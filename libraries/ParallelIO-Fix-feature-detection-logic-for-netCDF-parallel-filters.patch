@@ -1,0 +1,39 @@
+From 539ecaa152246117b2c04112482af53e72dfea4d Mon Sep 17 00:00:00 2001
+From: Kuan-Chih Wang <kuanchihwang@outlook.com>
+Date: Mon, 12 Jan 2026 15:47:24 +0800
+Subject: [PATCH 3/3] Fix feature detection logic for netCDF parallel filter
+
+The support status of netCDF parallel filter is now correctly
+reflected in `libpio.settings`.
+---
+ CMakeLists.txt | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7d360f43..b25cb543 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -363,9 +363,9 @@ if (HAVE_NETCDF_PAR)
+ #if !NC_HAS_PAR_FILTERS
+     choke me
+ #endif
+-int main() {return 0;}" PIO_HAS_PAR_FILTERS)
++int main() {return 0;}" HAVE_PAR_FILTERS)
+ else()
+-  set(PIO_HAS_PAR_FILTERS 0)
++  set(HAVE_PAR_FILTERS 0)
+ endif()
+ 
+ ###
+@@ -463,6 +463,8 @@ is_enabled(PIO_ENABLE_FORTRAN HAS_PIO_FORTRAN)
+ 
+ if(HAVE_PAR_FILTERS)
+   SET(PIO_HAS_PAR_FILTERS 1)
++else()
++  SET(PIO_HAS_PAR_FILTERS 0)
+ endif()
+ 
+ # Generate file from template.
+-- 
+2.47.3
+

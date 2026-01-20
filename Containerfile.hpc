@@ -1,0 +1,142 @@
+ARG BASE_IMAGE_NAME
+ARG BASE_IMAGE_TAG
+ARG COMPILER
+ARG MPI
+
+FROM ${BASE_IMAGE_NAME}:${BASE_IMAGE_TAG} AS install-base
+RUN --mount=type=tmpfs,target=/tmp \
+    --mount=type=tmpfs,target=/var/log \
+    --mount=type=cache,target=/var/cache/dnf,sharing=locked \
+    --mount=type=cache,target=/var/cache/yum,sharing=locked \
+    --mount=type=bind,source=scripts,target=/mnt/scripts,ro \
+    mkdir -p /tmp/working && \
+    pushd /tmp/working && \
+    /mnt/scripts/install-base.sh && \
+    popd && \
+    rm -fr /tmp/working
+ENV PATH="/opt/hpc/core/cmake/bin${PATH:+:$PATH}"
+
+FROM install-base AS install-drivers
+RUN --mount=type=tmpfs,target=/tmp \
+    --mount=type=tmpfs,target=/var/log \
+    --mount=type=cache,target=/var/cache/dnf,sharing=locked \
+    --mount=type=cache,target=/var/cache/yum,sharing=locked \
+    --mount=type=bind,source=drivers,target=/mnt/drivers,ro \
+    --mount=type=bind,source=drivers/cornelis-opxs/cornelis-opxs.repo,target=/etc/yum.repos.d/cornelis-opxs.repo,ro \
+    --mount=type=bind,source=drivers/cornelis-opxs/x86_64,target=/mnt/cornelis-opxs,ro \
+    --mount=type=bind,source=drivers/intel-efs/intel-efs.repo,target=/etc/yum.repos.d/intel-efs.repo,ro \
+    --mount=type=bind,source=drivers/intel-efs/x86_64,target=/mnt/intel-efs,ro \
+    --mount=type=bind,source=drivers/nvidia-doca/x86_64/etc/yum.repos.d/doca.repo,target=/etc/yum.repos.d/doca.repo,ro \
+    --mount=type=bind,source=drivers/nvidia-doca/x86_64/usr/share/doca-host-2.9.4,target=/usr/share/doca-host-2.9.4,ro \
+    --mount=type=bind,source=scripts,target=/mnt/scripts,ro \
+    mkdir -p /tmp/working && \
+    pushd /tmp/working && \
+    /mnt/scripts/install-drivers.sh && \
+    popd && \
+    rm -fr /tmp/working
+
+FROM install-drivers AS install-infrastructure
+RUN --mount=type=tmpfs,target=/tmp \
+    --mount=type=tmpfs,target=/var/log \
+    --mount=type=bind,source=infrastructure,target=/mnt/infrastructure,ro \
+    --mount=type=bind,source=scripts,target=/mnt/scripts,ro \
+    mkdir -p /tmp/working && \
+    pushd /tmp/working && \
+    printf "y\n" | \
+        HAVE_EXTERNAL_LIBEVENT="true" \
+        HAVE_EXTERNAL_NUMACTL="true" \
+        /mnt/scripts/install-infrastructure.sh "gcc-11" && \
+    popd && \
+    rm -fr /tmp/working && \
+    echo "# Included by /etc/ld.so.conf"         >  /etc/ld.so.conf.d/hpc-infrastructure.conf && \
+    echo "/opt/hpc/infrastructure/base/lib"      >> /etc/ld.so.conf.d/hpc-infrastructure.conf && \
+    echo "/opt/hpc/infrastructure/libcxi/lib"    >> /etc/ld.so.conf.d/hpc-infrastructure.conf && \
+    echo "/opt/hpc/infrastructure/libfabric/lib" >> /etc/ld.so.conf.d/hpc-infrastructure.conf && \
+    echo "/opt/hpc/infrastructure/ucx/lib"       >> /etc/ld.so.conf.d/hpc-infrastructure.conf && \
+    ldconfig
+ENV PATH="/opt/hpc/infrastructure/base/bin${PATH:+:$PATH}"
+ENV PATH="/opt/hpc/infrastructure/libcxi/bin${PATH:+:$PATH}"
+ENV PATH="/opt/hpc/infrastructure/libfabric/bin${PATH:+:$PATH}"
+ENV PATH="/opt/hpc/infrastructure/ucx/bin${PATH:+:$PATH}"
+
+FROM install-infrastructure AS install-compilers
+ARG COMPILER
+RUN --mount=type=tmpfs,target=/tmp \
+    --mount=type=tmpfs,target=/var/log \
+    --mount=type=cache,target=/var/cache/dnf,sharing=locked \
+    --mount=type=cache,target=/var/cache/yum,sharing=locked \
+    --mount=type=bind,source=compilers,target=/mnt/compilers,ro \
+    --mount=type=bind,source=scripts,target=/mnt/scripts,ro \
+    mkdir -p /tmp/working && \
+    pushd /tmp/working && \
+    /mnt/scripts/install-compilers.sh "${COMPILER}" && \
+    popd && \
+    rm -fr /tmp/working
+
+FROM install-compilers AS set-default-gcc-11
+# Default in RHEL 9. Nothing to do.
+
+FROM install-compilers AS set-default-gcc-12
+ENV LD_LIBRARY_PATH="/opt/rh/gcc-toolset-12/root/usr/lib64:/opt/rh/gcc-toolset-12/root/usr/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+ENV PATH="/opt/rh/gcc-toolset-12/root/usr/bin${PATH:+:$PATH}"
+
+FROM install-compilers AS set-default-gcc-13
+ENV LD_LIBRARY_PATH="/opt/rh/gcc-toolset-13/root/usr/lib64:/opt/rh/gcc-toolset-13/root/usr/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+ENV PATH="/opt/rh/gcc-toolset-13/root/usr/bin${PATH:+:$PATH}"
+
+FROM install-compilers AS set-default-gcc-14
+ENV LD_LIBRARY_PATH="/opt/rh/gcc-toolset-14/root/usr/lib64:/opt/rh/gcc-toolset-14/root/usr/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+ENV PATH="/opt/rh/gcc-toolset-14/root/usr/bin${PATH:+:$PATH}"
+
+FROM install-compilers AS set-default-gcc-15
+ENV LD_LIBRARY_PATH="/opt/rh/gcc-toolset-15/root/usr/lib64:/opt/rh/gcc-toolset-15/root/usr/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+ENV PATH="/opt/rh/gcc-toolset-15/root/usr/bin${PATH:+:$PATH}"
+
+FROM install-compilers AS set-default-intel-2024
+ENV LD_LIBRARY_PATH="/opt/intel/oneapi/compiler/latest/opt/compiler/lib:/opt/intel/oneapi/compiler/latest/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+ENV PATH="/opt/intel/oneapi/compiler/latest/bin${PATH:+:$PATH}"
+
+FROM install-compilers AS set-default-intel-2025
+ENV LD_LIBRARY_PATH="/opt/intel/oneapi/compiler/latest/opt/compiler/lib:/opt/intel/oneapi/compiler/latest/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+ENV PATH="/opt/intel/oneapi/compiler/latest/bin${PATH:+:$PATH}"
+
+FROM set-default-${COMPILER} AS install-mpi
+ARG COMPILER
+ARG MPI
+RUN --mount=type=tmpfs,target=/tmp \
+    --mount=type=tmpfs,target=/var/log \
+    --mount=type=bind,source=mpi,target=/mnt/mpi,ro \
+    --mount=type=bind,source=scripts,target=/mnt/scripts,ro \
+    mkdir -p /tmp/working && \
+    pushd /tmp/working && \
+    printf "y\n" | \
+        HAVE_EXTERNAL_LIBEVENT="true" \
+        HAVE_EXTERNAL_NUMACTL="true" \
+        /mnt/scripts/install-mpi.sh "${COMPILER}" "${MPI}" && \
+    popd && \
+    rm -fr /tmp/working
+
+FROM install-mpi AS set-default-intel-mpi
+ENV I_MPI_ROOT="/opt/intel/oneapi/mpi/latest"
+ENV LD_LIBRARY_PATH="/opt/intel/oneapi/mpi/latest/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+ENV PATH="/opt/intel/oneapi/mpi/latest/bin${PATH:+:$PATH}"
+
+FROM install-mpi AS set-default-mpich-4
+ARG COMPILER
+ARG MPI
+ENV LD_LIBRARY_PATH="/opt/hpc/compiler/${COMPILER}/${MPI}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+ENV PATH="/opt/hpc/compiler/${COMPILER}/${MPI}/bin${PATH:+:$PATH}"
+
+FROM install-mpi AS set-default-open-mpi-4
+ARG COMPILER
+ARG MPI
+ENV LD_LIBRARY_PATH="/opt/hpc/compiler/${COMPILER}/${MPI}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+ENV PATH="/opt/hpc/compiler/${COMPILER}/${MPI}/bin${PATH:+:$PATH}"
+
+FROM install-mpi AS set-default-open-mpi-5
+ARG COMPILER
+ARG MPI
+ENV LD_LIBRARY_PATH="/opt/hpc/compiler/${COMPILER}/${MPI}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+ENV PATH="/opt/hpc/compiler/${COMPILER}/${MPI}/bin${PATH:+:$PATH}"
+
+FROM set-default-${MPI} AS hpc-container

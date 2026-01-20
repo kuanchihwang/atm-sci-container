@@ -1,0 +1,20 @@
+ARG BASE_IMAGE_NAME
+ARG BASE_IMAGE_TAG
+ARG COMPILER
+ARG MPI
+
+FROM ${BASE_IMAGE_NAME}:${BASE_IMAGE_TAG} AS install-libraries
+ARG COMPILER
+ARG MPI
+RUN --mount=type=tmpfs,target=/tmp \
+    --mount=type=tmpfs,target=/var/log \
+    --mount=type=bind,source=libraries,target=/mnt/libraries,ro \
+    --mount=type=bind,source=scripts,target=/mnt/scripts,ro \
+    mkdir -p /tmp/working && \
+    pushd /tmp/working && \
+    printf "y\n" | \
+        /mnt/scripts/install-libraries.sh "${COMPILER}" "${MPI}" && \
+    popd && \
+    rm -fr /tmp/working
+
+FROM install-libraries AS atm-sci-lib-container

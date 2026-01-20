@@ -1,0 +1,5 @@
+[cornelis-opxs]
+name=Cornelis OPXS
+baseurl=file:///mnt/cornelis-opxs/repos/OPA_PKGS
+enabled=1
+gpgcheck=0

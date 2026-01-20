@@ -1,0 +1,50 @@
+From 1d408a5e61b5882d9a1ab1ebbb70c490ad48b5b5 Mon Sep 17 00:00:00 2001
+From: Kuan-Chih Wang <kuanchihwang@outlook.com>
+Date: Mon, 19 Jan 2026 19:07:44 +0800
+Subject: [PATCH 2/2] Fix undefined reference errors during linking
+
+When LAPACK is built as shared libraries, linking a Fortran program
+against liblapack.so (as well as libblas.so) fails with the following
+errors:
+
+ld: <path-to-lapack>/liblapack.so: undefined reference to `zlarf1_'
+ld: <path-to-lapack>/liblapack.so: undefined reference to `cger_'
+
+In SRC/clarf1f.f, the non-existent subroutine, CGER, incorrectly
+appears in an EXTERNAL statement, where it should have been CGERC.
+In SRC/zupmtr.f, the non-existent subroutine, ZLARF1, incorrectly
+appears in an EXTERNAL statement, where it should have been ZLARF1L.
+---
+ SRC/clarf1f.f | 2 +-
+ SRC/zupmtr.f  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/SRC/clarf1f.f b/SRC/clarf1f.f
+index c973dc0..acde3d0 100644
+--- a/SRC/clarf1f.f
++++ b/SRC/clarf1f.f
+@@ -151,7 +151,7 @@
+       INTEGER            I, LASTV, LASTC
+ *     ..
+ *     .. External Subroutines ..
+-      EXTERNAL           CGEMV, CGER, CSCAL
++      EXTERNAL           CGEMV, CGERC, CSCAL
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          CONJG
+diff --git a/SRC/zupmtr.f b/SRC/zupmtr.f
+index b3b8b8e..d39b988 100644
+--- a/SRC/zupmtr.f
++++ b/SRC/zupmtr.f
+@@ -177,7 +177,7 @@
+       EXTERNAL           LSAME
+ *     ..
+ *     .. External Subroutines ..
+-      EXTERNAL           XERBLA, ZLARF1, ZLARF1F
++      EXTERNAL           XERBLA, ZLARF1L, ZLARF1F
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          DCONJG, MAX
+-- 
+2.47.3
+

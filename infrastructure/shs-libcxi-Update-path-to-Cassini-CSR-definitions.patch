@@ -1,0 +1,25 @@
+From 5418283270c11c977d774cf7d4f71d162bdf50a5 Mon Sep 17 00:00:00 2001
+From: Kuan-Chih Wang <kuanchihwang@outlook.com>
+Date: Mon, 5 Jan 2026 08:59:32 +0800
+Subject: [PATCH] Update path to Cassini CSR definitions
+
+---
+ utils/cxi_dump_csrs.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/utils/cxi_dump_csrs.py b/utils/cxi_dump_csrs.py
+index 24a4ad4..45d9c3a 100755
+--- a/utils/cxi_dump_csrs.py
++++ b/utils/cxi_dump_csrs.py
+@@ -9,7 +9,7 @@
+ import json
+ 
+ try:
+-    with open('/usr/share/cassini-headers/csr_defs.json', 'r') as f:
++    with open('/opt/hpc/infrastructure/libcxi/share/cassini-headers/csr_defs.json', 'r') as f:
+         csrdefs = json.load(f)
+ except FileNotFoundError:
+     with open('../cassini-headers/install/share/cassini-headers/csr_defs.json', 'r') as f:
+-- 
+2.47.3
+

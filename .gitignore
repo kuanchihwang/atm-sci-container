@@ -1,0 +1,5 @@
+# Ignore build logs.
+logs/**
+
+# Ignore tarballs.
+*.tar.*

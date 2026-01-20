@@ -1,0 +1,76 @@
+From d687282debd347636fe8b8a97e466ff49fc48675 Mon Sep 17 00:00:00 2001
+From: Kuan-Chih Wang <kuanchihwang@outlook.com>
+Date: Fri, 16 Jan 2026 06:32:40 +0800
+Subject: [PATCH 1/2] Also generate shared libraries in addition to static ones
+
+---
+ BLAS/SRC/Makefile       | 1 +
+ CBLAS/src/Makefile      | 1 +
+ LAPACKE/src/Makefile    | 1 +
+ SRC/Makefile            | 1 +
+ TESTING/MATGEN/Makefile | 1 +
+ 5 files changed, 5 insertions(+)
+
+diff --git a/BLAS/SRC/Makefile b/BLAS/SRC/Makefile
+index 486571f..cf71625 100644
+--- a/BLAS/SRC/Makefile
++++ b/BLAS/SRC/Makefile
+@@ -148,6 +148,7 @@ ALLOBJ = $(SBLAS1) $(SBLAS2) $(SBLAS3) $(DBLAS1) $(DBLAS2) $(DBLAS3) \
+ $(BLASLIB): $(ALLOBJ)
+ 	$(AR) $(ARFLAGS) $@ $^
+ 	$(RANLIB) $@
++	$(FC) -shared -o $(patsubst %.a,%.so,$(BLASLIB)) $^
+ 
+ .PHONY: single double complex complex16
+ single: $(SBLAS1) $(ALLBLAS) $(SBLAS2) $(SBLAS3)
+diff --git a/CBLAS/src/Makefile b/CBLAS/src/Makefile
+index abc3192..b88c3ae 100644
+--- a/CBLAS/src/Makefile
++++ b/CBLAS/src/Makefile
+@@ -199,6 +199,7 @@ all3: $(alev3) $(errhand)
+ $(CBLASLIB): $(alev1) $(alev2) $(alev3) $(errhand)
+ 	$(AR) $(ARFLAGS) $@ $^
+ 	$(RANLIB) $@
++	$(CC) -shared -o $(patsubst %.a,%.so,$(CBLASLIB)) $^
+ 
+ FRC:
+ 	@FRC=$(FRC)
+diff --git a/LAPACKE/src/Makefile b/LAPACKE/src/Makefile
+index fece21a..ad3abf9 100644
+--- a/LAPACKE/src/Makefile
++++ b/LAPACKE/src/Makefile
+@@ -2559,6 +2559,7 @@ ifdef LAPACKE_WITH_TMG
+ 	$(AR) $(ARFLAGS) $@ $(MATGEN)
+ endif
+ 	$(RANLIB) $@
++	$(CC) -shared -o $(patsubst %.a,%.so,$(LAPACKELIB)) $^
+ 
+ .PHONY: clean cleanobj cleanlib
+ clean: cleanobj cleanlib
+diff --git a/SRC/Makefile b/SRC/Makefile
+index 0191626..b73c61f 100644
+--- a/SRC/Makefile
++++ b/SRC/Makefile
+@@ -560,6 +560,7 @@ endif
+ $(LAPACKLIB): $(LAPACKLIB_DEPS)
+ 	$(AR) $(ARFLAGS) $@ $^
+ 	$(RANLIB) $@
++	$(FC) -shared -o $(patsubst %.a,%.so,$(LAPACKLIB)) $^
+ 
+ .PHONY: single complex double complex16
+ 
+diff --git a/TESTING/MATGEN/Makefile b/TESTING/MATGEN/Makefile
+index e8a9150..b438af1 100644
+--- a/TESTING/MATGEN/Makefile
++++ b/TESTING/MATGEN/Makefile
+@@ -62,6 +62,7 @@ ALLOBJ = $(SMATGEN) $(CMATGEN) $(SCATGEN) $(DMATGEN) $(ZMATGEN) \
+ $(TMGLIB): $(ALLOBJ)
+ 	$(AR) $(ARFLAGS) $@ $^
+ 	$(RANLIB) $@
++	$(FC) -shared -o $(patsubst %.a,%.so,$(TMGLIB)) $^
+ 
+ .PHONY: single complex double complex16
+ single: $(SMATGEN) $(SCATGEN)
+-- 
+2.47.3
+

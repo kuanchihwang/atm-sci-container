@@ -1,0 +1,3 @@
+# Place driver binaries here. Git will ignore everything in this directory.
+/**
+!.gitignore
