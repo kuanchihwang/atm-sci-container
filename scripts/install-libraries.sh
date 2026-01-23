@@ -2,6 +2,7 @@
 set -euo pipefail
 
 SCRIPTS_PATH="$(dirname "$(realpath "$0")")"
+PATCHES_PATH="$(dirname "${SCRIPTS_PATH}")/patches"
 LIBRARIES_PATH="$(dirname "${SCRIPTS_PATH}")/libraries"
 
 . "${SCRIPTS_PATH}/utility-functions.sh"
@@ -621,11 +622,11 @@ compile_and_install_pio() {
     fi
 
     echo ">>>>> Preparing PIO"
-    if [ ! -d ParallelIO ]; then
+    if [ ! -d ParallelIO-pio2_6_8 ]; then
         extract_archive "${LIBRARIES_PATH}/ParallelIO-2.6.8.tar.gz"
-        apply_patch_to_directory "${LIBRARIES_PATH}/ParallelIO-"*".patch" ParallelIO
+        apply_patch_to_directory "${PATCHES_PATH}/ParallelIO-"*".patch" ParallelIO-pio2_6_8
     fi
-    stage_build_directory ParallelIO
+    stage_build_directory ParallelIO-pio2_6_8
 
     echo ">>>>> Configuring PIO"
     prepend_ld_library_path "${LIBRARIES_PREFIX}/pnetcdf4/lib:${LIBRARIES_PREFIX}/phdf5/lib:${LIBRARIES_PREFIX}/pnetcdf3/lib:${LIBRARIES_PREFIX}/base/lib"
@@ -675,11 +676,11 @@ compile_and_install_lapack() {
     echo ">>>>> Preparing LAPACK"
     rm -fr lapack-3.12.1
     extract_archive "${LIBRARIES_PATH}/lapack-3.12.1.tar.gz"
-    apply_patch_to_directory "${LIBRARIES_PATH}/lapack-"*".patch" lapack-3.12.1
+    apply_patch_to_directory "${PATCHES_PATH}/lapack-"*".patch" lapack-3.12.1
     pushd lapack-3.12.1
 
     echo ">>>>> Configuring LAPACK"
-    cp -av "${LIBRARIES_PATH}/lapack-make.inc" make.inc
+    cp -av "${PATCHES_PATH}/lapack-make.inc" make.inc
 
     echo ">>>>> Compiling LAPACK"
     COMPILER="${COMPILER}" \

@@ -1,0 +1,5 @@
+[intel-efs]
+name=Intel EFS
+baseurl=file:///mnt/drivers/intel-efs/repos/IEFS_PKGS
+enabled=1
+gpgcheck=0

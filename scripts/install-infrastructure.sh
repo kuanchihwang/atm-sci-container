@@ -2,6 +2,7 @@
 set -euo pipefail
 
 SCRIPTS_PATH="$(dirname "$(realpath "$0")")"
+PATCHES_PATH="$(dirname "${SCRIPTS_PATH}")/patches"
 INFRASTRUCTURE_PATH="$(dirname "${SCRIPTS_PATH}")/infrastructure"
 
 . "${SCRIPTS_PATH}/utility-functions.sh"
@@ -181,16 +182,16 @@ compile_and_install_libcxi() {
     mkdir -p "${LIBCXI_PREFIX}/share"
 
     extract_archive "${INFRASTRUCTURE_PATH}/shs-cassini-headers-12.0.2.tar.gz"
-    cp -av shs-cassini-headers/include/* "${LIBCXI_PREFIX}/include"
-    cp -av shs-cassini-headers/share/*   "${LIBCXI_PREFIX}/share"
+    cp -av shs-cassini-headers-release-shs-12.0.2/include/* "${LIBCXI_PREFIX}/include"
+    cp -av shs-cassini-headers-release-shs-12.0.2/share/*   "${LIBCXI_PREFIX}/share"
 
     extract_archive "${INFRASTRUCTURE_PATH}/shs-cxi-driver-12.0.2.tar.gz"
-    cp -av shs-cxi-driver/include/*      "${LIBCXI_PREFIX}/include"
+    cp -av shs-cxi-driver-release-shs-12.0.2/include/*      "${LIBCXI_PREFIX}/include"
 
     echo ">>>>> Preparing libcxi"
     extract_archive "${INFRASTRUCTURE_PATH}/shs-libcxi-12.0.2.tar.gz"
-    apply_patch_to_directory "${INFRASTRUCTURE_PATH}/shs-libcxi-"*".patch" shs-libcxi
-    pushd shs-libcxi
+    apply_patch_to_directory "${PATCHES_PATH}/shs-libcxi-"*".patch" shs-libcxi-release-shs-12.0.2
+    pushd shs-libcxi-release-shs-12.0.2
     autoreconf -fi
 
     echo ">>>>> Configuring libcxi"

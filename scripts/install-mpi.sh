@@ -2,6 +2,7 @@
 set -euo pipefail
 
 SCRIPTS_PATH="$(dirname "$(realpath "$0")")"
+PATCHES_PATH="$(dirname "${SCRIPTS_PATH}")/patches"
 MPI_PATH="$(dirname "${SCRIPTS_PATH}")/mpi"
 
 . "${SCRIPTS_PATH}/utility-functions.sh"
@@ -133,7 +134,7 @@ compile_and_install_open_mpi_4() {
 
     echo ">>>>> Preparing Open MPI"
     extract_archive "${MPI_PATH}/openmpi-4.1.8.tar.gz"
-    apply_patch_to_directory "${MPI_PATH}/openmpi-4-"*".patch" openmpi-4.1.8
+    apply_patch_to_directory "${PATCHES_PATH}/openmpi-4-"*".patch" openmpi-4.1.8
     stage_build_directory openmpi-4.1.8
 
     echo ">>>>> Configuring Open MPI"

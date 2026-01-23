@@ -1,7 +1,11 @@
 ARG BASE_IMAGE_NAME
 ARG BASE_IMAGE_TAG
+ARG DATA_IMAGE_NAME
+ARG DATA_IMAGE_TAG
 ARG COMPILER
 ARG MPI
+
+FROM ${DATA_IMAGE_NAME}:${DATA_IMAGE_TAG} AS install-data
 
 FROM ${BASE_IMAGE_NAME}:${BASE_IMAGE_TAG} AS install-base
 RUN --mount=type=tmpfs,target=/tmp \
@@ -21,13 +25,12 @@ RUN --mount=type=tmpfs,target=/tmp \
     --mount=type=tmpfs,target=/var/log \
     --mount=type=cache,target=/var/cache/dnf,sharing=locked \
     --mount=type=cache,target=/var/cache/yum,sharing=locked \
-    --mount=type=bind,source=drivers,target=/mnt/drivers,ro \
-    --mount=type=bind,source=drivers/cornelis-opxs/cornelis-opxs.repo,target=/etc/yum.repos.d/cornelis-opxs.repo,ro \
-    --mount=type=bind,source=drivers/cornelis-opxs/x86_64,target=/mnt/cornelis-opxs,ro \
-    --mount=type=bind,source=drivers/intel-efs/intel-efs.repo,target=/etc/yum.repos.d/intel-efs.repo,ro \
-    --mount=type=bind,source=drivers/intel-efs/x86_64,target=/mnt/intel-efs,ro \
-    --mount=type=bind,source=drivers/nvidia-doca/x86_64/etc/yum.repos.d/doca.repo,target=/etc/yum.repos.d/doca.repo,ro \
-    --mount=type=bind,source=drivers/nvidia-doca/x86_64/usr/share/doca-host-2.9.4,target=/usr/share/doca-host-2.9.4,ro \
+    --mount=type=bind,from=install-data,source=drivers/cornelis-opxs/x86_64,target=/mnt/drivers/cornelis-opxs,ro \
+    --mount=type=bind,from=install-data,source=drivers/intel-efs/x86_64,target=/mnt/drivers/intel-efs,ro \
+    --mount=type=bind,from=install-data,source=drivers/nvidia-doca/x86_64/etc/yum.repos.d/doca.repo,target=/etc/yum.repos.d/doca.repo,ro \
+    --mount=type=bind,from=install-data,source=drivers/nvidia-doca/x86_64/usr/share/doca-host-2.9.4,target=/usr/share/doca-host-2.9.4,ro \
+    --mount=type=bind,source=data/cornelis-opxs.repo,target=/etc/yum.repos.d/cornelis-opxs.repo,ro \
+    --mount=type=bind,source=data/intel-efs.repo,target=/etc/yum.repos.d/intel-efs.repo,ro \
     --mount=type=bind,source=scripts,target=/mnt/scripts,ro \
     mkdir -p /tmp/working && \
     pushd /tmp/working && \
@@ -38,7 +41,8 @@ RUN --mount=type=tmpfs,target=/tmp \
 FROM install-drivers AS install-infrastructure
 RUN --mount=type=tmpfs,target=/tmp \
     --mount=type=tmpfs,target=/var/log \
-    --mount=type=bind,source=infrastructure,target=/mnt/infrastructure,ro \
+    --mount=type=bind,from=install-data,source=infrastructure,target=/mnt/infrastructure,ro \
+    --mount=type=bind,source=patches,target=/mnt/patches,ro \
     --mount=type=bind,source=scripts,target=/mnt/scripts,ro \
     mkdir -p /tmp/working && \
     pushd /tmp/working && \
@@ -65,7 +69,7 @@ RUN --mount=type=tmpfs,target=/tmp \
     --mount=type=tmpfs,target=/var/log \
     --mount=type=cache,target=/var/cache/dnf,sharing=locked \
     --mount=type=cache,target=/var/cache/yum,sharing=locked \
-    --mount=type=bind,source=compilers,target=/mnt/compilers,ro \
+    --mount=type=bind,from=install-data,source=compilers,target=/mnt/compilers,ro \
     --mount=type=bind,source=scripts,target=/mnt/scripts,ro \
     mkdir -p /tmp/working && \
     pushd /tmp/working && \
@@ -105,7 +109,8 @@ ARG COMPILER
 ARG MPI
 RUN --mount=type=tmpfs,target=/tmp \
     --mount=type=tmpfs,target=/var/log \
-    --mount=type=bind,source=mpi,target=/mnt/mpi,ro \
+    --mount=type=bind,from=install-data,source=mpi,target=/mnt/mpi,ro \
+    --mount=type=bind,source=patches,target=/mnt/patches,ro \
     --mount=type=bind,source=scripts,target=/mnt/scripts,ro \
     mkdir -p /tmp/working && \
     pushd /tmp/working && \

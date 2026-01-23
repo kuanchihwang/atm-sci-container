@@ -1,5 +1,0 @@
-[intel-efs]
-name=Intel EFS
-baseurl=file:///mnt/intel-efs/repos/IEFS_PKGS
-enabled=1
-gpgcheck=0

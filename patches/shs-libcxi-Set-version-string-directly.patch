@@ -1,0 +1,25 @@
+From ca1192cb30909e906f2c0d6d16a55178f77a9415 Mon Sep 17 00:00:00 2001
+From: Kuan-Chih Wang <kuanchihwang@outlook.com>
+Date: Thu, 22 Jan 2026 06:42:14 +0800
+Subject: [PATCH 1/2] Set version string directly
+
+---
+ Makefile.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index 4c47094..a12ddb2 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -2,7 +2,7 @@
+ # Copyright 2018, 2020-2021 Hewlett Packard Enterprise Development LP
+ 
+ # Current version of the tree
+-GIT_VERSION := $(shell git describe --abbrev=8 --dirty --always --tags)
++GIT_VERSION := release/shs-12.0.2
+ 
+ AM_CPPFLAGS = \
+ 	-I$(srcdir)/include \
+-- 
+2.47.3
+
