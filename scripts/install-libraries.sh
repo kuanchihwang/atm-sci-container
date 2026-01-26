@@ -206,13 +206,13 @@ compile_and_install_jasper() {
         return
     fi
 
-    echo ">>>>> Preparing jasper"
+    echo ">>>>> Preparing JasPer"
     if [ ! -d jasper-2.0.33 ]; then
         extract_archive "${LIBRARIES_PATH}/jasper-2.0.33.tar.gz"
     fi
     stage_build_directory jasper-2.0.33
 
-    echo ">>>>> Configuring jasper"
+    echo ">>>>> Configuring JasPer"
     CC="${SELECTED_CC}" CFLAGS="${SELECTED_CFLAGS}" \
     CXX="${SELECTED_CXX}" CXXFLAGS="${SELECTED_CXXFLAGS}" \
     cmake \
@@ -230,13 +230,13 @@ compile_and_install_jasper() {
         -B . \
         -S ../source
 
-    echo ">>>>> Compiling jasper"
+    echo ">>>>> Compiling JasPer"
     make_compile
 
-    echo ">>>>> Installing jasper"
+    echo ">>>>> Installing JasPer"
     make_install
 
-    echo ">>>>> jasper - OK"
+    echo ">>>>> JasPer - OK"
     popd
 
     set_milestone jasper
