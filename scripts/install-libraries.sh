@@ -812,6 +812,51 @@ compile_and_install_esmf() {
     set_milestone esmf
 }
 
+compile_and_install_pfunit() {
+    if get_milestone pfunit; then
+        return
+    fi
+
+    echo ">>>>> Preparing pFUnit"
+    if [ ! -d pFUnit-v4.15.0 ]; then
+        extract_archive "${LIBRARIES_PATH}/pFUnit-v4.15.0.tar"
+    fi
+    stage_build_directory pFUnit-v4.15.0
+
+    echo ">>>>> Configuring pFUnit"
+    CC="${SELECTED_CC}" CFLAGS="${SELECTED_CFLAGS}" \
+    CXX="${SELECTED_CXX}" CXXFLAGS="${SELECTED_CXXFLAGS}" \
+    FC="${SELECTED_FC}" FFLAGS="${SELECTED_FCFLAGS}" \
+    cmake \
+        -D CMAKE_BUILD_TYPE="Release" \
+        -D CMAKE_INSTALL_LIBDIR="lib" \
+        -D CMAKE_INSTALL_PREFIX="${LIBRARIES_PREFIX}/pfunit" \
+        -D CMAKE_PREFIX_PATH="${LIBRARIES_PREFIX}/esmf" \
+        -D CMAKE_SKIP_RPATH=TRUE \
+        -D BUILD_SHARED_LIBS=FALSE \
+        -D ENABLE_BUILD_DOXYGEN=FALSE \
+        -D ENABLE_MPI_F08=FALSE \
+        -D ENABLE_TESTS=FALSE \
+        -D SKIP_ESMF=TRUE \
+        -D SKIP_FHAMCREST=FALSE \
+        -D SKIP_MPI=FALSE \
+        -D SKIP_OPENMP=FALSE \
+        -D SKIP_ROBUST=FALSE \
+        -B . \
+        -S ../source
+
+    echo ">>>>> Compiling pFUnit"
+    make_compile
+
+    echo ">>>>> Installing pFUnit"
+    make_install
+
+    echo ">>>>> pFUnit - OK"
+    popd
+
+    set_milestone pfunit
+}
+
 ###
 ### Main
 ###
@@ -854,6 +899,7 @@ compile_and_install_netcdf_fortran
 compile_and_install_pio
 compile_and_install_lapack
 compile_and_install_esmf
+compile_and_install_pfunit
 
 patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/base/bin/"* ""
 patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/base/lib/"* ""
