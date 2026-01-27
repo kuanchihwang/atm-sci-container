@@ -5,14 +5,14 @@ ARG DATA_IMAGE_TAG
 ARG COMPILER
 ARG MPI
 
-FROM ${DATA_IMAGE_NAME}:${DATA_IMAGE_TAG} AS install-data
+FROM ${DATA_IMAGE_NAME}:${DATA_IMAGE_TAG} AS data-image
 
 FROM ${BASE_IMAGE_NAME}:${BASE_IMAGE_TAG} AS install-libraries
 ARG COMPILER
 ARG MPI
 RUN --mount=type=tmpfs,target=/tmp \
     --mount=type=tmpfs,target=/var/log \
-    --mount=type=bind,from=install-data,source=libraries,target=/mnt/libraries,ro \
+    --mount=type=bind,from=data-image,source=libraries,target=/mnt/libraries,ro \
     --mount=type=bind,source=patches,target=/mnt/patches,ro \
     --mount=type=bind,source=scripts,target=/mnt/scripts,ro \
     mkdir -p /tmp/working && \

@@ -21,7 +21,7 @@ DOCKER = $(shell which docker 1>/dev/null 2>&1 && echo docker || echo podman)
 BASE_IMAGE_NAME = docker.io/almalinux/9-base
 BASE_IMAGE_TAG = 9.7
 DATA_IMAGE_NAME = docker.io/kuanchihwang/atm-sci-container-data
-DATA_IMAGE_TAG = 2026-01-23
+DATA_IMAGE_TAG = 2026-01-27
 IMAGE_NAME = atm-sci-container
 IMAGE_TAG = $(VERSION)_$(COMPILER)_$(MPI)
 
