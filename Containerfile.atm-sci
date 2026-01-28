@@ -22,4 +22,4 @@ RUN --mount=type=tmpfs,target=/tmp \
     popd && \
     rm -fr /tmp/working
 
-FROM install-libraries AS atm-sci-lib-container
+FROM install-libraries AS atm-sci-container

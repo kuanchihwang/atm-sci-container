@@ -40,7 +40,7 @@ stage:
 	@$(DOCKER) pull $(DATA_IMAGE_NAME):$(DATA_IMAGE_TAG)
 
 .PHONY: build
-build: build-hpc build-atm-sci-lib
+build: build-hpc build-atm-sci
 
 .PHONY: build-hpc
 build-hpc:
@@ -54,8 +54,8 @@ build-hpc:
 		--file Containerfile.hpc \
 		--tag "localhost/build-artifact/hpc-container:$(IMAGE_TAG)" .
 
-.PHONY: build-atm-sci-lib
-build-atm-sci-lib:
+.PHONY: build-atm-sci
+build-atm-sci:
 	@$(DOCKER) build \
 		--build-arg BASE_IMAGE_NAME="localhost/build-artifact/hpc-container" \
 		--build-arg BASE_IMAGE_TAG="$(IMAGE_TAG)" \
@@ -63,11 +63,11 @@ build-atm-sci-lib:
 		--build-arg DATA_IMAGE_TAG="$(DATA_IMAGE_TAG)" \
 		--build-arg COMPILER="$(COMPILER)" \
 		--build-arg MPI="$(MPI)" \
-		--file Containerfile.atm-sci-lib \
-		--tag "localhost/build-artifact/atm-sci-lib-container:$(IMAGE_TAG)" .
+		--file Containerfile.atm-sci \
+		--tag "localhost/build-artifact/atm-sci-container:$(IMAGE_TAG)" .
 
 .PHONY: clean
-clean: clean-hpc clean-atm-sci-lib
+clean: clean-hpc clean-atm-sci
 
 .PHONY: clean-hpc
 clean-hpc:
@@ -75,9 +75,9 @@ clean-hpc:
 		$(DOCKER) image rm -f -i "$${IMAGE}"; \
 	done
 
-.PHONY: clean-atm-sci-lib
-clean-atm-sci-lib:
-	@for IMAGE in $$($(DOCKER) image ls -q "atm-sci-lib-container"); do \
+.PHONY: clean-atm-sci
+clean-atm-sci:
+	@for IMAGE in $$($(DOCKER) image ls -q "atm-sci-container"); do \
 		$(DOCKER) image rm -f -i "$${IMAGE}"; \
 	done
 
