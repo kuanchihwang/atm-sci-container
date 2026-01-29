@@ -306,8 +306,33 @@ echo ""
 
 case "${MPI}" in
     intel-mpi)
-        # Installed with Intel compilers. Nothing to do.
-        :
+        case "${COMPILER}" in
+            intel-2024)
+                sh "${MPI_PATH}/l_mpi_oneapi_p_2021.13.1.769_offline.sh" \
+                    -r yes -a --action install --eula accept --silent
+                rm -fr /opt/intel/oneapi/installer
+                rm -fr /opt/intel/oneapi/logs
+                rm -fr /opt/intel/packagemanager
+                find /var/intel -mindepth 1 \
+                    "!" -path "/var/intel/installercache" \
+                    "!" -path "/var/intel/installercache/packagemanager.db" \
+                    -delete
+                ;;
+            intel-2025)
+                sh "${MPI_PATH}/intel-mpi-2021.17.2.94_offline.sh" \
+                    -r yes -a --action install --eula accept --silent
+                rm -fr /opt/intel/oneapi/installer
+                rm -fr /opt/intel/oneapi/logs
+                rm -fr /opt/intel/packagemanager
+                find /var/intel -mindepth 1 \
+                    "!" -path "/var/intel/installercache" \
+                    "!" -path "/var/intel/installercache/packagemanager.db" \
+                    -delete
+                ;;
+            *)
+                exit 1
+                ;;
+        esac
         ;;
     mpich-4)
         compile_and_install_mpich_4

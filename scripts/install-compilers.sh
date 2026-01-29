@@ -40,24 +40,26 @@ case "${COMPILER}" in
             -r yes -a --action install --eula accept --silent
         sh "${COMPILERS_PATH}/l_fortran-compiler_p_2024.2.1.80_offline.sh" \
             -r yes -a --action install --eula accept --silent
-        sh "${COMPILERS_PATH}/l_mpi_oneapi_p_2021.13.1.769_offline.sh" \
-            -r yes -a --action install --eula accept --silent
         rm -fr /opt/intel/oneapi/installer
         rm -fr /opt/intel/oneapi/logs
         rm -fr /opt/intel/packagemanager
-        rm -fr /var/intel
+        find /var/intel -mindepth 1 \
+            "!" -path "/var/intel/installercache" \
+            "!" -path "/var/intel/installercache/packagemanager.db" \
+            -delete
         ;;
     intel-2025)
         sh "${COMPILERS_PATH}/intel-dpcpp-cpp-compiler-2025.3.2.26_offline.sh" \
             -r yes -a --action install --eula accept --silent
         sh "${COMPILERS_PATH}/intel-fortran-compiler-2025.3.2.25_offline.sh" \
             -r yes -a --action install --eula accept --silent
-        sh "${COMPILERS_PATH}/intel-mpi-2021.17.2.94_offline.sh" \
-            -r yes -a --action install --eula accept --silent
         rm -fr /opt/intel/oneapi/installer
         rm -fr /opt/intel/oneapi/logs
         rm -fr /opt/intel/packagemanager
-        rm -fr /var/intel
+        find /var/intel -mindepth 1 \
+            "!" -path "/var/intel/installercache" \
+            "!" -path "/var/intel/installercache/packagemanager.db" \
+            -delete
         ;;
     *)
         exit 1
