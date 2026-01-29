@@ -26,6 +26,8 @@ DOCKER = $(shell which docker 1>/dev/null 2>&1 && echo docker || echo podman)
 IMAGE_NAME = atm-sci-container
 IMAGE_TAG = $(VERSION)_$(COMPILER)_$(MPI)
 
+.NOTPARALLEL:
+
 .PHONY: all
 all:
 	@echo "Usage:"
