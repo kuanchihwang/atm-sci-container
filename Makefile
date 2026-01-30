@@ -54,6 +54,8 @@ build-hpc:
 		--build-arg COMPILER="$(COMPILER)" \
 		--build-arg MPI="$(MPI)" \
 		--file Containerfile.hpc \
+		--label "org.opencontainers.image.revision=$(shell git rev-parse --verify HEAD)" \
+		--label "org.opencontainers.image.version=$(VERSION)" \
 		--tag "localhost/build-artifact/hpc-container:$(IMAGE_TAG)" .
 
 .PHONY: build-atm-sci
@@ -66,6 +68,8 @@ build-atm-sci:
 		--build-arg COMPILER="$(COMPILER)" \
 		--build-arg MPI="$(MPI)" \
 		--file Containerfile.atm-sci \
+		--label "org.opencontainers.image.revision=$(shell git rev-parse --verify HEAD)" \
+		--label "org.opencontainers.image.version=$(VERSION)" \
 		--tag "localhost/build-artifact/atm-sci-container:$(IMAGE_TAG)" .
 
 .PHONY: clean

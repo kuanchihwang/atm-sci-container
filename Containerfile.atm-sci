@@ -23,3 +23,8 @@ RUN --mount=type=tmpfs,target=/tmp \
     rm -fr /tmp/working
 
 FROM install-libraries AS atm-sci-container
+# https://specs.opencontainers.org/image-spec/annotations
+LABEL "org.opencontainers.image.title"="atm-sci-container" \
+      "org.opencontainers.image.description"="High-performance computing (HPC) containers for performance-portable and reproducible atmospheric modeling." \
+      "org.opencontainers.image.authors"="Kuan-Chih Wang, https://github.com/kuanchihwang" \
+      "org.opencontainers.image.url"="https://hub.docker.com/r/kuanchihwang/atm-sci-container"
