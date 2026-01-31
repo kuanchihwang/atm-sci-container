@@ -80,10 +80,16 @@ clean-hpc:
 	@for IMAGE in $$($(DOCKER) image ls -q "hpc-container"); do \
 		$(DOCKER) image rm -f -i "$${IMAGE}"; \
 	done
+	@for IMAGE in $$($(DOCKER) image ls -q --filter "dangling=true"); do \
+		$(DOCKER) image rm -f -i "$${IMAGE}"; \
+	done
 
 .PHONY: clean-atm-sci
 clean-atm-sci:
 	@for IMAGE in $$($(DOCKER) image ls -q "atm-sci-container"); do \
+		$(DOCKER) image rm -f -i "$${IMAGE}"; \
+	done
+	@for IMAGE in $$($(DOCKER) image ls -q --filter "dangling=true"); do \
 		$(DOCKER) image rm -f -i "$${IMAGE}"; \
 	done
 
