@@ -30,7 +30,7 @@ dnf install -y \
     bzip2-devel libzstd-devel lz4-devel xz-devel
 
 # Install newer CMake than the distribution one.
-CMAKE_VERSION="3.31.10"
+CMAKE_VERSION="3.31.11"
 mkdir -p /opt/hpc/core/cmake
 wget -nv "https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz"
 wget -nv -O - "https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-SHA-256.txt" | grep -i "cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz" | sha256sum -c -
