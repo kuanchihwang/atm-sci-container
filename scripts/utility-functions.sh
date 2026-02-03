@@ -6,11 +6,19 @@ set_selected_compiler() {
     fi
 
     case "${1}" in
-        gcc-11|gcc-12|gcc-13|gcc-14|gcc-15)
+        gcc-11|gcc-12|gcc-13|gcc-14)
             SELECTED_CC="${SELECTED_CC:-gcc}"
             SELECTED_CFLAGS="${SELECTED_CFLAGS:--fPIC -march=x86-64-v3 -mtune=znver3 -O3}"
             SELECTED_CXX="${SELECTED_CXX:-g++}"
             SELECTED_CXXFLAGS="${SELECTED_CXXFLAGS:--fPIC -march=x86-64-v3 -mtune=znver3 -O3}"
+            SELECTED_FC="${SELECTED_FC:-gfortran}"
+            SELECTED_FCFLAGS="${SELECTED_FCFLAGS:--fPIC -march=x86-64-v3 -mtune=znver3 -O3}"
+            ;;
+        gcc-15)
+            SELECTED_CC="${SELECTED_CC:-gcc}"
+            SELECTED_CFLAGS="${SELECTED_CFLAGS:--fPIC -march=x86-64-v3 -mtune=znver3 -O3 -std=gnu17}"
+            SELECTED_CXX="${SELECTED_CXX:-g++}"
+            SELECTED_CXXFLAGS="${SELECTED_CXXFLAGS:--fPIC -march=x86-64-v3 -mtune=znver3 -O3 -std=gnu++17}"
             SELECTED_FC="${SELECTED_FC:-gfortran}"
             SELECTED_FCFLAGS="${SELECTED_FCFLAGS:--fPIC -march=x86-64-v3 -mtune=znver3 -O3}"
             ;;
