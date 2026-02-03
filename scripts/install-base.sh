@@ -16,7 +16,7 @@ sed -i "/^ *\[crb\]/,/^ *\[/{/^ *enabled *= *0 *$/s//enabled=1/}" /etc/yum.repos
 
 dnf makecache
 dnf install -y \
-    binutils patchelf gcc gcc-c++ gcc-gfortran autoconf automake libtool gdb \
+    binutils gcc gcc-c++ gcc-gfortran autoconf automake libtool gdb \
     diffstat diffutils git git-lfs make patch patchutils pkgconf pkgconf-pkg-config \
     bash-completion coreutils-common coreutils-single less nano perl procps-ng psmisc python-unversioned-command python3 python3-pip python3.12 python3.12-pip tcsh vim-minimal \
     ca-certificates curl-minimal hostname rsync openssh-clients wget \
@@ -38,3 +38,13 @@ tar -xf "cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz" -C /opt/hpc/core/cmake --no
 rm -fr "cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz"
 rm -fr /opt/hpc/core/cmake/doc /opt/hpc/core/cmake/man
 unset -v CMAKE_VERSION
+
+# Install LIEF-based patchelf instead of the distribution one.
+LIEF_VERSION="0.17.3"
+wget -nv "https://github.com/lief-project/LIEF/releases/download/${LIEF_VERSION}/lief-tools-x86_64-unknown-linux-gnu.zip"
+unzip lief-tools-x86_64-unknown-linux-gnu.zip -d lief-tools
+chmod 0755 lief-tools/bin/lief-patchelf
+cp -av lief-tools/bin/lief-patchelf /usr/local/bin
+ln -sv lief-patchelf /usr/local/bin/patchelf
+rm -fr lief-tools-x86_64-unknown-linux-gnu.zip lief-tools
+unset -v LIEF_VERSION
