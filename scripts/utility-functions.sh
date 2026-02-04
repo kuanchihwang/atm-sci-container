@@ -304,6 +304,26 @@ remove_libtool_archive_from_directory() {
     return 0
 }
 
+remove_pkgconfig_from_directory() {
+    if [ "${#}" -lt 1 ]; then
+        return 1
+    fi
+
+    for d in "${@}"; do
+        if [ ! -d "${d}" ]; then
+            continue
+        fi
+
+        echo "[Utility] Removing pkgconfig from directory ${d}"
+        find "${d}" -depth -name "*pkgconfig*" -type d -print -execdir rm -fr "{}" ";"
+        find "${d}" -depth -name "*pkgconfig*" -type l -print -execdir rm -fr "{}" ";"
+    done
+
+    unset -v d
+
+    return 0
+}
+
 remove_static_library_from_directory() {
     if [ "${#}" -lt 1 ]; then
         return 1
