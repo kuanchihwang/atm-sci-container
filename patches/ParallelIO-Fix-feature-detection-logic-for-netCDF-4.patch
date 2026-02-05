@@ -1,18 +1,21 @@
-From 2b95f677bb434c4aa412358fba0f2c04cb00f892 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Kuan-Chih Wang <kuanchihwang@outlook.com>
 Date: Sat, 3 Jan 2026 20:54:04 +0800
-Subject: [PATCH 2/3] Fix feature detection logic for netCDF-4 capability
+Subject: [PATCH] Fix feature detection logic for netCDF-4
 
 As of netCDF-C version 4.9.3, NC_HAS_NC4 is no longer defined.
-netCDF-4 capability is now detected through NC_HAS_HDF5.
+netCDF-4 is now detected through NC_HAS_HDF5.
 
 The original logic, which relied on NC_VERSION_PATCH, was also
 flawed anyway because it did not check NC_VERSION_{MAJOR,MINOR}.
+
+The support status of netCDF-4 is now correctly reflected in
+`libpio.settings`.
 ---
  CMakeLists.txt          | 2 +-
  configure.ac            | 2 +-
- src/clib/pioc_support.c | 5 +++--
- 3 files changed, 5 insertions(+), 4 deletions(-)
+ src/clib/pioc_support.c | 7 ++++---
+ 3 files changed, 6 insertions(+), 5 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 7cb025be..7d360f43 100644
@@ -41,21 +44,25 @@ index d44688da..5207a6a2 100644
  #endif]
  ])], [have_netcdf4=yes], [have_netcdf4=no])
 diff --git a/src/clib/pioc_support.c b/src/clib/pioc_support.c
-index c9139196..ff28b030 100644
+index c9139196..93350237 100644
 --- a/src/clib/pioc_support.c
 +++ b/src/clib/pioc_support.c
-@@ -3126,8 +3126,9 @@ iotype_is_valid(int iotype)
+@@ -3126,11 +3126,12 @@ iotype_is_valid(int iotype)
          ret++;
  
      /* Some builds include netCDF-4. */
 -    /* as of netcdf 4.9.3 NC_HAS_NC4 is no longer defined */
 -#if NC_HAS_NC4 || (NC_VERSION_PATCH > 2)
 +    /* As of netCDF-C version 4.9.3, NC_HAS_NC4 is no longer defined.
-+       netCDF-4 capability is now detected through NC_HAS_HDF5. */
++       netCDF-4 is now detected through NC_HAS_HDF5. */
 +#if NC_HAS_HDF5
      if (iotype == PIO_IOTYPE_NETCDF4C || iotype == PIO_IOTYPE_NETCDF4P)
          ret++;
- #endif /* _NETCDF4 */
+-#endif /* _NETCDF4 */
++#endif /* NC_HAS_HDF5 */
+ 
+     /* Some builds include pnetcdf. */
+ #ifdef _PNETCDF
 -- 
 2.47.3
 

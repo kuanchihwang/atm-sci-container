@@ -1,7 +1,7 @@
-From d236dfcd58f5123660b1998918b5b3116c80884f Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Kuan-Chih Wang <kuanchihwang@outlook.com>
 Date: Mon, 5 Jan 2026 08:59:32 +0800
-Subject: [PATCH 2/2] Update path to Cassini CSR definitions
+Subject: [PATCH] Update path to Cassini CSR definitions
 
 ---
  utils/cxi_dump_csrs.py | 2 +-

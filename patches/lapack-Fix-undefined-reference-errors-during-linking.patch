@@ -1,7 +1,7 @@
-From 1d408a5e61b5882d9a1ab1ebbb70c490ad48b5b5 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Kuan-Chih Wang <kuanchihwang@outlook.com>
 Date: Mon, 19 Jan 2026 19:07:44 +0800
-Subject: [PATCH 2/2] Fix undefined reference errors during linking
+Subject: [PATCH] Fix undefined reference errors during linking
 
 When LAPACK is built as shared libraries, linking a Fortran program
 against liblapack.so (as well as libblas.so) fails with the following

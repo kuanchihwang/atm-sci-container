@@ -1,7 +1,7 @@
-From d687282debd347636fe8b8a97e466ff49fc48675 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Kuan-Chih Wang <kuanchihwang@outlook.com>
 Date: Fri, 16 Jan 2026 06:32:40 +0800
-Subject: [PATCH 1/2] Also generate shared libraries in addition to static ones
+Subject: [PATCH] Also generate shared libraries in addition to static ones
 
 ---
  BLAS/SRC/Makefile       | 1 +

@@ -1,7 +1,7 @@
-From ca1192cb30909e906f2c0d6d16a55178f77a9415 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Kuan-Chih Wang <kuanchihwang@outlook.com>
 Date: Thu, 22 Jan 2026 06:42:14 +0800
-Subject: [PATCH 1/2] Set version string directly
+Subject: [PATCH] Set version string directly
 
 ---
  Makefile.am | 2 +-

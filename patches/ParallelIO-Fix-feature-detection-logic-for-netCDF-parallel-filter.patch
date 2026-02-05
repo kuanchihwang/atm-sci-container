@@ -1,7 +1,7 @@
-From 539ecaa152246117b2c04112482af53e72dfea4d Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Kuan-Chih Wang <kuanchihwang@outlook.com>
 Date: Mon, 12 Jan 2026 15:47:24 +0800
-Subject: [PATCH 3/3] Fix feature detection logic for netCDF parallel filter
+Subject: [PATCH] Fix feature detection logic for netCDF parallel filter
 
 The support status of netCDF parallel filter is now correctly
 reflected in `libpio.settings`.
