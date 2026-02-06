@@ -350,7 +350,7 @@ patch_binary_to_set_rpath() {
     fi
 
     while [ "${1}" != "${r}" ]; do
-        if [ ! -f "${1}" ]; then
+        if [ ! -f "${1}" ] || [ -L "${1}" ]; then
             shift
 
             continue
