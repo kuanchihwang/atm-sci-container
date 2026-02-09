@@ -301,6 +301,8 @@ compile_and_install_pmix() {
         --disable-devel-check \
         --disable-memory-sanitizers \
         --disable-sphinx \
+        --disable-wrapper-rpath \
+        --disable-wrapper-runpath \
         --with-hwloc="${HWLOC_PREFIX}" \
         --with-libevent="${LIBEVENT_PREFIX}" \
         --with-zlib="${ZLIB_PREFIX}" \
@@ -325,6 +327,7 @@ compile_and_install_prrte() {
 
     echo ">>>>> Configuring PRRTE"
     ../source/configure --help
+    prepend_ld_library_path "${INFRASTRUCTURE_PREFIX}/base/lib"
     CC="${SELECTED_CC}" CFLAGS="${SELECTED_CFLAGS}" \
     CXX="${SELECTED_CXX}" CXXFLAGS="${SELECTED_CXXFLAGS}" \
     ../source/configure --disable-static --enable-shared --prefix="${INFRASTRUCTURE_PREFIX}/base" \
@@ -342,6 +345,8 @@ compile_and_install_prrte() {
 
     echo ">>>>> Installing PRRTE"
     make_install
+
+    restore_ld_library_path
 
     echo ">>>>> PRRTE - OK"
     popd
