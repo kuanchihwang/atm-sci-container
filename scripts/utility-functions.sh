@@ -359,11 +359,18 @@ patch_binary_to_set_rpath() {
 
     if [ ! -z "${r}" ]; then
         printf "%s\n" "${r}" | tr ":" "\n" | while IFS="" read -r d; do
-            if [ ! -d "${d}" ]; then
-                unset -v d
+            case "${d}" in
+                '$LIB'*|'$ORIGIN'*)
+                    continue
+                    ;;
+                *)
+                    if [ ! -d "${d}" ]; then
+                        unset -v d
 
-                return 1
-            fi
+                        return 1
+                    fi
+                    ;;
+            esac
         done
 
         unset -v d

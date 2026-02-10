@@ -901,26 +901,26 @@ compile_and_install_lapack
 compile_and_install_esmf
 compile_and_install_pfunit
 
-patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/base/bin/"* ""
-patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/base/lib/"* ""
-patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/hdf5/bin/"* ""
-patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/hdf5/lib/"* ""
-patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/phdf5/bin/"* ""
-patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/phdf5/lib/"* ""
-patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/netcdf3/bin/"* ""
-patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/netcdf3/lib/"* ""
-patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/netcdf4/bin/"* ""
-patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/netcdf4/lib/"* ""
-patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/pnetcdf3/bin/"* ""
-patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/pnetcdf3/lib/"* ""
-patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/pnetcdf4/bin/"* ""
-patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/pnetcdf4/lib/"* ""
-patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/pio/bin/"* ""
-patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/pio/lib/"* ""
-patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/lapack/bin/"* ""
-patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/lapack/lib/"* ""
-patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/esmf/bin/"*/*/* ""
-patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/esmf/lib/"*/*/* ""
+patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/base/bin/"* ''
+patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/base/lib/"* ''
+patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/hdf5/bin/"* ''
+patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/hdf5/lib/"* ''
+patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/phdf5/bin/"* ''
+patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/phdf5/lib/"* ''
+patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/netcdf3/bin/"* ''
+patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/netcdf3/lib/"* ''
+patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/netcdf4/bin/"* ''
+patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/netcdf4/lib/"* ''
+patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/pnetcdf3/bin/"* ''
+patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/pnetcdf3/lib/"* ''
+patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/pnetcdf4/bin/"* ''
+patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/pnetcdf4/lib/"* ''
+patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/pio/bin/"* ''
+patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/pio/lib/"* ''
+patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/lapack/bin/"* ''
+patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/lapack/lib/"* ''
+patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/esmf/bin/"*/*/* ''
+patch_binary_to_set_rpath "${LIBRARIES_PREFIX}/esmf/lib/"*/*/* ''
 
 remove_documentation_from_directory "${LIBRARIES_PREFIX}/"*
 remove_libtool_archive_from_directory "${LIBRARIES_PREFIX}/"*

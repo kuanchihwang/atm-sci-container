@@ -30,6 +30,29 @@ HAVE_EXTERNAL_ZLIB="${HAVE_EXTERNAL_ZLIB:-false}"
 ### Individual library compilation and installation functions
 ###
 
+compile_and_install_patchelf() {
+    echo ">>>>> Preparing patchelf"
+    extract_archive "${INFRASTRUCTURE_PATH}/patchelf-0.18.0.tar.gz"
+    apply_patch_to_directory "${PATCHES_PATH}/patchelf-"*".patch" patchelf-0.18.0
+    stage_build_directory patchelf-0.18.0
+
+    echo ">>>>> Configuring patchelf"
+    ../source/configure --help
+    CC="${SELECTED_CC}" CFLAGS="${SELECTED_CFLAGS}" \
+    CXX="${SELECTED_CXX}" CXXFLAGS="${SELECTED_CXXFLAGS}" \
+    ../source/configure --prefix="$(pwd)/patchelf-install"
+
+    echo ">>>>> Compiling patchelf"
+    make_compile
+
+    echo ">>>>> Installing patchelf"
+    make_install
+    cp -av patchelf-install/bin/patchelf /usr/local/bin
+
+    echo ">>>>> patchelf - OK"
+    popd
+}
+
 compile_and_install_zlib() {
     case "${HAVE_EXTERNAL_ZLIB}" in
         true)
@@ -463,6 +486,7 @@ echo ""
 confirm_to_continue || exit 0
 echo ""
 
+compile_and_install_patchelf
 compile_and_install_zlib
 compile_and_install_numactl
 compile_and_install_hwloc
@@ -474,14 +498,14 @@ compile_and_install_prrte
 compile_and_install_ucx
 compile_and_install_libfabric
 
-patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/base/bin/"* ""
-patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/base/lib/"* "${INFRASTRUCTURE_PREFIX}/base/lib"
-patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/libcxi/bin/"* ""
-patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/libcxi/lib/"* "${INFRASTRUCTURE_PREFIX}/libcxi/lib"
-patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/ucx/bin/"* ""
-patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/ucx/lib/"* "${INFRASTRUCTURE_PREFIX}/ucx/lib"
-patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/libfabric/bin/"* ""
-patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/libfabric/lib/"* "${INFRASTRUCTURE_PREFIX}/libfabric/lib:${INFRASTRUCTURE_PREFIX}/ucx/lib:${INFRASTRUCTURE_PREFIX}/libcxi/lib:${INFRASTRUCTURE_PREFIX}/base/lib"
+patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/base/bin/"* ''
+patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/base/lib/"* '$ORIGIN'
+patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/libcxi/bin/"* ''
+patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/libcxi/lib/"* '$ORIGIN'
+patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/ucx/bin/"* ''
+patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/ucx/lib/"* '$ORIGIN'
+patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/libfabric/bin/"* ''
+patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/libfabric/lib/"* '$ORIGIN'
 
 remove_documentation_from_directory "${INFRASTRUCTURE_PREFIX}/"*
 remove_libtool_archive_from_directory "${INFRASTRUCTURE_PREFIX}/"*
