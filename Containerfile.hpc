@@ -8,6 +8,8 @@ ARG MPI
 FROM ${DATA_IMAGE_NAME}:${DATA_IMAGE_TAG} AS data-image
 
 FROM ${BASE_IMAGE_NAME}:${BASE_IMAGE_TAG} AS install-base
+USER root
+WORKDIR /root
 RUN --mount=type=tmpfs,target=/tmp \
     --mount=type=tmpfs,target=/var/log \
     --mount=type=cache,target=/var/cache/dnf,sharing=locked \
@@ -144,7 +146,13 @@ ARG MPI
 ENV LD_LIBRARY_PATH="/opt/hpc/compiler/${COMPILER}/${MPI}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 ENV PATH="/opt/hpc/compiler/${COMPILER}/${MPI}/bin${PATH:+:$PATH}"
 
-FROM set-default-${MPI} AS hpc-container
+FROM set-default-${MPI} AS set-default-user
+RUN groupadd -g 1865 alice && \
+    useradd -b /home -g alice -m -s /bin/bash -u 1865 alice
+USER alice
+WORKDIR /home/alice
+
+FROM set-default-user AS hpc-container
 # https://specs.opencontainers.org/image-spec/annotations
 LABEL "org.opencontainers.image.title"="hpc-container" \
       "org.opencontainers.image.description"="High-performance computing (HPC) containers for parallel workloads, with optimal single-/multi-node performance out of the box." \
