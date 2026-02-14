@@ -5,9 +5,17 @@ ARG DATA_IMAGE_TAG
 ARG COMPILER
 ARG MPI
 
-FROM ${DATA_IMAGE_NAME}:${DATA_IMAGE_TAG} AS data-image
+FROM ${BASE_IMAGE_NAME}:${BASE_IMAGE_TAG} AS base-image
+ARG BASE_IMAGE_NAME
+ARG BASE_IMAGE_TAG
+LABEL "org.opencontainers.image.base.name"="${BASE_IMAGE_NAME}:${BASE_IMAGE_TAG}"
 
-FROM ${BASE_IMAGE_NAME}:${BASE_IMAGE_TAG} AS install-libraries
+FROM ${DATA_IMAGE_NAME}:${DATA_IMAGE_TAG} AS data-image
+ARG DATA_IMAGE_NAME
+ARG DATA_IMAGE_TAG
+LABEL "org.opencontainers.image.base.name"="${DATA_IMAGE_NAME}:${DATA_IMAGE_TAG}"
+
+FROM base-image AS install-libraries
 ARG COMPILER
 ARG MPI
 USER root
