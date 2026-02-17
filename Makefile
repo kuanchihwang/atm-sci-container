@@ -1,3 +1,5 @@
+REGISTRY ?= docker.io
+NAMESPACE ?= kuanchihwang
 VERSION ?= testing
 
 # Compiler choices are:
@@ -23,7 +25,8 @@ DATA_IMAGE_NAME ?= docker.io/kuanchihwang/atm-sci-container-data
 DATA_IMAGE_TAG ?= 2026-02-10
 
 DOCKER = $(shell which docker 1>/dev/null 2>&1 && echo docker || echo podman)
-IMAGE_NAME = atm-sci-container
+HPC_IMAGE_NAME = hpc-container
+ATM_SCI_IMAGE_NAME = atm-sci-container
 IMAGE_TAG = $(VERSION)_$(COMPILER)_$(MPI)
 
 .NOTPARALLEL:
@@ -34,19 +37,24 @@ all:
 	@echo "    make stage"
 	@echo "    make build [VERSION=...] [COMPILER=...] [MPI=...]"
 	@echo "    make clean"
+	@echo ""
+	@echo "    make login [REGISTRY=...] [NAMESPACE=...]"
+	@echo "    make push [REGISTRY=...] [NAMESPACE=...] [VERSION=...] [COMPILER=...] [MPI=...]"
+	@echo "    make logout [REGISTRY=...]"
+	@echo ""
 	@echo "    make reset (Warning: Mass destruction!)"
 
 .PHONY: stage
 stage:
-	@$(DOCKER) pull $(BASE_IMAGE_NAME):$(BASE_IMAGE_TAG)
-	@$(DOCKER) pull $(DATA_IMAGE_NAME):$(DATA_IMAGE_TAG)
+	@$(DOCKER) image pull $(BASE_IMAGE_NAME):$(BASE_IMAGE_TAG)
+	@$(DOCKER) image pull $(DATA_IMAGE_NAME):$(DATA_IMAGE_TAG)
 
 .PHONY: build
 build: build-hpc build-atm-sci
 
 .PHONY: build-hpc
 build-hpc:
-	@$(DOCKER) build \
+	@$(DOCKER) image build \
 		--build-arg BASE_IMAGE_NAME="$(BASE_IMAGE_NAME)" \
 		--build-arg BASE_IMAGE_TAG="$(BASE_IMAGE_TAG)" \
 		--build-arg DATA_IMAGE_NAME="$(DATA_IMAGE_NAME)" \
@@ -56,12 +64,12 @@ build-hpc:
 		--file Containerfile.hpc \
 		--label "org.opencontainers.image.revision=$(shell git rev-parse --verify HEAD)" \
 		--label "org.opencontainers.image.version=$(VERSION)" \
-		--tag "localhost/build-artifact/hpc-container:$(IMAGE_TAG)" .
+		--tag "localhost/build-artifact/$(HPC_IMAGE_NAME):$(IMAGE_TAG)" .
 
 .PHONY: build-atm-sci
 build-atm-sci:
-	@$(DOCKER) build \
-		--build-arg BASE_IMAGE_NAME="localhost/build-artifact/hpc-container" \
+	@$(DOCKER) image build \
+		--build-arg BASE_IMAGE_NAME="localhost/build-artifact/$(HPC_IMAGE_NAME)" \
 		--build-arg BASE_IMAGE_TAG="$(IMAGE_TAG)" \
 		--build-arg DATA_IMAGE_NAME="$(DATA_IMAGE_NAME)" \
 		--build-arg DATA_IMAGE_TAG="$(DATA_IMAGE_TAG)" \
@@ -70,14 +78,39 @@ build-atm-sci:
 		--file Containerfile.atm-sci \
 		--label "org.opencontainers.image.revision=$(shell git rev-parse --verify HEAD)" \
 		--label "org.opencontainers.image.version=$(VERSION)" \
-		--tag "localhost/build-artifact/atm-sci-container:$(IMAGE_TAG)" .
+		--tag "localhost/build-artifact/$(ATM_SCI_IMAGE_NAME):$(IMAGE_TAG)" .
+
+.PHONY: push
+push: push-hpc push-atm-sci
+
+.PHONY: push-hpc
+push-hpc:
+	@$(DOCKER) image tag "localhost/build-artifact/$(HPC_IMAGE_NAME):$(IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$(HPC_IMAGE_NAME):$(IMAGE_TAG)"
+	@$(DOCKER) image tag "localhost/build-artifact/$(HPC_IMAGE_NAME):$(IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$(HPC_IMAGE_NAME):latest"
+	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$(HPC_IMAGE_NAME):$(IMAGE_TAG)"
+	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$(HPC_IMAGE_NAME):latest"
+
+.PHONY: push-atm-sci
+push-atm-sci:
+	@$(DOCKER) image tag "localhost/build-artifact/$(ATM_SCI_IMAGE_NAME):$(IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$(ATM_SCI_IMAGE_NAME):$(IMAGE_TAG)"
+	@$(DOCKER) image tag "localhost/build-artifact/$(ATM_SCI_IMAGE_NAME):$(IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$(ATM_SCI_IMAGE_NAME):latest"
+	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$(ATM_SCI_IMAGE_NAME):$(IMAGE_TAG)"
+	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$(ATM_SCI_IMAGE_NAME):latest"
+
+.PHONY: login
+login:
+	@$(DOCKER) login --username "$(NAMESPACE)" "$(REGISTRY)"
+
+.PHONY: logout
+logout:
+	@$(DOCKER) logout "$(REGISTRY)"
 
 .PHONY: clean
 clean: clean-hpc clean-atm-sci
 
 .PHONY: clean-hpc
 clean-hpc:
-	@for IMAGE in $$($(DOCKER) image ls -q "hpc-container"); do \
+	@for IMAGE in $$($(DOCKER) image ls -q "$(HPC_IMAGE_NAME)"); do \
 		$(DOCKER) image rm -f -i "$${IMAGE}"; \
 	done
 	@for IMAGE in $$($(DOCKER) image ls -q --filter "dangling=true"); do \
@@ -86,7 +119,7 @@ clean-hpc:
 
 .PHONY: clean-atm-sci
 clean-atm-sci:
-	@for IMAGE in $$($(DOCKER) image ls -q "atm-sci-container"); do \
+	@for IMAGE in $$($(DOCKER) image ls -q "$(ATM_SCI_IMAGE_NAME)"); do \
 		$(DOCKER) image rm -f -i "$${IMAGE}"; \
 	done
 	@for IMAGE in $$($(DOCKER) image ls -q --filter "dangling=true"); do \
