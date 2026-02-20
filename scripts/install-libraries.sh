@@ -98,10 +98,10 @@ compile_and_install_zlib() {
     fi
 
     echo ">>>>> Preparing zlib"
-    if [ ! -d zlib-1.3.1 ]; then
-        extract_archive "${LIBRARIES_PATH}/zlib-1.3.1.tar.gz"
+    if [ ! -d zlib-1.3.2 ]; then
+        extract_archive "${LIBRARIES_PATH}/zlib-1.3.2.tar.gz"
     fi
-    stage_build_directory zlib-1.3.1
+    stage_build_directory zlib-1.3.2
 
     echo ">>>>> Configuring zlib"
     ../source/configure --help

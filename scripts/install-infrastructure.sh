@@ -71,8 +71,8 @@ compile_and_install_zlib() {
     ZLIB_PREFIX="${INFRASTRUCTURE_PREFIX}/base"
 
     echo ">>>>> Preparing zlib"
-    extract_archive "${INFRASTRUCTURE_PATH}/zlib-1.3.1.tar.gz"
-    stage_build_directory zlib-1.3.1
+    extract_archive "${INFRASTRUCTURE_PATH}/zlib-1.3.2.tar.gz"
+    stage_build_directory zlib-1.3.2
 
     echo ">>>>> Configuring zlib"
     ../source/configure --help
