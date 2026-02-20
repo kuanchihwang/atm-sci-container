@@ -22,7 +22,7 @@ MPI ?= open-mpi-5
 BASE_IMAGE_NAME ?= docker.io/almalinux/9-base
 BASE_IMAGE_TAG ?= 9.7
 DATA_IMAGE_NAME ?= docker.io/kuanchihwang/atm-sci-container-data
-DATA_IMAGE_TAG ?= 2026-02-10
+DATA_IMAGE_TAG ?= 2026-02-21
 
 DOCKER = $(shell which docker 1>/dev/null 2>&1 && echo docker || echo podman)
 HPC_IMAGE_NAME = hpc-container
