@@ -1,5 +1,5 @@
 [cornelis-opxs]
 name=Cornelis OPXS
-baseurl=file:///mnt/drivers/cornelis-opxs/repos/OPA_PKGS
+baseurl=file:///mnt/drivers/cornelis-opxs
 enabled=1
 gpgcheck=0
