@@ -24,16 +24,16 @@ case "${COMPILER}" in
         :
         ;;
     gcc-12)
-        dnf install -y gcc-toolset-12
+        dnf -y install gcc-toolset-12
         ;;
     gcc-13)
-        dnf install -y gcc-toolset-13
+        dnf -y install gcc-toolset-13
         ;;
     gcc-14)
-        dnf install -y gcc-toolset-14
+        dnf -y install gcc-toolset-14
         ;;
     gcc-15)
-        dnf install -y gcc-toolset-15
+        dnf -y install gcc-toolset-15
         ;;
     intel-2024)
         sh "${COMPILERS_PATH}/l_dpcpp-cpp-compiler_p_2024.2.1.79_offline.sh" \

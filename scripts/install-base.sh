@@ -9,19 +9,19 @@ echo "keepcache=True" >> /etc/dnf/dnf.conf
 echo "tsflags=nodocs" >> /etc/dnf/dnf.conf
 
 dnf makecache
-dnf update -y
+dnf -y update
 
-dnf install -y epel-release
+dnf -y install epel-release
 sed -i "/^ *\[crb\]/,/^ *\[/{/^ *enabled *= *0 *$/s//enabled=1/}" /etc/yum.repos.d/almalinux-crb.repo
 
 dnf makecache
-dnf install -y \
+dnf -y install \
     binutils gcc gcc-c++ gcc-gfortran autoconf automake libtool gdb \
     diffstat diffutils git git-lfs make patch patchutils pkgconf pkgconf-pkg-config \
     bash-completion coreutils-common coreutils-single jq less perl procps-ng psmisc python-unversioned-command python3 python3-pip python3.12 python3.12-pip tcsh vim-minimal yq \
     ca-certificates curl-minimal hostname rsync openssh-clients wget \
     bzip2 gzip lz4 unzip xz zip zstd
-dnf install -y \
+dnf -y install \
     libpciaccess-devel libxml2-devel ncurses-devel systemd-devel \
     fuse-devel libconfig-devel libnl3-devel libuv-devel libyaml-devel lm_sensors-devel \
     json-c-devel libcurl-devel liburing-devel libuuid-devel \
