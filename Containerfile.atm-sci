@@ -33,4 +33,6 @@ FROM set-default-user AS atm-sci-container
 LABEL "org.opencontainers.image.title"="atm-sci-container" \
       "org.opencontainers.image.description"="High-performance computing (HPC) containers for performance-portable and reproducible atmospheric modeling." \
       "org.opencontainers.image.authors"="Kuan-Chih Wang, https://github.com/kuanchihwang" \
-      "org.opencontainers.image.url"="https://hub.docker.com/r/kuanchihwang/atm-sci-container"
+      "org.opencontainers.image.url"="https://hub.docker.com/r/kuanchihwang/atm-sci-container" \
+      "org.opencontainers.image.source"="https://github.com/kuanchihwang/atm-sci-container" \
+      "org.opencontainers.image.licenses"="GPL-3.0-or-later"

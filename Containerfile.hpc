@@ -159,4 +159,6 @@ FROM set-default-user AS hpc-container
 LABEL "org.opencontainers.image.title"="hpc-container" \
       "org.opencontainers.image.description"="High-performance computing (HPC) containers for parallel workloads, with optimal single-/multi-node performance out of the box." \
       "org.opencontainers.image.authors"="Kuan-Chih Wang, https://github.com/kuanchihwang" \
-      "org.opencontainers.image.url"="https://hub.docker.com/r/kuanchihwang/hpc-container"
+      "org.opencontainers.image.url"="https://hub.docker.com/r/kuanchihwang/hpc-container" \
+      "org.opencontainers.image.source"="https://github.com/kuanchihwang/atm-sci-container" \
+      "org.opencontainers.image.licenses"="GPL-3.0-or-later"
