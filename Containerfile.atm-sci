@@ -10,8 +10,6 @@ FROM ${DATA_IMAGE_NAME}:${DATA_IMAGE_TAG} AS data-image
 FROM ${BASE_IMAGE_NAME}:${BASE_IMAGE_TAG} AS install-libraries
 ARG COMPILER
 ARG MPI
-USER root
-WORKDIR /root
 RUN --mount=type=tmpfs,target=/tmp \
     --mount=type=tmpfs,target=/var/log \
     --mount=type=bind,from=data-image,source=libraries,target=/mnt/libraries,ro \
@@ -24,11 +22,7 @@ RUN --mount=type=tmpfs,target=/tmp \
     popd && \
     rm -fr /tmp/working
 
-FROM install-libraries AS set-default-user
-USER alice
-WORKDIR /home/alice
-
-FROM set-default-user AS atm-sci-container
+FROM install-libraries AS atm-sci-container
 # https://specs.opencontainers.org/image-spec/annotations
 LABEL "org.opencontainers.image.title"="atm-sci-container" \
       "org.opencontainers.image.description"="High-performance computing (HPC) containers for performance-portable and reproducible atmospheric modeling." \
