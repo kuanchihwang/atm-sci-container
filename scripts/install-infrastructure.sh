@@ -1,7 +1,7 @@
 #!/bin/sh
 set -euo pipefail
 
-SCRIPTS_PATH="$(dirname "$(realpath "$0")")"
+SCRIPTS_PATH="$(dirname "$(realpath "${0}")")"
 PATCHES_PATH="$(dirname "${SCRIPTS_PATH}")/patches"
 INFRASTRUCTURE_PATH="$(dirname "${SCRIPTS_PATH}")/infrastructure"
 
@@ -15,9 +15,9 @@ if [ -z "${1:-}" ]; then
     exit 1
 fi
 
-COMPILER="$1"
+COMPILER="${1}"
 
-INFRASTRUCTURE_LOG="${INFRASTRUCTURE_LOG:-$(basename "$0" .sh).log}"
+INFRASTRUCTURE_LOG="${INFRASTRUCTURE_LOG:-$(basename "${0}" .sh).log}"
 INFRASTRUCTURE_PREFIX="${INFRASTRUCTURE_PREFIX:-/opt/hpc/infrastructure}"
 
 HAVE_EXTERNAL_HWLOC="${HAVE_EXTERNAL_HWLOC:-false}"

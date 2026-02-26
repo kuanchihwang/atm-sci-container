@@ -1,7 +1,7 @@
 #!/bin/sh
 set -euo pipefail
 
-SCRIPTS_PATH="$(dirname "$(realpath "$0")")"
+SCRIPTS_PATH="$(dirname "$(realpath "${0}")")"
 PATCHES_PATH="$(dirname "${SCRIPTS_PATH}")/patches"
 LIBRARIES_PATH="$(dirname "${SCRIPTS_PATH}")/libraries"
 
@@ -15,10 +15,10 @@ if [ -z "${1:-}" ] || [ -z "${2:-}" ]; then
     exit 1
 fi
 
-COMPILER="$1"
-MPI="$2"
+COMPILER="${1}"
+MPI="${2}"
 
-LIBRARIES_LOG="${LIBRARIES_LOG:-$(basename "$0" .sh).log}"
+LIBRARIES_LOG="${LIBRARIES_LOG:-$(basename "${0}" .sh).log}"
 LIBRARIES_PREFIX_COMPILER_SPECIFIC="${LIBRARIES_PREFIX_COMPILER_SPECIFIC:-/opt/hpc/compiler/${COMPILER}}"
 LIBRARIES_PREFIX_MPI_SPECIFIC="${LIBRARIES_PREFIX_MPI_SPECIFIC:-/opt/hpc/mpi/${COMPILER}/${MPI}}"
 

@@ -1,7 +1,7 @@
 #!/bin/sh
 set -euo pipefail
 
-SCRIPTS_PATH="$(dirname "$(realpath "$0")")"
+SCRIPTS_PATH="$(dirname "$(realpath "${0}")")"
 COMPILERS_PATH="$(dirname "${SCRIPTS_PATH}")/compilers"
 
 ###
@@ -12,7 +12,7 @@ if [ -z "${1:-}" ]; then
     exit 1
 fi
 
-COMPILER="$1"
+COMPILER="${1}"
 
 ###
 ### Main

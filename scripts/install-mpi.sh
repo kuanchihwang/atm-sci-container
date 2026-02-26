@@ -1,7 +1,7 @@
 #!/bin/sh
 set -euo pipefail
 
-SCRIPTS_PATH="$(dirname "$(realpath "$0")")"
+SCRIPTS_PATH="$(dirname "$(realpath "${0}")")"
 PATCHES_PATH="$(dirname "${SCRIPTS_PATH}")/patches"
 MPI_PATH="$(dirname "${SCRIPTS_PATH}")/mpi"
 
@@ -15,12 +15,12 @@ if [ -z "${1:-}" ] || [ -z "${2:-}" ]; then
     exit 1
 fi
 
-COMPILER="$1"
-MPI="$2"
+COMPILER="${1}"
+MPI="${2}"
 
 INFRASTRUCTURE_PREFIX="${INFRASTRUCTURE_PREFIX:-/opt/hpc/infrastructure}"
 
-MPI_LOG="${MPI_LOG:-$(basename "$0" .sh).log}"
+MPI_LOG="${MPI_LOG:-$(basename "${0}" .sh).log}"
 MPI_PREFIX="${MPI_PREFIX:-/opt/hpc/compiler/${COMPILER}/${MPI}}"
 
 HAVE_EXTERNAL_HWLOC="${HAVE_EXTERNAL_HWLOC:-false}"
