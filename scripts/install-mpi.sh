@@ -229,8 +229,8 @@ compile_and_install_open_mpi_5() {
     esac
 
     echo ">>>>> Preparing Open MPI"
-    extract_archive "${MPI_PATH}/openmpi-5.0.9.tar.gz"
-    stage_build_directory openmpi-5.0.9
+    extract_archive "${MPI_PATH}/openmpi-5.0.10.tar.gz"
+    stage_build_directory openmpi-5.0.10
 
     echo ">>>>> Configuring Open MPI"
     ../source/configure --help
