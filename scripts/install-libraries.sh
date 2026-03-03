@@ -818,10 +818,10 @@ compile_and_install_pfunit() {
     fi
 
     echo ">>>>> Preparing pFUnit"
-    if [ ! -d pFUnit-v4.15.0 ]; then
-        extract_archive "${LIBRARIES_PATH}/pFUnit-v4.15.0.tar"
+    if [ ! -d pFUnit-v4.16.0 ]; then
+        extract_archive "${LIBRARIES_PATH}/pFUnit-v4.16.0.tar"
     fi
-    stage_build_directory pFUnit-v4.15.0
+    stage_build_directory pFUnit-v4.16.0
 
     echo ">>>>> Configuring pFUnit"
     CC="${SELECTED_CC}" CFLAGS="${SELECTED_CFLAGS}" \
