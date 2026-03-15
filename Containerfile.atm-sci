@@ -2,14 +2,10 @@ ARG BASE_IMAGE_NAME
 ARG BASE_IMAGE_TAG
 ARG DATA_IMAGE_NAME
 ARG DATA_IMAGE_TAG
-ARG COMPILER
-ARG MPI
 
 FROM ${DATA_IMAGE_NAME}:${DATA_IMAGE_TAG} AS data-image
 
 FROM ${BASE_IMAGE_NAME}:${BASE_IMAGE_TAG} AS install-libraries
-ARG COMPILER
-ARG MPI
 RUN --mount=type=tmpfs,target=/tmp \
     --mount=type=tmpfs,target=/var/log \
     --mount=type=bind,from=data-image,source=libraries,target=/mnt/libraries,ro \

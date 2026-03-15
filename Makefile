@@ -73,8 +73,6 @@ build-atm-sci:
 		--build-arg BASE_IMAGE_TAG="$(IMAGE_TAG)" \
 		--build-arg DATA_IMAGE_NAME="$(DATA_IMAGE_NAME)" \
 		--build-arg DATA_IMAGE_TAG="$(DATA_IMAGE_TAG)" \
-		--build-arg COMPILER="$(COMPILER)" \
-		--build-arg MPI="$(MPI)" \
 		--file Containerfile.atm-sci \
 		--label "org.opencontainers.image.revision=$(shell git rev-parse --verify HEAD)" \
 		--label "org.opencontainers.image.version=$(VERSION)" \
