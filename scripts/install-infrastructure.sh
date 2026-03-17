@@ -180,7 +180,7 @@ compile_and_install_hwloc() {
     popd
 }
 
-# The driver binaries of HPE Cray Cassini NIC are not publicly available.
+# The driver binaries of HPE Slingshot 11 NIC are not publicly available.
 # However, the source code is, at least for the user space part.
 # Compile and install `libcxi` manually.
 compile_and_install_libcxi() {

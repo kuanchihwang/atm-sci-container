@@ -6,7 +6,7 @@ VERSION ?= testing
 # * gcc-11 (Default in RHEL 9)
 # * gcc-12
 # * gcc-13
-# * gcc-14
+# * gcc-14 (Default in RHEL 10)
 # * gcc-15
 # * intel-2024
 # * intel-2025
