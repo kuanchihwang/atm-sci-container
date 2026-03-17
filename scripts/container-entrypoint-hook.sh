@@ -30,7 +30,7 @@ case "${CONTAINER_PRESET}" in
         # export PHDF5="${MPI_SPECIFIC_LIBRARY_PATH}/phdf5"
         # export NETCDFPAR="${MPI_SPECIFIC_LIBRARY_PATH}/pnetcdf4"
 
-        export WRFIO_NCD_NO_LARGE_FILE_SUPPORT=0
+        export WRFIO_NCD_NO_LARGE_FILE_SUPPORT="0"
         ;;
     *)
         # No or unsupported preset is specified. Nothing to do.
