@@ -501,11 +501,11 @@ compile_and_install_libfabric
 patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/base/bin/"* ''
 patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/base/lib/"* '$ORIGIN'
 patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/libcxi/bin/"* ''
-patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/libcxi/lib/"* '$ORIGIN'
+patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/libcxi/lib/"* '$ORIGIN'":${INFRASTRUCTURE_PREFIX}/base/lib"
 patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/ucx/bin/"* ''
-patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/ucx/lib/"* '$ORIGIN'
+patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/ucx/lib/"* '$ORIGIN'":${INFRASTRUCTURE_PREFIX}/base/lib"
 patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/libfabric/bin/"* ''
-patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/libfabric/lib/"* '$ORIGIN'
+patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/libfabric/lib/"* '$ORIGIN'":${INFRASTRUCTURE_PREFIX}/base/lib"
 
 remove_documentation_from_directory "${INFRASTRUCTURE_PREFIX}/"*
 remove_libtool_archive_from_directory "${INFRASTRUCTURE_PREFIX}/"*

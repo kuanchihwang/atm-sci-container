@@ -338,7 +338,7 @@ case "${MPI}" in
         compile_and_install_mpich_4
 
         patch_binary_to_set_rpath "${MPI_PREFIX}/bin/"* ''
-        patch_binary_to_set_rpath "${MPI_PREFIX}/lib/"* '$ORIGIN'
+        patch_binary_to_set_rpath "${MPI_PREFIX}/lib/"* '$ORIGIN'":${INFRASTRUCTURE_PREFIX}/base/lib"
 
         remove_documentation_from_directory "${MPI_PREFIX}"
         remove_libtool_archive_from_directory "${MPI_PREFIX}"
@@ -347,7 +347,7 @@ case "${MPI}" in
         compile_and_install_open_mpi_4
 
         patch_binary_to_set_rpath "${MPI_PREFIX}/bin/"* ''
-        patch_binary_to_set_rpath "${MPI_PREFIX}/lib/"* '$ORIGIN'
+        patch_binary_to_set_rpath "${MPI_PREFIX}/lib/"* '$ORIGIN'":${INFRASTRUCTURE_PREFIX}/base/lib"
 
         remove_documentation_from_directory "${MPI_PREFIX}"
         remove_libtool_archive_from_directory "${MPI_PREFIX}"
@@ -356,7 +356,7 @@ case "${MPI}" in
         compile_and_install_open_mpi_5
 
         patch_binary_to_set_rpath "${MPI_PREFIX}/bin/"* ''
-        patch_binary_to_set_rpath "${MPI_PREFIX}/lib/"* '$ORIGIN'
+        patch_binary_to_set_rpath "${MPI_PREFIX}/lib/"* '$ORIGIN'":${INFRASTRUCTURE_PREFIX}/base/lib"
 
         remove_documentation_from_directory "${MPI_PREFIX}"
         remove_libtool_archive_from_directory "${MPI_PREFIX}"
