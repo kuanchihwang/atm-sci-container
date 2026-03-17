@@ -18,16 +18,18 @@ dnf makecache
 dnf -y install \
     binutils gcc gcc-c++ gcc-gfortran autoconf automake libtool gdb \
     diffstat diffutils git git-lfs make patch patchutils pkgconf pkgconf-pkg-config \
-    bash-completion coreutils-common coreutils-single jq less perl procps-ng psmisc python-unversioned-command python3 python3-pip python3.12 python3.12-pip tcsh vim-minimal yq \
+    bash-completion coreutils-common coreutils-single jq less perl procps-ng psmisc python-unversioned-command python3 python3-pip python3.12 python3.12-pip time tcsh vim-minimal yq \
     ca-certificates curl-minimal hostname rsync openssh-clients wget \
     bzip2 gzip lz4 unzip xz zip zstd
 dnf -y install \
+    bzip2-devel libzstd-devel lz4-devel xz-devel \
     libpciaccess-devel libxml2-devel ncurses-devel systemd-devel \
     fuse-devel libconfig-devel libnl3-devel libuv-devel libyaml-devel lm_sensors-devel \
     json-c-devel libcurl-devel liburing-devel libuuid-devel \
     libevent-devel numactl-devel zlib-devel \
     fuse3-devel libcap-devel \
-    bzip2-devel libzstd-devel lz4-devel xz-devel
+    libtirpc-devel
+ln -s tirpc/netconfig.h /usr/include/netconfig.h
 
 # Install newer CMake than the distribution one.
 CMAKE_VERSION="3.31.11"

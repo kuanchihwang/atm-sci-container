@@ -277,6 +277,9 @@ compile_and_install_libpng() {
     set_milestone libpng
 }
 
+# When using Intel compilers to build HDF5 without debug symbols, you may get spammed with
+# messages like "Warning: -Wl,-s: 'linker' input unused...". This is an HDF5 issue because
+# it recklessly forces the unsupported flag onto Intel compilers.
 compile_and_install_hdf5() {
     if get_milestone hdf5; then
         return
@@ -297,11 +300,11 @@ compile_and_install_hdf5() {
     ../source/configure --disable-static --enable-shared --prefix="${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/hdf5" \
         --disable-cxx \
         --disable-doxygen \
-        --disable-fortran \
         --disable-java \
         --disable-parallel-tools \
         --disable-tests \
         --enable-build-mode="production" \
+        --enable-fortran \
         --enable-hl \
         --enable-optimization="high" \
         --disable-parallel \
@@ -332,11 +335,11 @@ compile_and_install_hdf5() {
     ../source/configure --disable-static --enable-shared --prefix="${LIBRARIES_PREFIX_MPI_SPECIFIC}/phdf5" \
         --disable-cxx \
         --disable-doxygen \
-        --disable-fortran \
         --disable-java \
         --disable-parallel-tools \
         --disable-tests \
         --enable-build-mode="production" \
+        --enable-fortran \
         --enable-hl \
         --enable-optimization="high" \
         --enable-parallel \
