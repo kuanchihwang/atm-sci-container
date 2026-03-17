@@ -25,15 +25,19 @@ case "${COMPILER}" in
         ;;
     gcc-12)
         dnf -y install gcc-toolset-12
+        rm -fr /etc/profile.d/modules.* /etc/profile.d/scl-init.*
         ;;
     gcc-13)
         dnf -y install gcc-toolset-13
+        rm -fr /etc/profile.d/modules.* /etc/profile.d/scl-init.*
         ;;
     gcc-14)
         dnf -y install gcc-toolset-14
+        rm -fr /etc/profile.d/modules.* /etc/profile.d/scl-init.*
         ;;
     gcc-15)
         dnf -y install gcc-toolset-15
+        rm -fr /etc/profile.d/modules.* /etc/profile.d/scl-init.*
         ;;
     intel-2024)
         sh "${COMPILERS_PATH}/l_dpcpp-cpp-compiler_p_2024.2.1.79_offline.sh" \
