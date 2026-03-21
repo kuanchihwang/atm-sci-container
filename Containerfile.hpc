@@ -24,7 +24,7 @@ RUN --mount=type=tmpfs,target=/tmp \
     /mnt/scripts/install-base.sh && \
     popd && \
     rm -fr /tmp/working
-ENV PATH="/opt/hpc/core/cmake/bin${PATH:+:$PATH}"
+ENV PATH="/opt/hpc/core/cmake/bin${PATH:+:${PATH}}"
 
 FROM install-base AS install-drivers
 RUN --mount=type=tmpfs,target=/tmp \
@@ -64,10 +64,10 @@ RUN --mount=type=tmpfs,target=/tmp \
     echo "/opt/hpc/infrastructure/libfabric/lib" >> /etc/ld.so.conf.d/hpc-infrastructure.conf && \
     echo "/opt/hpc/infrastructure/ucx/lib"       >> /etc/ld.so.conf.d/hpc-infrastructure.conf && \
     ldconfig
-ENV PATH="/opt/hpc/infrastructure/base/bin${PATH:+:$PATH}"
-ENV PATH="/opt/hpc/infrastructure/libcxi/bin${PATH:+:$PATH}"
-ENV PATH="/opt/hpc/infrastructure/libfabric/bin${PATH:+:$PATH}"
-ENV PATH="/opt/hpc/infrastructure/ucx/bin${PATH:+:$PATH}"
+ENV PATH="/opt/hpc/infrastructure/base/bin${PATH:+:${PATH}}"
+ENV PATH="/opt/hpc/infrastructure/libcxi/bin${PATH:+:${PATH}}"
+ENV PATH="/opt/hpc/infrastructure/libfabric/bin${PATH:+:${PATH}}"
+ENV PATH="/opt/hpc/infrastructure/ucx/bin${PATH:+:${PATH}}"
 
 FROM install-infrastructure AS install-compilers
 ARG COMPILER
@@ -90,28 +90,28 @@ ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}"
 ENV PATH="${PATH:-}"
 
 FROM install-compilers AS set-default-gcc-12
-ENV LD_LIBRARY_PATH="/opt/rh/gcc-toolset-12/root/usr/lib64:/opt/rh/gcc-toolset-12/root/usr/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-ENV PATH="/opt/rh/gcc-toolset-12/root/usr/bin${PATH:+:$PATH}"
+ENV LD_LIBRARY_PATH="/opt/rh/gcc-toolset-12/root/usr/lib64:/opt/rh/gcc-toolset-12/root/usr/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+ENV PATH="/opt/rh/gcc-toolset-12/root/usr/bin${PATH:+:${PATH}}"
 
 FROM install-compilers AS set-default-gcc-13
-ENV LD_LIBRARY_PATH="/opt/rh/gcc-toolset-13/root/usr/lib64:/opt/rh/gcc-toolset-13/root/usr/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-ENV PATH="/opt/rh/gcc-toolset-13/root/usr/bin${PATH:+:$PATH}"
+ENV LD_LIBRARY_PATH="/opt/rh/gcc-toolset-13/root/usr/lib64:/opt/rh/gcc-toolset-13/root/usr/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+ENV PATH="/opt/rh/gcc-toolset-13/root/usr/bin${PATH:+:${PATH}}"
 
 FROM install-compilers AS set-default-gcc-14
-ENV LD_LIBRARY_PATH="/opt/rh/gcc-toolset-14/root/usr/lib64:/opt/rh/gcc-toolset-14/root/usr/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-ENV PATH="/opt/rh/gcc-toolset-14/root/usr/bin${PATH:+:$PATH}"
+ENV LD_LIBRARY_PATH="/opt/rh/gcc-toolset-14/root/usr/lib64:/opt/rh/gcc-toolset-14/root/usr/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+ENV PATH="/opt/rh/gcc-toolset-14/root/usr/bin${PATH:+:${PATH}}"
 
 FROM install-compilers AS set-default-gcc-15
-ENV LD_LIBRARY_PATH="/opt/rh/gcc-toolset-15/root/usr/lib64:/opt/rh/gcc-toolset-15/root/usr/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-ENV PATH="/opt/rh/gcc-toolset-15/root/usr/bin${PATH:+:$PATH}"
+ENV LD_LIBRARY_PATH="/opt/rh/gcc-toolset-15/root/usr/lib64:/opt/rh/gcc-toolset-15/root/usr/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+ENV PATH="/opt/rh/gcc-toolset-15/root/usr/bin${PATH:+:${PATH}}"
 
 FROM install-compilers AS set-default-intel-2024
-ENV LD_LIBRARY_PATH="/opt/intel/oneapi/compiler/latest/opt/compiler/lib:/opt/intel/oneapi/compiler/latest/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-ENV PATH="/opt/intel/oneapi/compiler/latest/bin${PATH:+:$PATH}"
+ENV LD_LIBRARY_PATH="/opt/intel/oneapi/compiler/latest/opt/compiler/lib:/opt/intel/oneapi/compiler/latest/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+ENV PATH="/opt/intel/oneapi/compiler/latest/bin${PATH:+:${PATH}}"
 
 FROM install-compilers AS set-default-intel-2025
-ENV LD_LIBRARY_PATH="/opt/intel/oneapi/compiler/latest/opt/compiler/lib:/opt/intel/oneapi/compiler/latest/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-ENV PATH="/opt/intel/oneapi/compiler/latest/bin${PATH:+:$PATH}"
+ENV LD_LIBRARY_PATH="/opt/intel/oneapi/compiler/latest/opt/compiler/lib:/opt/intel/oneapi/compiler/latest/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+ENV PATH="/opt/intel/oneapi/compiler/latest/bin${PATH:+:${PATH}}"
 
 FROM set-default-${COMPILER} AS install-mpi
 ARG MPI
@@ -132,20 +132,20 @@ ENV MPI="${MPI}"
 
 FROM install-mpi AS set-default-intel-mpi
 ENV I_MPI_ROOT="/opt/intel/oneapi/mpi/latest"
-ENV LD_LIBRARY_PATH="/opt/intel/oneapi/mpi/latest/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-ENV PATH="/opt/intel/oneapi/mpi/latest/bin${PATH:+:$PATH}"
+ENV LD_LIBRARY_PATH="/opt/intel/oneapi/mpi/latest/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+ENV PATH="/opt/intel/oneapi/mpi/latest/bin${PATH:+:${PATH}}"
 
 FROM install-mpi AS set-default-mpich-4
-ENV LD_LIBRARY_PATH="/opt/hpc/compiler/${COMPILER}/${MPI}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-ENV PATH="/opt/hpc/compiler/${COMPILER}/${MPI}/bin${PATH:+:$PATH}"
+ENV LD_LIBRARY_PATH="/opt/hpc/compiler/${COMPILER}/${MPI}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+ENV PATH="/opt/hpc/compiler/${COMPILER}/${MPI}/bin${PATH:+:${PATH}}"
 
 FROM install-mpi AS set-default-open-mpi-4
-ENV LD_LIBRARY_PATH="/opt/hpc/compiler/${COMPILER}/${MPI}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-ENV PATH="/opt/hpc/compiler/${COMPILER}/${MPI}/bin${PATH:+:$PATH}"
+ENV LD_LIBRARY_PATH="/opt/hpc/compiler/${COMPILER}/${MPI}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+ENV PATH="/opt/hpc/compiler/${COMPILER}/${MPI}/bin${PATH:+:${PATH}}"
 
 FROM install-mpi AS set-default-open-mpi-5
-ENV LD_LIBRARY_PATH="/opt/hpc/compiler/${COMPILER}/${MPI}/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-ENV PATH="/opt/hpc/compiler/${COMPILER}/${MPI}/bin${PATH:+:$PATH}"
+ENV LD_LIBRARY_PATH="/opt/hpc/compiler/${COMPILER}/${MPI}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+ENV PATH="/opt/hpc/compiler/${COMPILER}/${MPI}/bin${PATH:+:${PATH}}"
 
 FROM set-default-${MPI} AS hpc-container
 COPY scripts/container-entrypoint.sh /usr/local/bin/container-entrypoint.sh

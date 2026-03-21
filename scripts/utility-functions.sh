@@ -43,7 +43,9 @@ set_selected_compiler() {
             ;;
     esac
 
-    if ! which "${SELECTED_CC}" "${SELECTED_CXX}" "${SELECTED_FC}" 1>/dev/null 2>&1; then
+    if ! command -v "${SELECTED_CC}" 1>/dev/null 2>&1 || \
+            ! command -v "${SELECTED_CXX}" 1>/dev/null 2>&1 || \
+            ! command -v "${SELECTED_FC}" 1>/dev/null 2>&1; then
         unset -v SELECTED_CC SELECTED_CFLAGS
         unset -v SELECTED_CXX SELECTED_CXXFLAGS
         unset -v SELECTED_FC SELECTED_FCFLAGS
@@ -92,7 +94,9 @@ set_selected_mpi_compiler() {
             ;;
     esac
 
-    if ! which "${SELECTED_MPICC}" "${SELECTED_MPICXX}" "${SELECTED_MPIFC}" 1>/dev/null 2>&1; then
+    if ! command -v "${SELECTED_MPICC}" 1>/dev/null 2>&1 || \
+            ! command -v "${SELECTED_MPICXX}" 1>/dev/null 2>&1 || \
+            ! command -v "${SELECTED_MPIFC}" 1>/dev/null 2>&1; then
         unset -v SELECTED_MPICC
         unset -v SELECTED_MPICXX
         unset -v SELECTED_MPIFC
@@ -131,13 +135,13 @@ package_is_installed() {
         return 1
     fi
 
-    if which rpm 1>/dev/null 2>&1; then
+    if command -v rpm 1>/dev/null 2>&1; then
         if rpm -q --quiet "${1}"; then
             return 0
         else
             return 1
         fi
-    elif which dpkg-query 1>/dev/null 2>&1; then
+    elif command -v dpkg-query 1>/dev/null 2>&1; then
         if dpkg-query -W "${1}" 1>/dev/null 2>&1; then
             return 0
         else
@@ -168,7 +172,7 @@ apply_patch_to_directory() {
         return 1
     fi
 
-    if ! which git 1>/dev/null 2>&1; then
+    if ! command -v git 1>/dev/null 2>&1; then
         return 1
     fi
 
@@ -225,7 +229,7 @@ stage_build_directory() {
     rm -f -r "${bd}"
     mkdir -p "${bd}"
 
-    pushd "${bd}"
+    pushd "${bd}" || return 1
 
     unset -v bd sd
 
@@ -349,7 +353,8 @@ patch_binary_to_set_rpath() {
         return 1
     fi
 
-    if ! which patchelf readelf 1>/dev/null 2>&1; then
+    if ! command -v patchelf 1>/dev/null 2>&1 || \
+            ! command -v readelf 1>/dev/null 2>&1; then
         return 1
     fi
 

@@ -699,9 +699,9 @@ compile_and_install_lapack() {
     echo ">>>>> Installing LAPACK"
     mkdir -p "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/include"
     mkdir -p "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/lib"
-    cp -av CBLAS/include/*.h "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/include"
-    cp -av LAPACKE/include/*.h "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/include"
-    cp -av *.so "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/lib"
+    cp -av ./CBLAS/include/*.h "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/include"
+    cp -av ./LAPACKE/include/*.h "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/include"
+    cp -av ./*.so "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/lib"
     echo ">>>>> LAPACK - OK"
     popd
 
@@ -750,9 +750,9 @@ compile_and_install_esmf() {
             exit 1
             ;;
     esac
-    SELECTED_CFLAGS_NO_PIC="$(echo ${SELECTED_CFLAGS} | sed 's/[a-z-]*pic[a-z-]*//gi' | awk '{ $1 = $1; print }')"
-    SELECTED_CXXFLAGS_NO_PIC="$(echo ${SELECTED_CXXFLAGS} | sed 's/[a-z-]*pic[a-z-]*//gi' | awk '{ $1 = $1; print }')"
-    SELECTED_FCFLAGS_NO_PIC="$(echo ${SELECTED_FCFLAGS} | sed 's/[a-z-]*pic[a-z-]*//gi' | awk '{ $1 = $1; print }')"
+    SELECTED_CFLAGS_NO_PIC="$(echo "${SELECTED_CFLAGS}" | sed 's/[a-z-]*pic[a-z-]*//gi' | awk '{ $1 = $1; print }')"
+    SELECTED_CXXFLAGS_NO_PIC="$(echo "${SELECTED_CXXFLAGS}" | sed 's/[a-z-]*pic[a-z-]*//gi' | awk '{ $1 = $1; print }')"
+    SELECTED_FCFLAGS_NO_PIC="$(echo "${SELECTED_FCFLAGS}" | sed 's/[a-z-]*pic[a-z-]*//gi' | awk '{ $1 = $1; print }')"
 
     echo ">>>>> Compiling ESMF"
     ESMF_COMPILER="${SELECTED_ESMF_COMPILER}" \
@@ -871,16 +871,16 @@ set_selected_mpi_compiler "${COMPILER}" "${MPI}"
 echo "This script builds and installs optimized libraries for atmospheric models (e.g., CESM, MPAS, WRF)."
 echo "It is assumed that all relevant compilers and MPI libraries have already been installed."
 echo ""
-echo "    C Compiler: ${SELECTED_CC} ($(which "${SELECTED_CC}"))"
-echo "    MPI C Compiler: ${SELECTED_MPICC} ($(which "${SELECTED_MPICC}"))"
+echo "    C Compiler: ${SELECTED_CC} ($(command -v "${SELECTED_CC}"))"
+echo "    MPI C Compiler: ${SELECTED_MPICC} ($(command -v "${SELECTED_MPICC}"))"
 echo "    C Compiler Flags: ${SELECTED_CFLAGS}"
 echo ""
-echo "    C++ Compiler: ${SELECTED_CXX} ($(which "${SELECTED_CXX}"))"
-echo "    MPI C++ Compiler: ${SELECTED_MPICXX} ($(which "${SELECTED_MPICXX}"))"
+echo "    C++ Compiler: ${SELECTED_CXX} ($(command -v "${SELECTED_CXX}"))"
+echo "    MPI C++ Compiler: ${SELECTED_MPICXX} ($(command -v "${SELECTED_MPICXX}"))"
 echo "    C++ Compiler Flags: ${SELECTED_CXXFLAGS}"
 echo ""
-echo "    Fortran Compiler: ${SELECTED_FC} ($(which "${SELECTED_FC}"))"
-echo "    MPI Fortran Compiler: ${SELECTED_MPIFC} ($(which "${SELECTED_MPIFC}"))"
+echo "    Fortran Compiler: ${SELECTED_FC} ($(command -v "${SELECTED_FC}"))"
+echo "    MPI Fortran Compiler: ${SELECTED_MPIFC} ($(command -v "${SELECTED_MPIFC}"))"
 echo "    Fortran Compiler Flags: ${SELECTED_FCFLAGS}"
 echo ""
 echo "    Install Location: ${LIBRARIES_PREFIX_COMPILER_SPECIFIC} (Compiler-specific)"
