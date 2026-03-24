@@ -1,10 +1,5 @@
 # atm-sci-container
 
-> [!NOTE]
-> This `README.md` is a work in progress. More information to come when development stabilizes...
-
-High-performance computing (HPC) containers for parallel workloads (e.g., MPI, OpenMP), delivering portability, reproducibility, and optimal single-/multi-node performance out of the box.
-
 * [atm-sci-container](#atm-sci-container)
   * [Usage](#usage)
   * [Container Registries](#container-registries)
@@ -13,6 +8,11 @@ High-performance computing (HPC) containers for parallel workloads (e.g., MPI, O
   * [Included Device Drivers](#included-device-drivers)
   * [Supported Transports](#supported-transports)
   * [Building from Source](#building-from-source)
+
+> [!NOTE]
+> This `README.md` is a work in progress. More information to come when development stabilizes...
+
+High-performance computing (HPC) containers for parallel workloads (e.g., MPI, OpenMP), delivering portability, reproducibility, and optimal single-/multi-node performance out of the box.
 
 ## Usage
 
@@ -26,8 +26,8 @@ WIP...
 
 The container images are available in **2** variants:
 
-1. `hpc-container`: A general-purpose HPC container image for parallel workloads (e.g., MPI, OpenMP). It includes everything listed in the "Included Software Stack" section below, except for libraries that are commonly used by atmospheric models.
-2. `atm-sci-container`: An HPC container image tailored for atmospheric sciences applications. Built upon `hpc-container`, it includes additional libraries that are commonly used by atmospheric models such as CESM, MPAS, and WRF.
+1. `hpc-container`: A general-purpose HPC container image suitable for parallel workloads (e.g., MPI, OpenMP). It includes everything listed in the "[Included Software Stack](#included-software-stack)" section below, except for libraries that are commonly used by atmospheric models.
+2. `atm-sci-container`: A specialized HPC container image tailored for atmospheric science applications. Built upon `hpc-container`, it includes additional libraries that are commonly used by atmospheric models such as CESM, MPAS, and WRF.
 
 Both variants are tagged in the `${VERSION}_${COMPILER}_${MPI}` format, where:
 
@@ -104,7 +104,7 @@ The user-space components of the following device drivers are included in the co
 * Intel Ethernet Fabric Suite 12.1.0.0.149
 * NVIDIA DOCA 2.9.4
 
-Please refer to the vendor documentation for the exact list of supported hardware.
+They provide hardware enablement for their respective HPC interconnects, described in the "[Supported Transports](#supported-transports)" section below.
 
 ## Supported Transports
 
@@ -127,13 +127,13 @@ Please refer to the vendor documentation for the exact list of supported hardwar
 
 To build the container images from source, use the `Containerfile` to invoke the build process directly, or use the `Makefile` for convenience. You must be running an x86-64 Linux system with either `docker` or `podman` installed. If both are found, `docker` takes precedence. The system architecture is limited to what is supported by the included device drivers, and is not decided by this project.
 
-1. Pull the base and data images.
+1. Pull the base and data container images.
 
     ```shell
     make stage
     ```
 
-2. Build the container images by specifying the desired combinations of `VERSION`, `COMPILER`, and `MPI`. See the "Container Image Variants and Tags" section above for details. The `build-hpc` target will build the `hpc-container` variant, while the `build-atm-sci` target will build the `atm-sci-container` variant. The `build` target will build both in order.
+2. Build the container images by specifying the desired combinations of `VERSION`, `COMPILER`, and `MPI`, one at a time. See the "[Container Image Variants and Tags](#container-image-variants-and-tags)" section above for details. The `build-hpc` target will build the `hpc-container` variant, while the `build-atm-sci` target will build the `atm-sci-container` variant. The `build` target will build both.
 
     ```shell
     make build [VERSION=...] [COMPILER=...] [MPI=...]
@@ -141,8 +141,12 @@ To build the container images from source, use the `Containerfile` to invoke the
     make build-atm-sci [VERSION=...] [COMPILER=...] [MPI=...]
     ```
 
-3. Clean up the built and dangling container images.
+3. Alternatively, you can simply run the `make-all.sh` shell script, which will build all possible combinations and variants in one go. This can take several hours to complete.
+
+4. Clean up the built and dangling container images. The `clean-hpc` target will clean the `hpc-container` variant, while the `clean-atm-sci` target will clean the `atm-sci-container` variant. The `clean` target will clean both.
 
     ```shell
     make clean
+    make clean-hpc
+    make clean-atm-sci
     ```
