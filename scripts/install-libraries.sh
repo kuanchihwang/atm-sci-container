@@ -726,7 +726,7 @@ compile_and_install_esmf() {
     cp -av ../yaml-cpp-0.8.0-merge-key-support.3/src/* src/prologue/yaml-cpp/src
     # Massage input for ESMF.
     case "${COMPILER}" in
-        gcc-*)
+        gnu-*)
             SELECTED_ESMF_COMPILER="gfortran"
             ;;
         intel-*)

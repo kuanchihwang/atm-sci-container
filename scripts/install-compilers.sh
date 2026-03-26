@@ -19,23 +19,23 @@ COMPILER="${1}"
 ###
 
 case "${COMPILER}" in
-    gcc-11)
+    gnu-11)
         # Default in RHEL 9. Nothing to do.
         :
         ;;
-    gcc-12)
+    gnu-12)
         dnf -y install gcc-toolset-12
         rm -fr /etc/profile.d/modules.* /etc/profile.d/scl-init.*
         ;;
-    gcc-13)
+    gnu-13)
         dnf -y install gcc-toolset-13
         rm -fr /etc/profile.d/modules.* /etc/profile.d/scl-init.*
         ;;
-    gcc-14)
+    gnu-14)
         dnf -y install gcc-toolset-14
         rm -fr /etc/profile.d/modules.* /etc/profile.d/scl-init.*
         ;;
-    gcc-15)
+    gnu-15)
         dnf -y install gcc-toolset-15
         rm -fr /etc/profile.d/modules.* /etc/profile.d/scl-init.*
         ;;

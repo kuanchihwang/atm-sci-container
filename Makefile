@@ -3,14 +3,14 @@ NAMESPACE ?= kuanchihwang
 VERSION ?= testing
 
 # Compiler choices are:
-# * gcc-11 (Default in RHEL 9)
-# * gcc-12
-# * gcc-13
-# * gcc-14 (Default in RHEL 10)
-# * gcc-15
+# * gnu-11 (Default in RHEL 9)
+# * gnu-12
+# * gnu-13
+# * gnu-14 (Default in RHEL 10)
+# * gnu-15
 # * intel-2024
 # * intel-2025
-COMPILER ?= gcc-11
+COMPILER ?= gnu-11
 
 # MPI choices are:
 # * intel-mpi

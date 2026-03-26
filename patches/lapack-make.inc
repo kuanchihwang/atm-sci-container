@@ -3,7 +3,7 @@
 CC = $(SELECTED_CC)
 CFLAGS = $(SELECTED_CFLAGS)
 
-ifeq ($(findstring gcc,$(COMPILER)),gcc)
+ifeq ($(findstring gnu,$(COMPILER)),gnu)
     ADDITIONAL_FCFLAGS = -fno-unsafe-math-optimizations -frounding-math -fsignaling-nans -frecursive
 else ifeq ($(findstring intel,$(COMPILER)),intel)
     ADDITIONAL_FCFLAGS = -fp-model=precise -assume recursion
@@ -22,7 +22,7 @@ RANLIB = ranlib
 
 BUILD_DEPRECATED = 1
 
-ifeq ($(findstring gcc,$(COMPILER)),gcc)
+ifeq ($(findstring gnu,$(COMPILER)),gnu)
     TIMER = INT_ETIME
 else
     TIMER = EXT_ETIME

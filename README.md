@@ -32,7 +32,7 @@ The container images are available in **2** variants:
 Both variants are tagged in the `${VERSION}_${COMPILER}_${MPI}` format, where:
 
 * `${VERSION}` indicates the version of the container image. It should correspond to a Git tag in this project.
-* `${COMPILER}` indicates the compiler toolchain available in the container image. It should be one of `gcc-11`, `gcc-12`, `gcc-13`, `gcc-14`, `gcc-15`, `intel-2024`, or `intel-2025`.
+* `${COMPILER}` indicates the compiler toolchain available in the container image. It should be one of `gnu-11`, `gnu-12`, `gnu-13`, `gnu-14`, `gnu-15`, `intel-2024`, or `intel-2025`.
 * `${MPI}` indicates the MPI library available in the container image. It should be one of `mpich-4`, `open-mpi-4`, `open-mpi-5`, or `intel-mpi`.
 
 For each variant and `${VERSION}`, there are currently **23** different combinations of compiler toolchains and MPI libraries available for use.

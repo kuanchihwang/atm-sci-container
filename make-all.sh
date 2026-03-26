@@ -9,12 +9,12 @@ TARGET="${1:-build}"
 VERSION="$(date -u "+%F")"
 
 for MPI in "mpich-4" "open-mpi-4" "open-mpi-5" "intel-mpi"; do
-    for COMPILER in "gcc-11" "gcc-12" "gcc-13" "gcc-14" "gcc-15" "intel-2024" "intel-2025"; do
+    for COMPILER in "gnu-11" "gnu-12" "gnu-13" "gnu-14" "gnu-15" "intel-2024" "intel-2025"; do
         # Filter out invalid combinations.
         case "${MPI}" in
             intel-mpi)
                 case "${COMPILER}" in
-                    gcc-*)
+                    gnu-*)
                         continue
                         ;;
                 esac
