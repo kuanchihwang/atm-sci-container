@@ -105,9 +105,23 @@ compile_and_install_zlib() {
 
     echo ">>>>> Configuring zlib"
     ../source/configure --help
+    # Massage input for zlib.
+    case "${COMPILER}" in
+        gnu-*)
+            SELECTED_ZLIB_CFLAGS="${SELECTED_CFLAGS}"
+            SELECTED_ZLIB_CXXFLAGS="${SELECTED_CXXFLAGS}"
+            ;;
+        intel-*)
+            SELECTED_ZLIB_CFLAGS="${SELECTED_CFLAGS} -no-intel-lib"
+            SELECTED_ZLIB_CXXFLAGS="${SELECTED_CXXFLAGS} -no-intel-lib"
+            ;;
+        *)
+            exit 1
+            ;;
+    esac
     # There is no way to prevent zlib from building static libraries.
-    CC="${SELECTED_CC}" CFLAGS="${SELECTED_CFLAGS}" \
-    CXX="${SELECTED_CXX}" CXXFLAGS="${SELECTED_CXXFLAGS}" \
+    CC="${SELECTED_CC}" CFLAGS="${SELECTED_ZLIB_CFLAGS}" \
+    CXX="${SELECTED_CXX}" CXXFLAGS="${SELECTED_ZLIB_CXXFLAGS}" \
     ../source/configure --shared --prefix="${ZLIB_PREFIX}"
 
     echo ">>>>> Compiling zlib"
@@ -117,6 +131,9 @@ compile_and_install_zlib() {
     make_install
     # Static libraries are not desired. Delete them afterwards.
     remove_static_library_from_directory "${ZLIB_PREFIX}"
+
+    unset -v SELECTED_ZLIB_CFLAGS
+    unset -v SELECTED_ZLIB_CXXFLAGS
 
     echo ">>>>> zlib - OK"
     popd
@@ -151,20 +168,36 @@ compile_and_install_zstd() {
     pushd zstd-1.5.7
 
     echo ">>>>> Configuring zstd"
-    # There is no configure step for zstd.
+    # Massage input for zstd.
+    case "${COMPILER}" in
+        gnu-*)
+            SELECTED_ZSTD_CFLAGS="${SELECTED_CFLAGS}"
+            SELECTED_ZSTD_CXXFLAGS="${SELECTED_CXXFLAGS}"
+            ;;
+        intel-*)
+            SELECTED_ZSTD_CFLAGS="${SELECTED_CFLAGS} -no-intel-lib"
+            SELECTED_ZSTD_CXXFLAGS="${SELECTED_CXXFLAGS} -no-intel-lib"
+            ;;
+        *)
+            exit 1
+            ;;
+    esac
 
     echo ">>>>> Compiling zstd"
     # There is no way to prevent zstd from building static libraries.
-    CC="${SELECTED_CC}" CFLAGS="${SELECTED_CFLAGS}" \
-    CXX="${SELECTED_CXX}" CXXFLAGS="${SELECTED_CXXFLAGS}" \
+    CC="${SELECTED_CC}" CFLAGS="${SELECTED_ZSTD_CFLAGS}" \
+    CXX="${SELECTED_CXX}" CXXFLAGS="${SELECTED_ZSTD_CXXFLAGS}" \
     make_compile prefix="${ZSTD_PREFIX}"
 
     echo ">>>>> Installing zstd"
-    CC="${SELECTED_CC}" CFLAGS="${SELECTED_CFLAGS}" \
-    CXX="${SELECTED_CXX}" CXXFLAGS="${SELECTED_CXXFLAGS}" \
+    CC="${SELECTED_CC}" CFLAGS="${SELECTED_ZSTD_CFLAGS}" \
+    CXX="${SELECTED_CXX}" CXXFLAGS="${SELECTED_ZSTD_CXXFLAGS}" \
     make_install prefix="${ZSTD_PREFIX}"
     # Static libraries are not desired. Delete them afterwards.
     remove_static_library_from_directory "${ZSTD_PREFIX}"
+
+    unset -v SELECTED_ZSTD_CFLAGS
+    unset -v SELECTED_ZSTD_CXXFLAGS
 
     echo ">>>>> zstd - OK"
     popd
