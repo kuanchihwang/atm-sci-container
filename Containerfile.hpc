@@ -148,7 +148,7 @@ ENV LD_LIBRARY_PATH="/opt/hpc/compiler/${COMPILER}/${MPI}/lib${LD_LIBRARY_PATH:+
 ENV PATH="/opt/hpc/compiler/${COMPILER}/${MPI}/bin${PATH:+:${PATH}}"
 
 FROM set-default-${MPI} AS hpc-container
-COPY scripts/container-entrypoint.sh /usr/local/bin/container-entrypoint.sh
+COPY scripts/container-entrypoint.sh /usr/local/bin/
 ENTRYPOINT ["/usr/local/bin/container-entrypoint.sh"]
 CMD ["/bin/bash"]
 # https://specs.opencontainers.org/image-spec/annotations

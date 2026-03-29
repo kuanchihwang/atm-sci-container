@@ -19,7 +19,8 @@ RUN --mount=type=tmpfs,target=/tmp \
     rm -fr /tmp/working
 
 FROM install-libraries AS atm-sci-container
-COPY scripts/container-entrypoint-hook.sh /usr/local/bin/container-entrypoint-hook.sh
+COPY assets/cesm-config cesm-config/
+COPY scripts/container-entrypoint-hook.sh /usr/local/bin/
 # https://specs.opencontainers.org/image-spec/annotations
 LABEL "org.opencontainers.image.title"="atm-sci-container" \
       "org.opencontainers.image.description"="High-performance computing (HPC) containers for performance-portable and reproducible atmospheric modeling." \

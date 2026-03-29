@@ -8,8 +8,11 @@ CONTAINER_PRESET="${CONTAINER_PRESET:-}"
 
 case "${CONTAINER_PRESET}" in
     cesm)
-        # TODO...
-        :
+        CONTAINER_ENVIRONMENT="base+pnetcdf3+phdf5+pnetcdf4+pio+lapack+esmf${CONTAINER_ENVIRONMENT:++${CONTAINER_ENVIRONMENT}}"
+
+        export PNETCDF="${MPI_SPECIFIC_LIBRARY_PATH}/pnetcdf3"
+        export NETCDF="${MPI_SPECIFIC_LIBRARY_PATH}/pnetcdf4"
+        export PIO="${MPI_SPECIFIC_LIBRARY_PATH}/pio"
         ;;
     mpas)
         CONTAINER_ENVIRONMENT="base+pnetcdf3+phdf5+pnetcdf4+pio${CONTAINER_ENVIRONMENT:++${CONTAINER_ENVIRONMENT}}"
