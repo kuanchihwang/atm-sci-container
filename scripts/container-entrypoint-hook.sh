@@ -43,7 +43,7 @@ CONTAINER_ENVIRONMENT="${CONTAINER_ENVIRONMENT:-}"
 while IFS="" read -r x; do
     case "${x}" in
         base)
-            export LD_LIBRARY_PATH="/usr/lib64:${COMPILER_SPECIFIC_LIBRARY_PATH}/base/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+            export LD_LIBRARY_PATH="${COMPILER_SPECIFIC_LIBRARY_PATH}/base/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
             export PATH="${COMPILER_SPECIFIC_LIBRARY_PATH}/base/bin${PATH:+:${PATH}}"
             ;;
         hdf5)
