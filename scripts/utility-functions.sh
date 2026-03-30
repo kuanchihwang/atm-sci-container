@@ -44,8 +44,8 @@ set_selected_compiler() {
     esac
 
     if ! command -v "${SELECTED_CC}" 1>/dev/null 2>&1 || \
-            ! command -v "${SELECTED_CXX}" 1>/dev/null 2>&1 || \
-            ! command -v "${SELECTED_FC}" 1>/dev/null 2>&1; then
+        ! command -v "${SELECTED_CXX}" 1>/dev/null 2>&1 || \
+        ! command -v "${SELECTED_FC}" 1>/dev/null 2>&1; then
         unset -v SELECTED_CC SELECTED_CFLAGS
         unset -v SELECTED_CXX SELECTED_CXXFLAGS
         unset -v SELECTED_FC SELECTED_FCFLAGS
@@ -95,8 +95,8 @@ set_selected_mpi_compiler() {
     esac
 
     if ! command -v "${SELECTED_MPICC}" 1>/dev/null 2>&1 || \
-            ! command -v "${SELECTED_MPICXX}" 1>/dev/null 2>&1 || \
-            ! command -v "${SELECTED_MPIFC}" 1>/dev/null 2>&1; then
+        ! command -v "${SELECTED_MPICXX}" 1>/dev/null 2>&1 || \
+        ! command -v "${SELECTED_MPIFC}" 1>/dev/null 2>&1; then
         unset -v SELECTED_MPICC
         unset -v SELECTED_MPICXX
         unset -v SELECTED_MPIFC
@@ -354,7 +354,7 @@ patch_binary_to_set_rpath() {
     fi
 
     if ! command -v patchelf 1>/dev/null 2>&1 || \
-            ! command -v readelf 1>/dev/null 2>&1; then
+        ! command -v readelf 1>/dev/null 2>&1; then
         return 1
     fi
 
