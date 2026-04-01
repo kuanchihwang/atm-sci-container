@@ -53,9 +53,9 @@ case "${COMPILER}" in
             -delete
         ;;
     intel-2025)
-        sh "${COMPILERS_PATH}/intel-dpcpp-cpp-compiler-2025.3.2.26_offline.sh" \
+        sh "${COMPILERS_PATH}/intel-dpcpp-cpp-compiler-2025.3.3.17_offline.sh" \
             -r yes -a --action install --eula accept --silent
-        sh "${COMPILERS_PATH}/intel-fortran-compiler-2025.3.2.25_offline.sh" \
+        sh "${COMPILERS_PATH}/intel-fortran-compiler-2025.3.3.15_offline.sh" \
             -r yes -a --action install --eula accept --silent
         rm -fr /opt/intel/oneapi/installer
         rm -fr /opt/intel/oneapi/logs
