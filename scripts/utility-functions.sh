@@ -363,7 +363,7 @@ patch_binary_to_set_rpath() {
     done
 
     if [ ! -z "${r}" ]; then
-        printf "%s\n" "${r}" | tr ":" "\n" | while IFS="" read -r d; do
+        while IFS="" read -r d; do
             case "${d}" in
                 '$LIB'*|'$ORIGIN'*)
                     continue
@@ -376,7 +376,9 @@ patch_binary_to_set_rpath() {
                     fi
                     ;;
             esac
-        done
+        done << EOF
+$(printf "%s\n" "${r}" | tr ":" "\n")
+EOF
 
         unset -v d
     fi
@@ -443,13 +445,15 @@ prepend_ld_library_path() {
         return 1
     fi
 
-    printf "%s\n" "${1}" | tr ":" "\n" | while IFS="" read -r d; do
+    while IFS="" read -r d; do
         if [ ! -d "${d}" ]; then
             unset -v d
 
             return 1
         fi
-    done
+    done << EOF
+$(printf "%s\n" "${1}" | tr ":" "\n")
+EOF
 
     unset -v d
 
