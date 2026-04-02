@@ -18,8 +18,8 @@
     <SUPPORTED_BY>
       Kuan-Chih Wang, https://github.com/kuanchihwang
     </SUPPORTED_BY>
-    <MAX_TASKS_PER_NODE>4</MAX_TASKS_PER_NODE>
-    <MAX_MPITASKS_PER_NODE>4</MAX_MPITASKS_PER_NODE>
+    <MAX_TASKS_PER_NODE>$ENV{CESM_NTASKS_PER_NODE}</MAX_TASKS_PER_NODE>
+    <MAX_MPITASKS_PER_NODE>$ENV{CESM_NTASKS_PER_NODE}</MAX_MPITASKS_PER_NODE>
     <PROJECT_REQUIRED>FALSE</PROJECT_REQUIRED>
     <mpirun mpilib="open-mpi">
       <executable>mpirun</executable>
@@ -42,8 +42,6 @@
     <module_system type="none">
     </module_system>
     <environment_variables>
-      <env name="OMP_NUM_THREADS">2</env>
-      <env name="OMP_PLACES">threads</env>
       <env name="PNETCDF_PATH">$ENV{PNETCDF}</env>
       <env name="NETCDF_PATH">$ENV{NETCDF}</env>
       <env name="PIO_PATH">$ENV{PIO}</env>

@@ -13,6 +13,9 @@ case "${CONTAINER_PRESET}" in
         export PNETCDF="${MPI_SPECIFIC_LIBRARY_PATH}/pnetcdf3"
         export NETCDF="${MPI_SPECIFIC_LIBRARY_PATH}/pnetcdf4"
         export PIO="${MPI_SPECIFIC_LIBRARY_PATH}/pio"
+
+        # Auto-detect the number of physical cores for use with CESM through `ccs_config`.
+        export CESM_NTASKS_PER_NODE="$(lscpu --online --parse="CORE,SOCKET" | grep -v "^#" | sort -u | wc -l)"
         ;;
     mpas)
         CONTAINER_ENVIRONMENT="base+pnetcdf3+phdf5+pnetcdf4+pio${CONTAINER_ENVIRONMENT:++${CONTAINER_ENVIRONMENT}}"
