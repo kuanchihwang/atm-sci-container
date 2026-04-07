@@ -31,7 +31,7 @@ The container images are available in **2** variants:
 
 Both variants are tagged in the `${VERSION}_${COMPILER}_${MPI}` format, where:
 
-* `${VERSION}` indicates the version of the container image. It should correspond to a Git tag in this project.
+* `${VERSION}` indicates the version of the container image. It should correspond to a Git tag in this project, or `latest`.
 * `${COMPILER}` indicates the compiler toolchain available in the container image. It should be one of `gnu-11`, `gnu-12`, `gnu-13`, `gnu-14`, `gnu-15`, `intel-2024`, or `intel-2025`.
 * `${MPI}` indicates the MPI library available in the container image. It should be one of `mpich-4`, `open-mpi-4`, `open-mpi-5`, or `intel-mpi`.
 
@@ -64,20 +64,20 @@ For each variant and `${VERSION}`, there are currently **23** different combinat
   * GNU Compiler Collection 14 (C, C++, Fortran)
   * GNU Compiler Collection 15 (C, C++, Fortran)
   * Intel oneAPI Compiler 2024.2.1 (C, C++, Fortran)
-  * Intel oneAPI Compiler 2025.3.2 (C, C++, Fortran)
+  * Intel oneAPI Compiler 2025.3.3 (C, C++, Fortran)
 * MPI Libraries
   * MPICH 4.3.2
   * Open MPI 4.1.8
   * Open MPI 5.0.10
   * Intel MPI 2021.13.1 (Only when paired with Intel oneAPI Compiler 2024.2.1)
-  * Intel MPI 2021.17.2 (Only when paired with Intel oneAPI Compiler 2025.3.2)
+  * Intel MPI 2021.17.2 (Only when paired with Intel oneAPI Compiler 2025.3.3)
 * Libraries
   * libaec 1.1.6
   * zlib 1.3.2
   * zstd 1.5.7
   * libjpeg 9f
   * JasPer 2.0.33
-  * libpng 1.6.55
+  * libpng 1.6.56
   * HDF5 1.14.6
     * Serial mode
     * Parallel mode
@@ -101,7 +101,7 @@ The user-space components of the following device drivers are included in the co
 
 * Cornelis Omni-Path Express Software 12.1.0.1.4
 * HPE Slingshot Host Software 12.0.2
-* Intel Ethernet Fabric Suite 12.1.0.0.149
+* Intel Ethernet Fabric Suite 12.1.0.1.6
 * NVIDIA DOCA 2.9.4
 
 They provide hardware enablement for their respective HPC interconnects, described in the "[Supported Transports](#supported-transports)" section below.
