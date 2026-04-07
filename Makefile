@@ -84,16 +84,16 @@ push: push-hpc push-atm-sci
 .PHONY: push-hpc
 push-hpc:
 	@$(DOCKER) image tag "localhost/build-artifact/$(HPC_IMAGE_NAME):$(IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$(HPC_IMAGE_NAME):$(IMAGE_TAG)"
-	@$(DOCKER) image tag "localhost/build-artifact/$(HPC_IMAGE_NAME):$(IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$(HPC_IMAGE_NAME):latest"
+	@$(DOCKER) image tag "localhost/build-artifact/$(HPC_IMAGE_NAME):$(IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$(HPC_IMAGE_NAME):latest_$(COMPILER)_$(MPI)"
 	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$(HPC_IMAGE_NAME):$(IMAGE_TAG)"
-	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$(HPC_IMAGE_NAME):latest"
+	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$(HPC_IMAGE_NAME):latest_$(COMPILER)_$(MPI)"
 
 .PHONY: push-atm-sci
 push-atm-sci:
 	@$(DOCKER) image tag "localhost/build-artifact/$(ATM_SCI_IMAGE_NAME):$(IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$(ATM_SCI_IMAGE_NAME):$(IMAGE_TAG)"
-	@$(DOCKER) image tag "localhost/build-artifact/$(ATM_SCI_IMAGE_NAME):$(IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$(ATM_SCI_IMAGE_NAME):latest"
+	@$(DOCKER) image tag "localhost/build-artifact/$(ATM_SCI_IMAGE_NAME):$(IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$(ATM_SCI_IMAGE_NAME):latest_$(COMPILER)_$(MPI)"
 	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$(ATM_SCI_IMAGE_NAME):$(IMAGE_TAG)"
-	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$(ATM_SCI_IMAGE_NAME):latest"
+	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$(ATM_SCI_IMAGE_NAME):latest_$(COMPILER)_$(MPI)"
 
 .PHONY: login
 login:
