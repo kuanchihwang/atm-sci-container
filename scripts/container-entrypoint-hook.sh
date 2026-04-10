@@ -51,6 +51,8 @@ while IFS="" read -r x; do
         base)
             export LD_LIBRARY_PATH="${COMPILER_SPECIFIC_LIBRARY_PATH}/base/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
             export PATH="${COMPILER_SPECIFIC_LIBRARY_PATH}/base/bin${PATH:+:${PATH}}"
+
+            export CMAKE_PREFIX_PATH="${COMPILER_SPECIFIC_LIBRARY_PATH}/base${CMAKE_PREFIX_PATH:+:${CMAKE_PREFIX_PATH}}"
             ;;
         hdf5)
             export LD_LIBRARY_PATH="${COMPILER_SPECIFIC_LIBRARY_PATH}/hdf5/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
@@ -62,10 +64,14 @@ while IFS="" read -r x; do
         netcdf3)
             export LD_LIBRARY_PATH="${COMPILER_SPECIFIC_LIBRARY_PATH}/netcdf3/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
             export PATH="${COMPILER_SPECIFIC_LIBRARY_PATH}/netcdf3/bin${PATH:+:${PATH}}"
+
+            export CMAKE_PREFIX_PATH="${COMPILER_SPECIFIC_LIBRARY_PATH}/netcdf3${CMAKE_PREFIX_PATH:+:${CMAKE_PREFIX_PATH}}"
             ;;
         netcdf4)
             export LD_LIBRARY_PATH="${COMPILER_SPECIFIC_LIBRARY_PATH}/netcdf4/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
             export PATH="${COMPILER_SPECIFIC_LIBRARY_PATH}/netcdf4/bin${PATH:+:${PATH}}"
+
+            export CMAKE_PREFIX_PATH="${COMPILER_SPECIFIC_LIBRARY_PATH}/netcdf4${CMAKE_PREFIX_PATH:+:${CMAKE_PREFIX_PATH}}"
             ;;
         esmf)
             export LD_LIBRARY_PATH="$(dirname "$(find "${MPI_SPECIFIC_LIBRARY_PATH}/esmf/lib" -name "libesmf.so" -type f -print -quit)")${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
@@ -87,10 +93,14 @@ while IFS="" read -r x; do
         pnetcdf3)
             export LD_LIBRARY_PATH="${MPI_SPECIFIC_LIBRARY_PATH}/pnetcdf3/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
             export PATH="${MPI_SPECIFIC_LIBRARY_PATH}/pnetcdf3/bin${PATH:+:${PATH}}"
+
+            export CMAKE_PREFIX_PATH="${MPI_SPECIFIC_LIBRARY_PATH}/pnetcdf3${CMAKE_PREFIX_PATH:+:${CMAKE_PREFIX_PATH}}"
             ;;
         pnetcdf4)
             export LD_LIBRARY_PATH="${MPI_SPECIFIC_LIBRARY_PATH}/pnetcdf4/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
             export PATH="${MPI_SPECIFIC_LIBRARY_PATH}/pnetcdf4/bin${PATH:+:${PATH}}"
+
+            export CMAKE_PREFIX_PATH="${MPI_SPECIFIC_LIBRARY_PATH}/pnetcdf4${CMAKE_PREFIX_PATH:+:${CMAKE_PREFIX_PATH}}"
             ;;
         *)
             # No or unsupported environment is specified. Nothing to do.
