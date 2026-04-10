@@ -1,22 +1,198 @@
 # atm-sci-container
 
 * [atm-sci-container](#atm-sci-container)
-  * [Usage](#usage)
+  * [Quick Start](#quick-start)
+    * [CESM](#cesm)
+    * [MPAS](#mpas)
+    * [WRF](#wrf)
   * [Container Registries](#container-registries)
   * [Container Image Variants and Tags](#container-image-variants-and-tags)
+  * [Usage](#usage)
   * [Included Software Stack](#included-software-stack)
   * [Included Device Drivers](#included-device-drivers)
   * [Supported Transports](#supported-transports)
   * [Building from Source](#building-from-source)
 
 > [!NOTE]
-> This `README.md` is a work in progress. More information to come when development stabilizes...
+> This `README.md` is a work in progress. More information to come soon...
 
 High-performance computing (HPC) containers for parallel workloads (e.g., MPI, OpenMP), delivering portability, reproducibility, and optimal single-/multi-node performance out of the box.
 
-## Usage
+For an overview of why containers remain valuable even in HPC scenarios, see this [Apptainer introduction](https://apptainer.org/docs/user/latest/introduction.html).
 
-WIP...
+## Quick Start
+
+### CESM
+
+In this walkthrough, we will configure CAM-SIMA with MPAS dynamical core, a global 480-km mesh, Kessler microphysics, and the moist baroclinic wave initial condition. The model will be built and run with GNU compilers version 15 and MPICH version 4.
+
+Pull the appropriate container image and create a container from it.
+
+```shell
+docker image pull "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_mpich-4"
+docker container run -it --rm \
+    --env "CONTAINER_PRESET=cesm" \
+    --volume "working:/working" \
+    "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_mpich-4"
+```
+
+You are now inside the created container. Continue on,
+
+```shell
+# Set up git user name and email because CIME demands that you have them...
+git config --global user.name "Insider"
+git config --global user.email "insider@atm-sci-container"
+
+# Download model input data.
+mkdir -pv "/working/cesm-data-root/inputdata/atm/cam/chem/trop_mozart/ub"
+wget -P "/working/cesm-data-root/inputdata/atm/cam/chem/trop_mozart/ub" \
+    "https://osdf-director.osg-htc.org/ncar/gdex/d651077/cesmdata/inputdata/atm/cam/chem/trop_mozart/ub/clim_p_trop.nc"
+mkdir -pv "/working/cesm-data-root/inputdata/atm/cam/inic/mpas"
+wget -P "/working/cesm-data-root/inputdata/atm/cam/inic/mpas" \
+    "https://osdf-director.osg-htc.org/ncar/gdex/d651077/cesmdata/inputdata/atm/cam/inic/mpas/mpasa480_L32_notopo_coords_c240507.nc"
+wget -P "/working/cesm-data-root/inputdata/atm/cam/inic/mpas" \
+    "https://osdf-director.osg-htc.org/ncar/gdex/d651077/cesmdata/inputdata/atm/cam/inic/mpas/mpasa480.graph.info"
+wget -P "/working/cesm-data-root/inputdata/atm/cam/inic/mpas" \
+    "https://osdf-director.osg-htc.org/ncar/gdex/d651077/cesmdata/inputdata/atm/cam/inic/mpas/mpasa480.graph.info.part.4"
+# These should not be needed, but CIME wants them anyway...
+mkdir -pv "/working/cesm-data-root/inputdata/share/meshes"
+wget -P "/working/cesm-data-root/inputdata/share/meshes" \
+    "https://osdf-director.osg-htc.org/ncar/gdex/d651077/cesmdata/inputdata/share/meshes/gx1v7_151008_ESMFmesh.nc"
+wget -P "/working/cesm-data-root/inputdata/share/meshes" \
+    "https://osdf-director.osg-htc.org/ncar/gdex/d651077/cesmdata/inputdata/share/meshes/mpasa480_ESMFmesh-211109.nc"
+
+# Clone model source code.
+git clone --branch development --depth 1 "https://github.com/ESCOMP/CAM-SIMA.git"
+cd CAM-SIMA
+./bin/git-fleximod update
+cd ..
+
+# Copy model configuration files.
+cp -av /usr/local/share/cesm-config/atm-sci-container CAM-SIMA/ccs_config/machines
+
+# Configure model.
+# Normally, `CESM_NTASKS_PER_NODE` is auto-detected at container entrypoint.
+# For this walkthrough, we override it for simplicity.
+export CESM_NTASKS_PER_NODE="4"
+./CAM-SIMA/cime/scripts/create_newcase \
+    --machine atm-sci-container \
+    --compiler gnu \
+    --mpilib mpich \
+    --case /working/cesm-case-root/cam-sima-development \
+    --compset FKESSLER \
+    --res mpasa480_mpasa480 \
+    --run-unsupported
+cd /working/cesm-case-root/cam-sima-development
+./case.setup
+cat > user_nl_cam << EOF
+debug_output = 3
+hist_add_inst_fields;h0: U,V,T,Q,PMID
+hist_file_type;h0: history
+hist_max_frames;h0: 24
+hist_output_frequency;h0: hours
+hist_write_nstep0;h0: .true.
+EOF
+
+# Build model.
+./case.build
+# Run model, which takes about half a minute to complete.
+./case.submit
+
+# Examine model logs and history output.
+cd /working/cesm-output-root/archive/cam-sima-development
+# Model logs are located in the `logs` directory.
+ls -l logs
+# Model history output is located in the `atm/hist` directory.
+ls -l atm/hist
+```
+
+Congratulations! You just built CAM-SIMA and ran a test case on your own system with little effort.
+
+Traditionally, porting CESM and its component models like CAM-SIMA to a new system requires substantial effort. Its notoriously difficult dependency stack certainly does not help reduce the barrier to entry. In contrast, with `atm-sci-container`, standard CAM-SIMA dependencies are already included, and the container entrypoint takes care of the environment for you. There is no need to mess with any packages or environment variables at all.
+
+Finally, refer to the "Hybrid model" section of this [Apptainer documentation](https://apptainer.org/docs/user/latest/mpi.html) if you want to achieve optimal performance.
+
+### MPAS
+
+In this walkthrough, we will build MPAS with Intel compilers version 2025 and Open MPI version 5.
+
+Pull the appropriate container image and create a container from it.
+
+```shell
+docker image pull "docker.io/kuanchihwang/atm-sci-container:latest_intel-2025_open-mpi-5"
+docker container run -it --rm \
+    --env "CONTAINER_PRESET=mpas" \
+    --volume "working:/working" \
+    "docker.io/kuanchihwang/atm-sci-container:latest_intel-2025_open-mpi-5"
+```
+
+You are now inside the created container. Continue on,
+
+```shell
+# Clone model source code.
+git clone --branch develop --depth 1 "https://github.com/MPAS-Dev/MPAS-Model.git"
+
+# Build model.
+cd MPAS-Model
+make intel CORE="init_atmosphere"
+make intel CORE="atmosphere"
+# You should find that model executables like `init_atmosphere_model`, `atmosphere_model`, etc. have been generated.
+ls -l
+```
+
+You can now run the model as you normally would. Yes, it is really that easy. With `atm-sci-container`, standard MPAS dependencies are already included, and the container entrypoint takes care of the environment for you. There is no need to mess with any packages or environment variables at all.
+
+Finally, refer to the "Hybrid model" section of this [Apptainer documentation](https://apptainer.org/docs/user/latest/mpi.html) if you want to achieve optimal performance.
+
+### WRF
+
+In this walkthrough, we will build WRF with Intel compilers version 2024 and Open MPI version 4.
+
+Pull the appropriate container image and create a container from it.
+
+```shell
+docker image pull "docker.io/kuanchihwang/atm-sci-container:latest_intel-2024_open-mpi-4"
+docker container run -it --rm \
+    --env "CONTAINER_PRESET=wrf" \
+    --volume "working:/working" \
+    "docker.io/kuanchihwang/atm-sci-container:latest_intel-2024_open-mpi-4"
+```
+
+You are now inside the created container. Continue on,
+
+```shell
+# Clone model source code.
+git clone --branch v4.7.1 --depth 1 "https://github.com/wrf-model/WRF.git"
+cd WRF
+git submodule update --init --recursive
+cd ..
+git clone --branch v4.6.0 --depth 1 "https://github.com/wrf-model/WPS.git"
+cd WPS
+sed -e "s/1.900.1...1.900.29/1.900.1...2.0.33/g" -i CMakeLists.txt
+cd ..
+
+# Build WRF.
+cd WRF
+# When asked about the build configuration, be sure to choose the one similar to "... Intel (ifx/icx) ...".
+# For others, feel free to choose whatever you would like.
+./configure_new
+./compile_new
+# You should find that model executables like `real`, `wrf`, etc. have been generated.
+ls -l install/bin
+
+# Build WPS.
+cd ../WPS
+# When asked about the build configuration, be sure to choose the one similar to "... Intel (ifx/icx) ...".
+# For others, feel free to choose whatever you would like.
+./configure_new
+./compile_new
+# You should find that model executables like `geogrid`, `ungrib`, `metgrid`, etc. have been generated.
+ls -l install/bin
+```
+
+You can now run the model as you normally would. Yes, again, it is really that easy. With `atm-sci-container`, standard WRF dependencies are already included, and the container entrypoint takes care of the environment for you. There is no need to mess with any packages or environment variables at all.
+
+Finally, refer to the "Hybrid model" section of this [Apptainer documentation](https://apptainer.org/docs/user/latest/mpi.html) if you want to achieve optimal performance.
 
 ## Container Registries
 
@@ -35,7 +211,11 @@ Both variants are tagged in the `${VERSION}_${COMPILER}_${MPI}` format, where:
 * `${COMPILER}` indicates the compiler toolchain available in the container image. It should be one of `gnu-11`, `gnu-12`, `gnu-13`, `gnu-14`, `gnu-15`, `intel-2024`, or `intel-2025`.
 * `${MPI}` indicates the MPI library available in the container image. It should be one of `mpich-4`, `open-mpi-4`, `open-mpi-5`, or `intel-mpi`.
 
-For each variant and `${VERSION}`, there are currently **23** different combinations of compiler toolchains and MPI libraries available for use.
+For each variant and `${VERSION}`, there are currently **23** combinations of compiler toolchains and MPI libraries available.
+
+## Usage
+
+WIP...
 
 ## Included Software Stack
 
@@ -97,7 +277,7 @@ For each variant and `${VERSION}`, there are currently **23** different combinat
 
 ## Included Device Drivers
 
-The user-space components of the following device drivers are included in the container images.
+The user-space components for the following device drivers are included in the container images.
 
 * Cornelis Omni-Path Express Software 12.1.0.1.4
 * HPE Slingshot Host Software 12.0.2
@@ -125,7 +305,7 @@ Please refer to the vendor documentation for the exact list of supported hardwar
 
 ## Building from Source
 
-To build the container images from source, use the `Containerfile` to invoke the build process directly, or use the `Makefile` for convenience. You must be running an x86-64 Linux system with either `docker` or `podman` installed. If both are found, `docker` takes precedence. The system architecture is limited to what is supported by the included device drivers, and is not decided by this project.
+To build the container images from source, use the `Containerfile` directly or use the `Makefile` for convenience. You must be running an x86-64 Linux system with either `docker` or `podman` installed. If both are available, `docker` takes precedence. The supported system architecture is constrained by the included device drivers, not by this project.
 
 1. Pull the base and data container images.
 
@@ -133,7 +313,7 @@ To build the container images from source, use the `Containerfile` to invoke the
     make stage
     ```
 
-2. Build the container images by specifying the desired combinations of `VERSION`, `COMPILER`, and `MPI`, one at a time. See the "[Container Image Variants and Tags](#container-image-variants-and-tags)" section above for details. The `build-hpc` target will build the `hpc-container` variant, while the `build-atm-sci` target will build the `atm-sci-container` variant. The `build` target will build both.
+2. Build container images by specifying the desired combination of `VERSION`, `COMPILER`, and `MPI`, one at a time. See the "[Container Image Variants and Tags](#container-image-variants-and-tags)" section above for details. The `build-hpc` target builds the `hpc-container` variant, the `build-atm-sci` target builds the `atm-sci-container` variant, and the `build` target builds both.
 
     ```shell
     make build [VERSION=...] [COMPILER=...] [MPI=...]
@@ -141,9 +321,9 @@ To build the container images from source, use the `Containerfile` to invoke the
     make build-atm-sci [VERSION=...] [COMPILER=...] [MPI=...]
     ```
 
-3. Alternatively, you can simply run the `make-all.sh` shell script, which will build all possible combinations and variants in one go. This can take several hours to complete.
+3. Alternatively, simply run the `cicd/make-all.sh` shell script to build all possible combinations and variants in one pass. This can take several hours to complete.
 
-4. Clean up the built and dangling container images. The `clean-hpc` target will clean the `hpc-container` variant, while the `clean-atm-sci` target will clean the `atm-sci-container` variant. The `clean` target will clean both.
+4. Clean up built and dangling container images. The `clean-hpc` target cleans the `hpc-container` variant, the `clean-atm-sci` target cleans the `atm-sci-container` variant, and the `clean` target cleans both.
 
     ```shell
     make clean
