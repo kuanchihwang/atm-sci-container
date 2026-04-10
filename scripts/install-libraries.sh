@@ -18,7 +18,6 @@ fi
 COMPILER="${1}"
 MPI="${2}"
 
-LIBRARIES_LOG="${LIBRARIES_LOG:-$(basename "${0}" .sh).log}"
 LIBRARIES_PREFIX_COMPILER_SPECIFIC="${LIBRARIES_PREFIX_COMPILER_SPECIFIC:-/opt/hpc/compiler/${COMPILER}}"
 LIBRARIES_PREFIX_MPI_SPECIFIC="${LIBRARIES_PREFIX_MPI_SPECIFIC:-/opt/hpc/mpi/${COMPILER}/${MPI}}"
 
@@ -900,7 +899,6 @@ compile_and_install_pfunit() {
 set_selected_compiler "${COMPILER}"
 set_selected_mpi_compiler "${COMPILER}" "${MPI}"
 
-(
 echo "This script builds and installs optimized libraries for atmospheric models (e.g., CESM, MPAS, WRF)."
 echo "It is assumed that all relevant compilers and MPI libraries have already been installed."
 echo ""
@@ -966,4 +964,3 @@ remove_libtool_archive_from_directory "${LIBRARIES_PREFIX_MPI_SPECIFIC}/"*
 
 echo ""
 echo "SUCCESSFUL COMPLETION!"
-) 2>&1 | tee "${LIBRARIES_LOG}"

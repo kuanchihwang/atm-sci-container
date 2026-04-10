@@ -17,7 +17,6 @@ fi
 
 COMPILER="${1}"
 
-INFRASTRUCTURE_LOG="${INFRASTRUCTURE_LOG:-$(basename "${0}" .sh).log}"
 INFRASTRUCTURE_PREFIX="${INFRASTRUCTURE_PREFIX:-/opt/hpc/infrastructure}"
 
 HAVE_EXTERNAL_HWLOC="${HAVE_EXTERNAL_HWLOC:-false}"
@@ -467,7 +466,6 @@ compile_and_install_libfabric() {
 
 set_selected_compiler "${COMPILER}"
 
-(
 echo "This script builds and installs the infrastructure for optimized MPICH / Open MPI."
 echo "It is assumed that all relevant transport drivers have already been installed."
 echo ""
@@ -513,4 +511,3 @@ remove_pkgconfig_from_directory "${INFRASTRUCTURE_PREFIX}/"*
 
 echo ""
 echo "SUCCESSFUL COMPLETION!"
-) 2>&1 | tee "${INFRASTRUCTURE_LOG}"

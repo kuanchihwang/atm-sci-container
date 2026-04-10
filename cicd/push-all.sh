@@ -35,7 +35,7 @@ for MPI in "mpich-4" "open-mpi-4" "open-mpi-5" "intel-mpi"; do
             VERSION="${VERSION}" \
             COMPILER="${COMPILER}" \
             MPI="${MPI}" \
-            1>"logs/${TARGET}_${REGISTRY}_${NAMESPACE}_${VERSION}_${COMPILER}_${MPI}.log" 2>&1
+            2>&1 | tee "logs/${TARGET}_${REGISTRY}_${NAMESPACE}_${VERSION}_${COMPILER}_${MPI}.log"
     done
 done
 

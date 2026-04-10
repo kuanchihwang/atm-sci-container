@@ -19,8 +19,6 @@ COMPILER="${1}"
 MPI="${2}"
 
 INFRASTRUCTURE_PREFIX="${INFRASTRUCTURE_PREFIX:-/opt/hpc/infrastructure}"
-
-MPI_LOG="${MPI_LOG:-$(basename "${0}" .sh).log}"
 MPI_PREFIX="${MPI_PREFIX:-/opt/hpc/compiler/${COMPILER}/${MPI}}"
 
 HAVE_EXTERNAL_HWLOC="${HAVE_EXTERNAL_HWLOC:-false}"
@@ -285,7 +283,6 @@ compile_and_install_open_mpi_5() {
 
 set_selected_compiler "${COMPILER}"
 
-(
 echo "This script builds and installs optimized MPICH / Open MPI."
 echo "It is assumed that all relevant transport drivers have already been installed."
 echo ""
@@ -368,4 +365,3 @@ esac
 
 echo ""
 echo "SUCCESSFUL COMPLETION!"
-) 2>&1 | tee "${MPI_LOG}"
