@@ -24,7 +24,7 @@ For an overview of why containers remain valuable even in HPC scenarios, see thi
 
 ### CESM
 
-In this walkthrough, we will configure CAM-SIMA with MPAS dynamical core, a global 480-km mesh, Kessler microphysics, and the moist baroclinic wave initial condition. The model will be built and run with GNU compilers version 15 and MPICH version 4.
+In this walkthrough, we will configure [CAM-SIMA](https://github.com/ESCOMP/CAM-SIMA) with MPAS dynamical core, a global 480-km mesh, Kessler microphysics, and the moist baroclinic wave initial condition. The model will be built and run with GNU compilers version 15 and MPICH version 4.
 
 Pull the appropriate container image and create a container from it.
 
@@ -114,7 +114,7 @@ Finally, refer to the "Hybrid model" section of this [Apptainer documentation](h
 
 ### MPAS
 
-In this walkthrough, we will build MPAS with Intel compilers version 2025 and Open MPI version 5.
+In this walkthrough, we will build [MPAS](https://github.com/MPAS-Dev/MPAS-Model) with Intel compilers version 2025 and Open MPI version 5.
 
 Pull the appropriate container image and create a container from it.
 
@@ -146,7 +146,7 @@ Finally, refer to the "Hybrid model" section of this [Apptainer documentation](h
 
 ### WRF
 
-In this walkthrough, we will build WRF with Intel compilers version 2024 and Open MPI version 4.
+In this walkthrough, we will build [WRF](https://github.com/wrf-model/WRF) with Intel compilers version 2024 and Open MPI version 4.
 
 Pull the appropriate container image and create a container from it.
 
