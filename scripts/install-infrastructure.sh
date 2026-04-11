@@ -57,13 +57,13 @@ compile_and_install_zlib() {
         true)
             ZLIB_PREFIX="${ZLIB_PREFIX:-/usr}"
 
-            return
+            return 0
             ;;
         false)
             :
             ;;
         *)
-            exit 1
+            return 1
             ;;
     esac
 
@@ -97,13 +97,13 @@ compile_and_install_numactl() {
         true)
             NUMACTL_PREFIX="${NUMACTL_PREFIX:-/usr}"
 
-            return
+            return 0
             ;;
         false)
             :
             ;;
         *)
-            exit 1
+            return 1
             ;;
     esac
 
@@ -135,13 +135,13 @@ compile_and_install_hwloc() {
         true)
             HWLOC_PREFIX="${HWLOC_PREFIX:-/usr}"
 
-            return
+            return 0
             ;;
         false)
             :
             ;;
         *)
-            exit 1
+            return 1
             ;;
     esac
 
@@ -187,13 +187,13 @@ compile_and_install_libcxi() {
         true)
             LIBCXI_PREFIX="${LIBCXI_PREFIX:-/usr}"
 
-            return
+            return 0
             ;;
         false)
             :
             ;;
         *)
-            exit 1
+            return 1
             ;;
     esac
 
@@ -242,13 +242,13 @@ compile_and_install_libevent() {
         true)
             LIBEVENT_PREFIX="${LIBEVENT_PREFIX:-/usr}"
 
-            return
+            return 0
             ;;
         false)
             :
             ;;
         *)
-            exit 1
+            return 1
             ;;
     esac
 

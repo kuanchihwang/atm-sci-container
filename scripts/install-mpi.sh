@@ -39,7 +39,7 @@ compile_and_install_mpich_4() {
             HWLOC_PREFIX="${INFRASTRUCTURE_PREFIX}/base"
             ;;
         *)
-            exit 1
+            return 1
             ;;
     esac
 
@@ -90,7 +90,7 @@ compile_and_install_open_mpi_4() {
             HWLOC_PREFIX="${INFRASTRUCTURE_PREFIX}/base"
             ;;
         *)
-            exit 1
+            return 1
             ;;
     esac
 
@@ -102,7 +102,7 @@ compile_and_install_open_mpi_4() {
             LIBEVENT_PREFIX="${INFRASTRUCTURE_PREFIX}/base"
             ;;
         *)
-            exit 1
+            return 1
             ;;
     esac
 
@@ -114,7 +114,7 @@ compile_and_install_open_mpi_4() {
             NUMACTL_PREFIX="${INFRASTRUCTURE_PREFIX}/base"
             ;;
         *)
-            exit 1
+            return 1
             ;;
     esac
 
@@ -126,7 +126,7 @@ compile_and_install_open_mpi_4() {
             ZLIB_PREFIX="${INFRASTRUCTURE_PREFIX}/base"
             ;;
         *)
-            exit 1
+            return 1
             ;;
     esac
 
@@ -186,7 +186,7 @@ compile_and_install_open_mpi_5() {
             HWLOC_PREFIX="${INFRASTRUCTURE_PREFIX}/base"
             ;;
         *)
-            exit 1
+            return 1
             ;;
     esac
 
@@ -198,7 +198,7 @@ compile_and_install_open_mpi_5() {
             LIBEVENT_PREFIX="${INFRASTRUCTURE_PREFIX}/base"
             ;;
         *)
-            exit 1
+            return 1
             ;;
     esac
 
@@ -210,7 +210,7 @@ compile_and_install_open_mpi_5() {
             NUMACTL_PREFIX="${INFRASTRUCTURE_PREFIX}/base"
             ;;
         *)
-            exit 1
+            return 1
             ;;
     esac
 
@@ -222,7 +222,7 @@ compile_and_install_open_mpi_5() {
             ZLIB_PREFIX="${INFRASTRUCTURE_PREFIX}/base"
             ;;
         *)
-            exit 1
+            return 1
             ;;
     esac
 

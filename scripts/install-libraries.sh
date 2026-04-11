@@ -34,20 +34,20 @@ compile_and_install_libaec() {
         true)
             LIBAEC_PREFIX="${LIBAEC_PREFIX:-/usr}"
 
-            return
+            return 0
             ;;
         false)
             :
             ;;
         *)
-            exit 1
+            return 1
             ;;
     esac
 
     LIBAEC_PREFIX="${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base"
 
     if get_milestone libaec; then
-        return
+        return 0
     fi
 
     echo ">>>>> Preparing libaec"
@@ -80,20 +80,20 @@ compile_and_install_zlib() {
         true)
             ZLIB_PREFIX="${ZLIB_PREFIX:-/usr}"
 
-            return
+            return 0
             ;;
         false)
             :
             ;;
         *)
-            exit 1
+            return 1
             ;;
     esac
 
     ZLIB_PREFIX="${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base"
 
     if get_milestone zlib; then
-        return
+        return 0
     fi
 
     echo ">>>>> Preparing zlib"
@@ -115,7 +115,7 @@ compile_and_install_zlib() {
             SELECTED_ZLIB_CXXFLAGS="${SELECTED_CXXFLAGS} -no-intel-lib"
             ;;
         *)
-            exit 1
+            return 1
             ;;
     esac
     # There is no way to prevent zlib from building static libraries.
@@ -145,20 +145,20 @@ compile_and_install_zstd() {
         true)
             ZSTD_PREFIX="${ZSTD_PREFIX:-/usr}"
 
-            return
+            return 0
             ;;
         false)
             :
             ;;
         *)
-            exit 1
+            return 1
             ;;
     esac
 
     ZSTD_PREFIX="${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base"
 
     if get_milestone zstd; then
-        return
+        return 0
     fi
 
     echo ">>>>> Preparing zstd"
@@ -178,7 +178,7 @@ compile_and_install_zstd() {
             SELECTED_ZSTD_CXXFLAGS="${SELECTED_CXXFLAGS} -no-intel-lib"
             ;;
         *)
-            exit 1
+            return 1
             ;;
     esac
 
@@ -206,7 +206,7 @@ compile_and_install_zstd() {
 
 compile_and_install_libjpeg() {
     if get_milestone libjpeg; then
-        return
+        return 0
     fi
 
     echo ">>>>> Preparing libjpeg"
@@ -236,7 +236,7 @@ compile_and_install_libjpeg() {
 
 compile_and_install_jasper() {
     if get_milestone jasper; then
-        return
+        return 0
     fi
 
     echo ">>>>> Preparing JasPer"
@@ -277,7 +277,7 @@ compile_and_install_jasper() {
 
 compile_and_install_libpng() {
     if get_milestone libpng; then
-        return
+        return 0
     fi
 
     echo ">>>>> Preparing libpng"
@@ -314,7 +314,7 @@ compile_and_install_libpng() {
 # it recklessly forces the unsupported flag onto Intel compilers.
 compile_and_install_hdf5() {
     if get_milestone hdf5; then
-        return
+        return 0
     fi
 
     echo ">>>>> Preparing HDF5 (Serial)"
@@ -396,7 +396,7 @@ compile_and_install_hdf5() {
 
 compile_and_install_pnetcdf() {
     if get_milestone pnetcdf; then
-        return
+        return 0
     fi
 
     echo ">>>>> Preparing NetCDF (C, Fortran, 3, Parallel)"
@@ -432,7 +432,7 @@ compile_and_install_pnetcdf() {
 
 compile_and_install_netcdf_c() {
     if get_milestone netcdf-c; then
-        return
+        return 0
     fi
 
     echo ">>>>> Preparing NetCDF (C, 3, Serial)"
@@ -558,7 +558,7 @@ compile_and_install_netcdf_c() {
 
 compile_and_install_netcdf_fortran() {
     if get_milestone netcdf-fortran; then
-        return
+        return 0
     fi
 
     echo ">>>>> Preparing NetCDF (Fortran, 3, Serial)"
@@ -654,7 +654,7 @@ compile_and_install_netcdf_fortran() {
 
 compile_and_install_pio() {
     if get_milestone pio; then
-        return
+        return 0
     fi
 
     echo ">>>>> Preparing PIO"
@@ -706,7 +706,7 @@ compile_and_install_pio() {
 
 compile_and_install_lapack() {
     if get_milestone lapack; then
-        return
+        return 0
     fi
 
     echo ">>>>> Preparing LAPACK"
@@ -742,7 +742,7 @@ compile_and_install_lapack() {
 
 compile_and_install_esmf() {
     if get_milestone esmf; then
-        return
+        return 0
     fi
 
     echo ">>>>> Preparing ESMF"
@@ -765,7 +765,7 @@ compile_and_install_esmf() {
             SELECTED_ESMF_COMPILER="intel"
             ;;
         *)
-            exit 1
+            return 1
             ;;
     esac
     case "${MPI}" in
@@ -779,7 +779,7 @@ compile_and_install_esmf() {
             SELECTED_ESMF_COMM="openmpi"
             ;;
         *)
-            exit 1
+            return 1
             ;;
     esac
     SELECTED_CFLAGS_NO_PIC="$(echo "${SELECTED_CFLAGS}" | sed 's/[a-z-]*pic[a-z-]*//gi' | awk '{ $1 = $1; print }')"
@@ -849,7 +849,7 @@ compile_and_install_esmf() {
 
 compile_and_install_pfunit() {
     if get_milestone pfunit; then
-        return
+        return 0
     fi
 
     echo ">>>>> Preparing pFUnit"
