@@ -26,15 +26,11 @@ case "${CONTAINER_PRESET}" in
         ;;
     wrf)
         CONTAINER_ENVIRONMENT="base+hdf5+netcdf4${CONTAINER_ENVIRONMENT:++${CONTAINER_ENVIRONMENT}}"
-        # CONTAINER_ENVIRONMENT="base+pnetcdf3+phdf5+pnetcdf4${CONTAINER_ENVIRONMENT:++${CONTAINER_ENVIRONMENT}}"
 
         export JASPERINC="${COMPILER_SPECIFIC_LIBRARY_PATH}/base/include"
         export JASPERLIB="${COMPILER_SPECIFIC_LIBRARY_PATH}/base/lib"
         export HDF5="${COMPILER_SPECIFIC_LIBRARY_PATH}/hdf5"
         export NETCDF="${COMPILER_SPECIFIC_LIBRARY_PATH}/netcdf4"
-        # export PNETCDF="${MPI_SPECIFIC_LIBRARY_PATH}/pnetcdf3"
-        # export PHDF5="${MPI_SPECIFIC_LIBRARY_PATH}/phdf5"
-        # export NETCDFPAR="${MPI_SPECIFIC_LIBRARY_PATH}/pnetcdf4"
 
         export WRFIO_NCD_NO_LARGE_FILE_SUPPORT="0"
         ;;
