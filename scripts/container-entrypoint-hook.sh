@@ -8,7 +8,7 @@ CONTAINER_PRESET="${CONTAINER_PRESET:-}"
 
 case "${CONTAINER_PRESET}" in
     cesm)
-        CONTAINER_ENVIRONMENT="base+pnetcdf3+phdf5+pnetcdf4+pio+lapack+esmf+pfunit${CONTAINER_ENVIRONMENT:++${CONTAINER_ENVIRONMENT}}"
+        CONTAINER_ENVIRONMENT="base+pnetcdf3+phdf5+pnetcdf4+pio+lapack+esmf${CONTAINER_ENVIRONMENT:++${CONTAINER_ENVIRONMENT}}"
 
         export PNETCDF="${MPI_SPECIFIC_LIBRARY_PATH}/pnetcdf3"
         export NETCDF="${MPI_SPECIFIC_LIBRARY_PATH}/pnetcdf4"
@@ -77,6 +77,28 @@ while IFS="" read -r x; do
             export ESMFMKFILE="$(find "${MPI_SPECIFIC_LIBRARY_PATH}/esmf/lib" -name "esmf.mk" -type f -print -quit)"
             ;;
         pfunit)
+            # pFUnit typically requires CMake. Give it hints to find the correct compilers.
+            case "${COMPILER}" in
+                gnu-*)
+                    export CC="gcc"
+                    export CXX="g++"
+                    export FC="gfortran"
+                    ;;
+                intel-2024)
+                    export CC="icx"
+                    export CXX="icpx"
+                    export FC="ifort"
+                    ;;
+                intel-2025)
+                    export CC="icx"
+                    export CXX="icpx"
+                    export FC="ifx"
+                    ;;
+                *)
+                    exit 1
+                    ;;
+            esac
+
             export CMAKE_PREFIX_PATH="${MPI_SPECIFIC_LIBRARY_PATH}/pfunit${CMAKE_PREFIX_PATH:+:${CMAKE_PREFIX_PATH}}"
             ;;
         phdf5)
