@@ -3,7 +3,7 @@ set -euo pipefail
 
 mkdir -p logs
 
-echo "Container push began at $(date -u "+%FT%TZ")"
+echo "[$(date -u "+%FT%TZ")] Begin container push"
 
 TARGET="${1:-"push"}"
 REGISTRY="${2:-"docker.io"}"
@@ -23,7 +23,7 @@ for MPI in "mpich-4" "open-mpi-4" "open-mpi-5" "intel-mpi"; do
                 ;;
         esac
 
-        echo "Pushing container with"
+        echo "[$(date -u "+%FT%TZ")] Pushing container with"
         echo "    REGISTRY=\"${REGISTRY}\""
         echo "    NAMESPACE=\"${NAMESPACE}\""
         echo "    VERSION=\"${VERSION}\""
@@ -35,8 +35,8 @@ for MPI in "mpich-4" "open-mpi-4" "open-mpi-5" "intel-mpi"; do
             VERSION="${VERSION}" \
             COMPILER="${COMPILER}" \
             MPI="${MPI}" \
-            2>&1 | tee "logs/${TARGET}_${REGISTRY}_${NAMESPACE}_${VERSION}_${COMPILER}_${MPI}.log"
+            1>"logs/${TARGET}_${REGISTRY}_${NAMESPACE}_${VERSION}_${COMPILER}_${MPI}.log" 2>&1
     done
 done
 
-echo "Container push ended at $(date -u "+%FT%TZ")"
+echo "[$(date -u "+%FT%TZ")] End container push"

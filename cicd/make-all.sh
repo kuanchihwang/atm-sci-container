@@ -3,7 +3,7 @@ set -euo pipefail
 
 mkdir -p logs
 
-echo "Container build began at $(date -u "+%FT%TZ")"
+echo "[$(date -u "+%FT%TZ")] Begin container build"
 
 TARGET="${1:-"build"}"
 VERSION="${2:-"testing"}"
@@ -21,7 +21,7 @@ for MPI in "mpich-4" "open-mpi-4" "open-mpi-5" "intel-mpi"; do
                 ;;
         esac
 
-        echo "Building container with"
+        echo "[$(date -u "+%FT%TZ")] Building container with"
         echo "    VERSION=\"${VERSION}\""
         echo "    COMPILER=\"${COMPILER}\""
         echo "    MPI=\"${MPI}\""
@@ -29,8 +29,8 @@ for MPI in "mpich-4" "open-mpi-4" "open-mpi-5" "intel-mpi"; do
             VERSION="${VERSION}" \
             COMPILER="${COMPILER}" \
             MPI="${MPI}" \
-            2>&1 | tee "logs/${TARGET}_${VERSION}_${COMPILER}_${MPI}.log"
+            1>"logs/${TARGET}_${VERSION}_${COMPILER}_${MPI}.log" 2>&1
     done
 done
 
-echo "Container build ended at $(date -u "+%FT%TZ")"
+echo "[$(date -u "+%FT%TZ")] End container build"
