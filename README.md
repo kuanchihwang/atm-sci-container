@@ -196,7 +196,12 @@ Finally, refer to the "Hybrid model" section of this [Apptainer documentation](h
 
 ## Container Registries
 
-WIP...
+Prebuilt container images are available and can be pulled from:
+
+* [Docker Hub - hpc-container](https://hub.docker.com/r/kuanchihwang/hpc-container)
+* [Docker Hub - atm-sci-container](https://hub.docker.com/r/kuanchihwang/atm-sci-container)
+* [GitHub Container Registry - hpc-container](https://github.com/users/kuanchihwang/packages/container/package/hpc-container)
+* [GitHub Container Registry - atm-sci-container](https://github.com/users/kuanchihwang/packages/container/package/atm-sci-container)
 
 ## Container Image Variants and Tags
 
