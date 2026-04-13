@@ -18,8 +18,8 @@ dnf makecache
 dnf -y install \
     binutils gcc gcc-c++ gcc-gfortran autoconf automake libtool gdb \
     diffstat diffutils git git-lfs make patch patchutils pkgconf pkgconf-pkg-config \
-    bash-completion coreutils-common coreutils-single jq less perl procps-ng psmisc python-unversioned-command python3 python3-pip python3.12 python3.12-pip time tcsh vim-minimal yq \
-    ca-certificates curl-minimal hostname rsync openssh-clients wget \
+    bash-completion coreutils-common coreutils-single jq less perl procps-ng psmisc python-unversioned-command python3 python3-pip python3.12 python3.12-pip tcsh time vim-minimal yq \
+    ca-certificates curl-minimal hostname openssh-clients rsync wget \
     bzip2 gzip lz4 unzip xz zip zstd
 dnf -y install \
     bzip2-devel libzstd-devel lz4-devel xz-devel \
