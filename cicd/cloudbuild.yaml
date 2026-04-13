@@ -1,5 +1,5 @@
 steps:
-  - name: 'quay.io/containers/podman:v5.7.1'
+  - name: 'docker:28.5.2-cli'
     entrypoint: 'sh'
     secretEnv:
       - 'DOCKER_HUB_PAT'
@@ -8,28 +8,27 @@ steps:
     args:
       - '-c'
       - >-
-        echo "$${DOCKER_HUB_PAT}" | podman login --username "$${NAMESPACE}" --password-stdin "$${DOCKER_HUB_REGISTRY}";
-        echo "$${GITHUB_PACKAGE_REGISTRY_PAT}" | podman login --username "$${NAMESPACE}" --password-stdin "$${GITHUB_PACKAGE_REGISTRY}"
-  - name: 'quay.io/containers/podman:v5.7.1'
+        echo "$${DOCKER_HUB_PAT}" | docker login --username "$${NAMESPACE}" --password-stdin "$${DOCKER_HUB_REGISTRY}";
+        echo "$${GITHUB_PACKAGE_REGISTRY_PAT}" | docker login --username "$${NAMESPACE}" --password-stdin "$${GITHUB_PACKAGE_REGISTRY}"
+  - name: 'docker:28.5.2-cli'
     script: |
       #!/bin/sh
       set -euo pipefail
 
-      dnf makecache
-      dnf -y install make
+      apk --no-cache add git make
 
       make stage
-      ./cicd/make-all.sh build "${VERSION}"
-      podman image ls
-      ./cicd/push-all.sh push "${DOCKER_HUB_REGISTRY}" "${NAMESPACE}" "${VERSION}"
-      ./cicd/push-all.sh push "${GITHUB_PACKAGE_REGISTRY}" "${NAMESPACE}" "${VERSION}"
-  - name: 'quay.io/containers/podman:v5.7.1'
+      ./cicd/make-all.sh build-hpc "${VERSION}"
+      docker image ls
+      ./cicd/push-all.sh push-hpc "${DOCKER_HUB_REGISTRY}" "${NAMESPACE}" "${VERSION}"
+      ./cicd/push-all.sh push-hpc "${GITHUB_PACKAGE_REGISTRY}" "${NAMESPACE}" "${VERSION}"
+  - name: 'docker:28.5.2-cli'
     entrypoint: 'sh'
     args:
       - '-c'
       - >-
-        podman logout "$${DOCKER_HUB_REGISTRY}";
-        podman logout "$${GITHUB_PACKAGE_REGISTRY}"
+        docker logout "$${DOCKER_HUB_REGISTRY}";
+        docker logout "$${GITHUB_PACKAGE_REGISTRY}"
 availableSecrets:
   secretManager:
     - versionName: 'projects/${PROJECT_ID}/secrets/docker-hub-pat/versions/latest'
@@ -39,20 +38,13 @@ availableSecrets:
 options:
   defaultLogsBucketBehavior: 'REGIONAL_USER_OWNED_BUCKET'
   env:
-    # The VM used by Google Cloud Build does not support cgroup v2...
-    - 'PODMAN_IGNORE_CGROUPSV1_WARNING=1'
     - 'DOCKER_HUB_REGISTRY=docker.io'
     - 'GITHUB_PACKAGE_REGISTRY=ghcr.io'
     - 'NAMESPACE=kuanchihwang'
-    - 'VERSION=${TAG_NAME}'
+    - 'VERSION=${REF_NAME}'
   logStreamingOption: 'STREAM_ON'
   logging: 'GCS_ONLY'
   pool:
     name: 'projects/${PROJECT_ID}/locations/${LOCATION}/workerPools/cloud-builder-pool'
-  volumes:
-    - name: 'graphroot'
-      path: '/var/lib/containers'
-    - name: 'runroot'
-      path: '/run/containers'
 queueTtl: '3600s'
 timeout: '43200s'
