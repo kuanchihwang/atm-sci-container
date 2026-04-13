@@ -51,6 +51,8 @@ case "${COMPILER}" in
             "!" -path "/var/intel/installercache" \
             "!" -path "/var/intel/installercache/packagemanager.db" \
             -delete
+        # Shush Intel `ifort` compiler about its deprecation message.
+        echo "-diag-disable=10448" > /opt/intel/oneapi/compiler/latest/bin/ifort.cfg
         ;;
     intel-2025)
         sh "${COMPILERS_PATH}/intel-dpcpp-cpp-compiler-2025.3.3.17_offline.sh" \
