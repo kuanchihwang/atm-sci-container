@@ -225,9 +225,9 @@ WIP...
 ## Included Software Stack
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./README-Container-Software-Stack-Dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="./README-Container-Software-Stack-Light.png">
-  <img alt="Container Software Stack" src="./README-Container-Software-Stack-Light.png">
+  <source media="(prefers-color-scheme: dark)" srcset="./README-Container-Software-Stack-Dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="./README-Container-Software-Stack-Light.svg">
+  <img alt="Container Software Stack" src="./README-Container-Software-Stack-Light.svg">
 </picture>
 
 * AlmaLinux Base Image 9.7
