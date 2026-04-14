@@ -25,8 +25,8 @@ DATA_IMAGE_NAME ?= docker.io/kuanchihwang/atm-sci-container-data
 DATA_IMAGE_TAG ?= 2026-04-01
 
 DOCKER = $(shell which docker 1>/dev/null 2>&1 && echo docker || echo podman)
-HPC_IMAGE_NAME = hpc-container
-ATM_SCI_IMAGE_NAME = atm-sci-container
+HPC_IMAGE_NAME = localhost/build-artifact/hpc-container
+ATM_SCI_IMAGE_NAME = localhost/build-artifact/atm-sci-container
 IMAGE_TAG = $(VERSION)_$(COMPILER)_$(MPI)
 
 .NOTPARALLEL:
@@ -62,38 +62,38 @@ build-hpc:
 		--build-arg COMPILER="$(COMPILER)" \
 		--build-arg MPI="$(MPI)" \
 		--file Containerfile.hpc \
-		--label "org.opencontainers.image.revision=$(shell git rev-parse --verify HEAD)" \
+		--label "org.opencontainers.image.revision=$$(git rev-parse --verify HEAD)" \
 		--label "org.opencontainers.image.version=$(VERSION)" \
-		--tag "localhost/build-artifact/$(HPC_IMAGE_NAME):$(IMAGE_TAG)" .
+		--tag "$(HPC_IMAGE_NAME):$(IMAGE_TAG)" .
 
 .PHONY: build-atm-sci
 build-atm-sci:
 	@$(DOCKER) image build \
-		--build-arg BASE_IMAGE_NAME="localhost/build-artifact/$(HPC_IMAGE_NAME)" \
+		--build-arg BASE_IMAGE_NAME="$(HPC_IMAGE_NAME)" \
 		--build-arg BASE_IMAGE_TAG="$(IMAGE_TAG)" \
 		--build-arg DATA_IMAGE_NAME="$(DATA_IMAGE_NAME)" \
 		--build-arg DATA_IMAGE_TAG="$(DATA_IMAGE_TAG)" \
 		--file Containerfile.atm-sci \
-		--label "org.opencontainers.image.revision=$(shell git rev-parse --verify HEAD)" \
+		--label "org.opencontainers.image.revision=$$(git rev-parse --verify HEAD)" \
 		--label "org.opencontainers.image.version=$(VERSION)" \
-		--tag "localhost/build-artifact/$(ATM_SCI_IMAGE_NAME):$(IMAGE_TAG)" .
+		--tag "$(ATM_SCI_IMAGE_NAME):$(IMAGE_TAG)" .
 
 .PHONY: push
 push: push-hpc push-atm-sci
 
 .PHONY: push-hpc
 push-hpc:
-	@$(DOCKER) image tag "localhost/build-artifact/$(HPC_IMAGE_NAME):$(IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$(HPC_IMAGE_NAME):$(IMAGE_TAG)"
-	@$(DOCKER) image tag "localhost/build-artifact/$(HPC_IMAGE_NAME):$(IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$(HPC_IMAGE_NAME):latest_$(COMPILER)_$(MPI)"
-	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$(HPC_IMAGE_NAME):$(IMAGE_TAG)"
-	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$(HPC_IMAGE_NAME):latest_$(COMPILER)_$(MPI)"
+	@$(DOCKER) image tag "$(HPC_IMAGE_NAME):$(IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(HPC_IMAGE_NAME)"):$(IMAGE_TAG)"
+	@$(DOCKER) image tag "$(HPC_IMAGE_NAME):$(IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(HPC_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)"
+	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(HPC_IMAGE_NAME)"):$(IMAGE_TAG)"
+	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(HPC_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)"
 
 .PHONY: push-atm-sci
 push-atm-sci:
-	@$(DOCKER) image tag "localhost/build-artifact/$(ATM_SCI_IMAGE_NAME):$(IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$(ATM_SCI_IMAGE_NAME):$(IMAGE_TAG)"
-	@$(DOCKER) image tag "localhost/build-artifact/$(ATM_SCI_IMAGE_NAME):$(IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$(ATM_SCI_IMAGE_NAME):latest_$(COMPILER)_$(MPI)"
-	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$(ATM_SCI_IMAGE_NAME):$(IMAGE_TAG)"
-	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$(ATM_SCI_IMAGE_NAME):latest_$(COMPILER)_$(MPI)"
+	@$(DOCKER) image tag "$(ATM_SCI_IMAGE_NAME):$(IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(ATM_SCI_IMAGE_NAME)"):$(IMAGE_TAG)"
+	@$(DOCKER) image tag "$(ATM_SCI_IMAGE_NAME):$(IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(ATM_SCI_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)"
+	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(ATM_SCI_IMAGE_NAME)"):$(IMAGE_TAG)"
+	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(ATM_SCI_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)"
 
 .PHONY: login
 login:
@@ -108,7 +108,7 @@ clean: clean-hpc clean-atm-sci
 
 .PHONY: clean-hpc
 clean-hpc:
-	@for IMAGE in $$($(DOCKER) image ls -q "$(HPC_IMAGE_NAME)"); do \
+	@for IMAGE in $$($(DOCKER) image ls -q "$$(basename "$(HPC_IMAGE_NAME)")"); do \
 		$(DOCKER) image rm -f -i "$${IMAGE}"; \
 	done
 	@for IMAGE in $$($(DOCKER) image ls -q --filter "dangling=true"); do \
@@ -117,7 +117,7 @@ clean-hpc:
 
 .PHONY: clean-atm-sci
 clean-atm-sci:
-	@for IMAGE in $$($(DOCKER) image ls -q "$(ATM_SCI_IMAGE_NAME)"); do \
+	@for IMAGE in $$($(DOCKER) image ls -q "$$(basename "$(ATM_SCI_IMAGE_NAME)")"); do \
 		$(DOCKER) image rm -f -i "$${IMAGE}"; \
 	done
 	@for IMAGE in $$($(DOCKER) image ls -q --filter "dangling=true"); do \
