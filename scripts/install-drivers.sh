@@ -3,7 +3,8 @@ set -euo pipefail
 
 dnf makecache
 dnf -y --disablerepo="*" --enablerepo="doca" install \
-    knem libxpmem-devel rdma-core-devel
+    knem libxpmem libxpmem-devel rdma-core rdma-core-devel \
+    infiniband-diags libibverbs-utils librdmacm-utils
 LIBPSM2_DEVEL="$(dnf -q --disablerepo="*" --enablerepo="cornelis-opxs" repoquery \
     libpsm2-devel | \
     grep -E -v "cuda|rocm" | \
