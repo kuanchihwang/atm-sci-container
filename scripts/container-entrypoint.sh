@@ -50,6 +50,7 @@ create_or_reuse_user
 
 # Simulate a login shell despite not actually being one.
 export HOME="$(getent passwd "${CONTAINER_USER}" | cut -d ":" -f 6)"
+export LOGNAME="${CONTAINER_USER}"
 export USER="${CONTAINER_USER}"
 
 source_entrypoint_hook
