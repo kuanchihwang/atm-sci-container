@@ -24,7 +24,8 @@ For an overview of why containers remain valuable even for HPC scenarios, see th
 
 ### CESM
 
-In this walkthrough, we will configure [CAM-SIMA](https://github.com/ESCOMP/CAM-SIMA) with MPAS dynamical core, a global 480-km mesh, Kessler microphysics, and the moist baroclinic wave initial condition. CAM-SIMA is a component model of [CESM](https://github.com/ESCOMP/CESM). The model will be built and run with GNU compilers version 15 and MPICH version 4.
+> [!NOTE]
+> In this walkthrough, we will configure [CAM-SIMA](https://github.com/ESCOMP/CAM-SIMA) with MPAS dynamical core, a global 480-km mesh, Kessler microphysics, and the moist baroclinic wave initial condition. CAM-SIMA is a component model of [CESM](https://github.com/ESCOMP/CESM). The model will be built and run with GNU compilers version 15 and MPICH version 4.
 
 Pull the appropriate container image and create a container from it.
 
@@ -114,7 +115,8 @@ If multi-node execution and optimal performance are desired, it is recommended t
 
 ### MPAS
 
-In this walkthrough, we will build [MPAS](https://github.com/MPAS-Dev/MPAS-Model) with Intel compilers version 2025 and Open MPI version 5.
+> [!NOTE]
+> In this walkthrough, we will build [MPAS](https://github.com/MPAS-Dev/MPAS-Model) with Intel compilers version 2025 and Open MPI version 5.
 
 Pull the appropriate container image and create a container from it.
 
@@ -146,7 +148,8 @@ If multi-node execution and optimal performance are desired, it is recommended t
 
 ### WRF
 
-In this walkthrough, we will build [WRF](https://github.com/wrf-model/WRF) with Intel compilers version 2024 and Open MPI version 4.
+> [!NOTE]
+> In this walkthrough, we will build [WRF](https://github.com/wrf-model/WRF) with Intel compilers version 2024 and Open MPI version 4.
 
 Pull the appropriate container image and create a container from it.
 
