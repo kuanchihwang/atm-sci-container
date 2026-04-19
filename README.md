@@ -312,6 +312,8 @@ The following high-speed and low-latency transports are supported by the contain
 
 Please refer to the vendor documentation for the exact list of supported hardware.
 
+Shout out to the [Guix HPC](https://hpc.guix.info) project for the [discovery](https://hpc.guix.info/blog/2024/11/targeting-the-crayhpe-slingshot-interconnect) of how to build libfabric with support for HPE Slingshot 11 NIC.
+
 ## Building from Source
 
 To build the container images from source, use the `Containerfile` directly or use the `Makefile` for convenience. You must be running an x86-64 Linux system with either `docker` or `podman` installed. If both are available, `docker` takes precedence. The supported system architecture is constrained by the included device drivers, not by this project.
