@@ -19,10 +19,7 @@
   * [Supported Transports](#supported-transports)
   * [Building from Source](#building-from-source)
 
-> [!NOTE]
-> This `README.md` is a work in progress. More information to come soon...
-
-High-performance computing (HPC) containers for parallel workloads (e.g., MPI, OpenMP), delivering portability, reproducibility, and optimal single-/multi-node performance out of the box.
+**High-performance computing (HPC) containers** for parallel workloads (e.g., MPI, OpenMP), delivering portability, reproducibility, and optimal single-/multi-node performance out of the box.
 
 For an overview of why containers remain valuable even for HPC scenarios, see the [Apptainer introduction](https://apptainer.org/docs/user/latest/introduction.html).
 
@@ -43,7 +40,7 @@ docker container run -it --rm \
     "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_mpich-4"
 ```
 
-You are now in an interactive shell session inside the created container. Continue on:
+You are now in an interactive shell session inside the created container. Continue with:
 
 ```shell
 # Set up git user name and email because CIME demands that you have them...
@@ -115,9 +112,9 @@ ls -l atm/hist
 
 Congratulations! You just built CAM-SIMA and ran a test case on your own system with little effort.
 
-Traditionally, porting CESM and its component models like CAM-SIMA to a new system requires substantial effort. Its notoriously difficult dependency stack certainly does not help reduce the barrier to entry. In contrast, with `atm-sci-container`, standard CAM-SIMA dependencies are already included, and the container entrypoint takes care of the environment setup for you. There is no need to mess with any packages or environment variables at all. Hooray!
+Traditionally, porting CESM and its component models like CAM-SIMA to a new system requires substantial effort. Its notoriously difficult dependency stack certainly does not help reduce the barrier to entry. In contrast, with `atm-sci-container`, the standard CAM-SIMA dependencies are already included, and the container entrypoint takes care of the environment setup for you. There is no need to mess with any packages or environment variables at all. Hooray!
 
-If multi-node execution and optimal performance are desired, it is recommended that you use [Apptainer](https://apptainer.org). Specifically, refer to the "Hybrid model" section of this [Apptainer documentation](https://apptainer.org/docs/user/latest/mpi.html) for details.
+If multi-node execution and optimal performance are desired, it is recommended to use [Apptainer](https://apptainer.org). Specifically, refer to the "[Running a Container](#running-a-container)" and "[Running a Container across Multiple Nodes](#running-a-container-across-multiple-nodes)" sections for details.
 
 ### MPAS
 
@@ -134,7 +131,7 @@ docker container run -it --rm \
     "docker.io/kuanchihwang/atm-sci-container:latest_intel-2025_open-mpi-5"
 ```
 
-You are now in an interactive shell session inside the created container. Continue on:
+You are now in an interactive shell session inside the created container. Continue with:
 
 ```shell
 # Clone model source code.
@@ -144,13 +141,13 @@ git clone --branch develop --depth 1 "https://github.com/MPAS-Dev/MPAS-Model.git
 cd MPAS-Model
 make intel CORE="init_atmosphere"
 make intel CORE="atmosphere"
-# You should find that model executables like `init_atmosphere_model`, `atmosphere_model`, etc. have been generated.
+# You should find that model executables such as `init_atmosphere_model`, `atmosphere_model`, etc. have been generated.
 ls -l
 ```
 
-You can now run the model as you normally would. Yes, it is really that easy. With `atm-sci-container`, standard MPAS dependencies are already included, and the container entrypoint takes care of the environment setup for you. There is no need to mess with any packages or environment variables at all. Hooray!
+You can now run the model as you normally would. Yes, it is really that easy. With `atm-sci-container`, the standard MPAS dependencies are already included, and the container entrypoint takes care of the environment setup for you. There is no need to mess with any packages or environment variables at all. Hooray!
 
-If multi-node execution and optimal performance are desired, it is recommended that you use [Apptainer](https://apptainer.org). Specifically, refer to the "Hybrid model" section of this [Apptainer documentation](https://apptainer.org/docs/user/latest/mpi.html) for details.
+If multi-node execution and optimal performance are desired, it is recommended to use [Apptainer](https://apptainer.org). Specifically, refer to the "[Running a Container](#running-a-container)" and "[Running a Container across Multiple Nodes](#running-a-container-across-multiple-nodes)" sections for details.
 
 ### WRF
 
@@ -167,7 +164,7 @@ docker container run -it --rm \
     "docker.io/kuanchihwang/atm-sci-container:latest_intel-2024_open-mpi-4"
 ```
 
-You are now in an interactive shell session inside the created container. Continue on:
+You are now in an interactive shell session inside the created container. Continue with:
 
 ```shell
 # Clone model source code.
@@ -187,7 +184,7 @@ cd WRF
 # For others, feel free to choose whatever you would like.
 ./configure_new
 ./compile_new
-# You should find that model executables like `real`, `wrf`, etc. have been generated.
+# You should find that model executables such as `real`, `wrf`, etc. have been generated.
 ls -l install/bin
 
 # Build WPS.
@@ -196,13 +193,13 @@ cd ../WPS
 # For others, feel free to choose whatever you would like.
 ./configure_new
 ./compile_new
-# You should find that model executables like `geogrid`, `ungrib`, `metgrid`, etc. have been generated.
+# You should find that model executables such as `geogrid`, `ungrib`, `metgrid`, etc. have been generated.
 ls -l install/bin
 ```
 
-You can now run the model as you normally would. Yes, again, it is really that easy. With `atm-sci-container`, standard WRF dependencies are already included, and the container entrypoint takes care of the environment setup for you. There is no need to mess with any packages or environment variables at all. Hooray!
+You can now run the model as you normally would. Yes, again, it is really that easy. With `atm-sci-container`, the standard WRF dependencies are already included, and the container entrypoint takes care of the environment setup for you. There is no need to mess with any packages or environment variables at all. Hooray!
 
-If multi-node execution and optimal performance are desired, it is recommended that you use [Apptainer](https://apptainer.org). Specifically, refer to the "Hybrid model" section of this [Apptainer documentation](https://apptainer.org/docs/user/latest/mpi.html) for details.
+If multi-node execution and optimal performance are desired, it is recommended to use [Apptainer](https://apptainer.org). Specifically, refer to the "[Running a Container](#running-a-container)" and "[Running a Container across Multiple Nodes](#running-a-container-across-multiple-nodes)" sections for details.
 
 ## Container Registries
 
@@ -217,14 +214,14 @@ Prebuilt container images are available and can be pulled from:
 
 The container images are available in **2** variants:
 
-1. `hpc-container`: A general-purpose HPC container image suitable for parallel workloads (e.g., MPI, OpenMP). It includes everything listed in the "[Included Software Stack](#included-software-stack)" section, except for libraries that are commonly used by atmospheric models.
-2. `atm-sci-container`: A specialized HPC container image tailored for atmospheric science applications. Built upon `hpc-container`, it includes additional libraries that are commonly used by atmospheric models such as CESM, MPAS, and WRF.
+1. `hpc-container`: A **general-purpose** HPC container image suitable for parallel workloads (e.g., MPI, OpenMP). It includes everything listed in the "[Included Software Stack](#included-software-stack)" section, except for libraries that are commonly used by atmospheric models.
+2. `atm-sci-container`: A **specialized** HPC container image tailored for **atmospheric science applications**. Built upon `hpc-container`, it includes additional libraries that are commonly used by atmospheric models such as CESM, MPAS, and WRF.
 
 Both variants are tagged in the `${VERSION}_${COMPILER}_${MPI}` format, where:
 
-* `${VERSION}` indicates the version of the container image. It should correspond to a Git tag in this project, or `latest`.
-* `${COMPILER}` indicates the compiler toolchain available in the container image. It should be one of `gnu-11`, `gnu-12`, `gnu-13`, `gnu-14`, `gnu-15`, `intel-2024`, or `intel-2025`.
-* `${MPI}` indicates the MPI library available in the container image. It should be one of `mpich-4`, `open-mpi-4`, `open-mpi-5`, or `intel-mpi`.
+* `${VERSION}` indicates the **version** of the container image. It should correspond to a Git tag in this project, or `latest`.
+* `${COMPILER}` indicates the **compiler toolchain** available in the container image. It should be one of `gnu-11`, `gnu-12`, `gnu-13`, `gnu-14`, `gnu-15`, `intel-2024`, or `intel-2025`.
+* `${MPI}` indicates the **MPI library** available in the container image. It should be one of `mpich-4`, `open-mpi-4`, `open-mpi-5`, or `intel-mpi`.
 
 For each variant and `${VERSION}`, there are currently **23** combinations of compiler toolchains and MPI libraries available.
 
@@ -451,6 +448,7 @@ Refer to the "Hybrid model" section of this [Apptainer documentation](https://ap
     * Serial mode
     * Parallel mode
   * PNetCDF 1.14.1
+    * Classic data model, Parallel mode
   * NetCDF-C 4.9.3
     * Classic data model, Serial mode
     * Enhanced data model, Serial mode
@@ -496,7 +494,7 @@ Shout out to the [Guix HPC](https://hpc.guix.info) project for the [discovery](h
 
 ## Building from Source
 
-To build the container images from source, use the `Containerfile` directly or use the `Makefile` for convenience. You must be running an x86-64 Linux system with either `docker` or `podman` installed. If both are available, `docker` takes precedence. The supported system architecture is constrained by the included device drivers, not by this project.
+To build the container images from source, use the `Containerfile` directly or the `Makefile` for convenience. You must be running an x86-64 Linux system with either `docker` or `podman` installed. If both are available, `docker` takes precedence. The supported system architecture is constrained by the included device drivers, not by this project.
 
 1. Pull the base and data container images.
 
@@ -504,7 +502,7 @@ To build the container images from source, use the `Containerfile` directly or u
     make stage
     ```
 
-2. Build container images by specifying the desired combination of `VERSION`, `COMPILER`, and `MPI`, one at a time. See the "[Container Image Variants and Tags](#container-image-variants-and-tags)" section for details. The `build-hpc` target builds the `hpc-container` variant, the `build-atm-sci` target builds the `atm-sci-container` variant, and the `build` target builds both.
+2. Build container images by specifying the desired combination of `VERSION`, `COMPILER`, and `MPI`, one at a time. Refer to the "[Container Image Variants and Tags](#container-image-variants-and-tags)" section for details. The `build-hpc` target builds the `hpc-container` variant, the `build-atm-sci` target builds the `atm-sci-container` variant, and the `build` target builds both.
 
     ```shell
     make build [VERSION=...] [COMPILER=...] [MPI=...]
