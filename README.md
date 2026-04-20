@@ -1,6 +1,7 @@
 # atm-sci-container
 
 * [atm-sci-container](#atm-sci-container)
+  * [Prerequisites](#prerequisites)
   * [Quick Start](#quick-start)
     * [CESM](#cesm)
     * [MPAS](#mpas)
@@ -22,6 +23,11 @@
 **High-performance computing (HPC) containers** for parallel workloads (e.g., MPI, OpenMP), delivering portability, reproducibility, and optimal single-/multi-node performance out of the box.
 
 For an overview of why containers remain valuable even for HPC scenarios, see the [Apptainer introduction](https://apptainer.org/docs/user/latest/introduction.html).
+
+## Prerequisites
+
+* An **x86-64 Linux system**, preferably baremetal. Virtualization should also be fine, but usually incurs significant performance overhead. This constraint comes from the included device drivers, not from this project.
+* A **container runtime**: [Docker](https://docs.docker.com/engine/install), [Podman](https://podman.io/docs/installation), or [Apptainer](https://apptainer.org/get-started).
 
 ## Quick Start
 
