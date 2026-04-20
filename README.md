@@ -8,6 +8,12 @@
   * [Container Registries](#container-registries)
   * [Container Image Variants and Tags](#container-image-variants-and-tags)
   * [Usage](#usage)
+    * [Running a Container](#running-a-container)
+    * [User Configuration](#user-configuration)
+    * [Environment Configuration](#environment-configuration)
+      * [Presets](#presets)
+      * [Environment Components](#environment-components)
+    * [Running a Container across Multiple Nodes](#running-a-container-across-multiple-nodes)
   * [Included Software Stack](#included-software-stack)
   * [Included Device Drivers](#included-device-drivers)
   * [Supported Transports](#supported-transports)
@@ -224,7 +230,181 @@ For each variant and `${VERSION}`, there are currently **23** combinations of co
 
 ## Usage
 
-WIP...
+### Running a Container
+
+The container uses `/usr/local/bin/container-entrypoint.sh` as its default [entrypoint](https://docs.docker.com/reference/dockerfile/#entrypoint) and `/bin/bash` as its default [command](https://docs.docker.com/reference/dockerfile/#cmd). At startup, the entrypoint handles [user creation](#user-configuration), [environment setup](#environment-configuration), and privilege dropping through [`setpriv`](https://man7.org/linux/man-pages/man1/setpriv.1.html) before [executing](https://man7.org/linux/man-pages/man2/execve.2.html) the given command for better security. The container provides `/working` as its default world-writable [working directory](https://docs.docker.com/reference/dockerfile/#workdir).
+
+To start an interactive shell session:
+
+```shell
+# Docker
+docker container run -it --rm \
+    "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_open-mpi-5"
+
+# Podman
+podman container run -it --rm \
+    "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_open-mpi-5"
+
+# Apptainer
+apptainer build \
+    "atm-sci-container@latest_gnu-15_open-mpi-5.sif" \
+    "docker://kuanchihwang/atm-sci-container:latest_gnu-15_open-mpi-5"
+apptainer run \
+    "atm-sci-container@latest_gnu-15_open-mpi-5.sif"
+```
+
+> [!IMPORTANT]
+> With Apptainer, use `apptainer run` instead of `apptainer shell` to ensure that the container entrypoint executes. Both `apptainer shell` and `apptainer exec` bypass the container entrypoint, so the aforementioned startup tasks like [environment setup](#environment-configuration) will not be applied. In either case, you can still manually execute `container-entrypoint.sh`.
+
+A custom command, along with any arguments, can be supplied for execution instead of the default shell:
+
+```shell
+docker container run --rm \
+    "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_open-mpi-5" \
+    gcc --version
+docker container run --rm \
+    "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_open-mpi-5" \
+    g++ --version
+docker container run --rm \
+    "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_open-mpi-5" \
+    gfortran --version
+docker container run --rm \
+    "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_open-mpi-5" \
+    mpirun --version
+```
+
+For HPC scenarios, some run options are frequently used:
+
+> [!IMPORTANT]
+> If you use Apptainer, you likely do not need to specify any of these options.
+
+* [`--mount`](https://docs.docker.com/reference/cli/docker/container/run/#mount), [`--volume`](https://docs.docker.com/reference/cli/docker/container/run/#volume) ([`-v`](https://docs.docker.com/reference/cli/docker/container/run/#volume))
+
+Mount a [host path](https://docs.docker.com/engine/storage/bind-mounts) or a [volume](https://docs.docker.com/engine/storage/volumes) into a container. For example, in the [Quick Start](#quick-start) section, all walkthroughs begin by spinning up a container with `--volume "working:/working"`, which mounts a volume named `working` at `/working`.
+
+If your application performs heavy I/O operations, it is recommended to specify this option. Storing data in the writable [container layer](https://docs.docker.com/engine/storage/drivers) usually incurs significant performance overhead.
+
+* [`--ipc=host`](https://docs.docker.com/reference/cli/docker/container/run/#ipc), [`--pid=host`](https://docs.docker.com/reference/cli/docker/container/run/#pid), [`--network=host`](https://docs.docker.com/reference/cli/docker/container/run/#network)
+
+Disable namespace separation for IPC, PID, and network for improved intra-node communication performance by leveraging available Linux kernel features. In typical HPC environments, container runtimes are rootless. Specifying these options therefore does not degrade security.
+
+* [`--privileged`](https://docs.docker.com/reference/cli/docker/container/run/#privileged)
+
+Grant extended privileges to a container (e.g., access to all host devices) for improved inter-node communication performance by leveraging available HPC network interconnects. In typical HPC environments, container runtimes are rootless. Specifying this option therefore does not degrade security.
+
+For other run options, refer to the documentation of each container runtime (e.g., [Docker](https://docs.docker.com/reference/cli/docker/container/run), [Podman](https://docs.podman.io/en/latest/markdown/podman-run.1.html), [Apptainer](https://apptainer.org/docs/user/latest/cli/apptainer_run.html)).
+
+### User Configuration
+
+By default, the container entrypoint creates and switches to a non-root user named `alice` with UID and GID `1865` for better security. This behavior can be controlled with the following environment variables:
+
+| Variable | Default | Description |
+| --- | --- | --- |
+| `CONTAINER_USER` | `alice` | Name of the non-root user to create and run as. If this user already exists in the container, it is reused and `CONTAINER_UID`/`CONTAINER_GID` are ignored. |
+| `CONTAINER_UID` | `1865` | UID of the non-root user to create. |
+| `CONTAINER_GID` | Same as `CONTAINER_UID` | GID of the non-root user to create. |
+
+To match the container user to your host user, pass your user name, UID, and GID:
+
+```shell
+docker container run -it --rm \
+    --env "CONTAINER_USER=$(id -nu)" \
+    --env "CONTAINER_UID=$(id -u)" \
+    --env "CONTAINER_GID=$(id -g)" \
+    "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_open-mpi-5"
+```
+
+If the container is already started as a non-root user (e.g., in most Apptainer environments), the user switching is skipped entirely.
+
+### Environment Configuration
+
+The container entrypoint sets `PATH`, `LD_LIBRARY_PATH`, `CMAKE_PREFIX_PATH`, and application-specific environment variables based on two sources: `CONTAINER_PRESET` and `CONTAINER_ENVIRONMENT`.
+
+By default, `CONTAINER_PRESET` and `CONTAINER_ENVIRONMENT` are not set, yielding a clean environment.
+
+> [!IMPORTANT]
+> Presets and environment components are configured at run time by the container entrypoint hook at `/usr/local/bin/container-entrypoint-hook.sh`, which is only present in `atm-sci-container`. They have no effect in `hpc-container`, where compiler toolchain and MPI library paths are already configured at build time.
+
+#### Presets
+
+A preset is a named shortcut that loads a well-known combination of environment components:
+
+> [!IMPORTANT]
+> Only one preset can be specified at a time.
+
+| Preset | Environment Components Loaded | Variables Exported |
+| --- | --- | --- |
+| `cesm` | `base+pnetcdf3+phdf5+pnetcdf4+pio+lapack+esmf` | `PNETCDF`, `NETCDF`, `PIO`, `CESM_NTASKS_PER_NODE` |
+| `mpas` | `base+pnetcdf3+phdf5+pnetcdf4+pio` | `PNETCDF`, `NETCDF`, `PIO` |
+| `wrf` | `base+hdf5+netcdf4` | `JASPERINC`, `JASPERLIB`, `HDF5`, `NETCDF`, `WRFIO_NCD_NO_LARGE_FILE_SUPPORT` |
+
+For example, to load the `cesm` preset, pass its name via `CONTAINER_PRESET`:
+
+```shell
+docker container run -it --rm \
+    --env "CONTAINER_PRESET=cesm" \
+    "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_open-mpi-5"
+```
+
+#### Environment Components
+
+Individual libraries can be loaded directly without a preset by setting `CONTAINER_ENVIRONMENT` to a `+`-delimited list of environment components. When both `CONTAINER_PRESET` and `CONTAINER_ENVIRONMENT` are set, the environment components in `CONTAINER_PRESET` are loaded first, followed by those in `CONTAINER_ENVIRONMENT`.
+
+| Environment Component | Libraries Loaded | Variables Exported |
+| --- | --- | --- |
+| `base` | libaec, zlib, zstd, libjpeg, JasPer, libpng | `PATH`, `LD_LIBRARY_PATH`, `CMAKE_PREFIX_PATH` |
+| `hdf5` | HDF5 (Serial) | `PATH`, `LD_LIBRARY_PATH` |
+| `lapack` | Netlib LAPACK | `LD_LIBRARY_PATH` |
+| `netcdf3` | NetCDF (Classic, Serial) | `PATH`, `LD_LIBRARY_PATH`, `CMAKE_PREFIX_PATH` |
+| `netcdf4` | NetCDF (Enhanced, Serial) | `PATH`, `LD_LIBRARY_PATH`, `CMAKE_PREFIX_PATH` |
+| `esmf` | ESMF | `PATH`, `LD_LIBRARY_PATH`, `CMAKE_PREFIX_PATH`, `ESMFMKFILE` |
+| `pfunit` | pFUnit | `CC`, `CXX`, `FC`, `CMAKE_PREFIX_PATH` |
+| `phdf5` | HDF5 (Parallel) | `PATH`, `LD_LIBRARY_PATH` |
+| `pio` | ParallelIO | `LD_LIBRARY_PATH` |
+| `pnetcdf3` | PNetCDF (Classic, Parallel) | `PATH`, `LD_LIBRARY_PATH`, `CMAKE_PREFIX_PATH` |
+| `pnetcdf4` | NetCDF (Enhanced, Parallel) | `PATH`, `LD_LIBRARY_PATH`, `CMAKE_PREFIX_PATH` |
+
+For example, to load only pFUnit, pass its name via `CONTAINER_ENVIRONMENT`:
+
+```shell
+docker container run -it --rm \
+    --env "CONTAINER_ENVIRONMENT=pfunit" \
+    "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_open-mpi-5"
+```
+
+To load pFUnit on top of the `cesm` preset:
+
+```shell
+docker container run -it --rm \
+    --env "CONTAINER_PRESET=cesm" \
+    --env "CONTAINER_ENVIRONMENT=pfunit" \
+    "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_open-mpi-5"
+```
+
+### Running a Container across Multiple Nodes
+
+Running a containerized MPI application on a single node should work out of the box.
+
+For running across multiple nodes, the containerized MPI libraries need to be compatible with the counterparts on the host. At least one process management interface (e.g., PMI1, PMI2, PMIx) also needs to match between both sides. If HPC network interconnects are available, the containerized user-space drivers additionally need to be compatible with the kernel-space counterparts on the host.
+
+In general, the host MPI launcher (e.g., `mpiexec`, `mpirun`, `srun`) invokes the container on each node via `apptainer exec`:
+
+```shell
+mpirun -n 4 apptainer exec \
+    "atm-sci-container@latest_gnu-15_open-mpi-5.sif" \
+    /working/mpi-application
+```
+
+Since `apptainer exec` bypasses the container entrypoint, source the container entrypoint hook to set up the environment before running the MPI application:
+
+```shell
+mpirun -n 4 apptainer exec \
+    --env "CONTAINER_PRESET=cesm" \
+    "atm-sci-container@latest_gnu-15_open-mpi-5.sif" \
+    bash -c 'source /usr/local/bin/container-entrypoint-hook.sh && exec /working/mpi-application'
+```
+
+Refer to the "Hybrid model" section of this [Apptainer documentation](https://apptainer.org/docs/user/latest/mpi.html) for details.
 
 ## Included Software Stack
 
