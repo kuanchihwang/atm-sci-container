@@ -82,7 +82,7 @@ cp -av /usr/local/share/cesm-config/atm-sci-container CAM-SIMA/ccs_config/machin
 
 # Configure model.
 # Normally, `CESM_NTASKS_PER_NODE` is auto-detected at the container entrypoint.
-# For this walkthrough, we override it for simplicity.
+# For simplicity, we override it here.
 export CESM_NTASKS_PER_NODE="4"
 ./CAM-SIMA/cime/scripts/create_newcase \
     --machine atm-sci-container \
@@ -407,7 +407,7 @@ mpirun -n 4 apptainer exec \
     bash -c 'source /usr/local/bin/container-entrypoint-hook.sh && exec /working/mpi-application'
 ```
 
-Refer to the "Hybrid model" section of this [Apptainer documentation](https://apptainer.org/docs/user/latest/mpi.html) for details.
+Refer to the "Hybrid model" section of the [Apptainer documentation](https://apptainer.org/docs/user/latest/mpi.html) for details.
 
 ## Included Software Stack
 
