@@ -26,7 +26,7 @@ For an overview of why containers remain valuable even for HPC scenarios, see th
 
 ## Prerequisites
 
-* An **x86-64 Linux system**, preferably baremetal. Virtualization should also be fine, but usually incurs significant performance overhead. This constraint comes from the included device drivers, not from this project.
+* An **x86-64 Linux system**, preferably on bare metal. Virtualization should also be fine, but usually incurs significant performance overhead. This constraint comes from the included device drivers, not from this project.
 * A **container runtime**: [Docker](https://docs.docker.com/engine/install), [Podman](https://podman.io/docs/installation), or [Apptainer](https://apptainer.org/get-started).
 
 ## Quick Start
@@ -36,7 +36,7 @@ For an overview of why containers remain valuable even for HPC scenarios, see th
 > [!NOTE]
 > In this walkthrough, we will configure [CAM-SIMA](https://github.com/ESCOMP/CAM-SIMA) with MPAS dynamical core, a global 480-km mesh, Kessler microphysics, and the moist baroclinic wave initial condition. CAM-SIMA is a component model of [CESM](https://github.com/ESCOMP/CESM). The model will be built and run with GNU compilers version 15 and MPICH version 4.
 
-Pull the appropriate container image and create a container from it.
+Pull the appropriate container image and create a container from it:
 
 ```shell
 docker image pull "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_mpich-4"
@@ -127,7 +127,7 @@ If multi-node execution and optimal performance are desired, it is recommended t
 > [!NOTE]
 > In this walkthrough, we will build [MPAS](https://github.com/MPAS-Dev/MPAS-Model) with Intel compilers version 2025 and Open MPI version 5.
 
-Pull the appropriate container image and create a container from it.
+Pull the appropriate container image and create a container from it:
 
 ```shell
 docker image pull "docker.io/kuanchihwang/atm-sci-container:latest_intel-2025_open-mpi-5"
@@ -160,7 +160,7 @@ If multi-node execution and optimal performance are desired, it is recommended t
 > [!NOTE]
 > In this walkthrough, we will build [WRF](https://github.com/wrf-model/WRF) with Intel compilers version 2024 and Open MPI version 4.
 
-Pull the appropriate container image and create a container from it.
+Pull the appropriate container image and create a container from it:
 
 ```shell
 docker image pull "docker.io/kuanchihwang/atm-sci-container:latest_intel-2024_open-mpi-4"
@@ -235,7 +235,7 @@ For each variant and `${VERSION}`, there are currently **23** combinations of co
 
 ### Running a Container
 
-The container uses `/usr/local/bin/container-entrypoint.sh` as its default [entrypoint](https://docs.docker.com/reference/dockerfile/#entrypoint) and `/bin/bash` as its default [command](https://docs.docker.com/reference/dockerfile/#cmd). At startup, the entrypoint handles [user creation](#user-configuration), [environment setup](#environment-configuration), and privilege dropping through [`setpriv`](https://man7.org/linux/man-pages/man1/setpriv.1.html) before [executing](https://man7.org/linux/man-pages/man2/execve.2.html) the given command for better security. The container provides `/working` as its default world-writable [working directory](https://docs.docker.com/reference/dockerfile/#workdir).
+The container uses `/usr/local/bin/container-entrypoint.sh` as its default [entrypoint](https://docs.docker.com/reference/dockerfile/#entrypoint) and `/bin/bash` as its default [command](https://docs.docker.com/reference/dockerfile/#cmd). At startup, the entrypoint handles [user creation](#user-configuration), [environment setup](#environment-configuration), privilege dropping from `root` through [`setpriv`](https://man7.org/linux/man-pages/man1/setpriv.1.html), and [execution](https://man7.org/linux/man-pages/man2/execve.2.html) of the given command for better security. The container provides `/working` as its default world-writable [working directory](https://docs.docker.com/reference/dockerfile/#workdir).
 
 To start an interactive shell session:
 
@@ -279,7 +279,7 @@ docker container run --rm \
 For HPC scenarios, some run options are frequently used:
 
 > [!IMPORTANT]
-> If you use Apptainer, you likely do not need to specify any of these options.
+> If you use Apptainer, the recommended container runtime for HPC scenarios, you likely do not need to specify any of these options.
 
 * [`--mount`](https://docs.docker.com/reference/cli/docker/container/run/#mount), [`--volume`](https://docs.docker.com/reference/cli/docker/container/run/#volume) ([`-v`](https://docs.docker.com/reference/cli/docker/container/run/#volume))
 
@@ -303,7 +303,7 @@ By default, the container entrypoint creates and switches to a non-root user nam
 
 | Variable | Default | Description |
 | --- | --- | --- |
-| `CONTAINER_USER` | `alice` | Name of the non-root user to create and run as. If this user already exists in the container, it is reused and `CONTAINER_UID`/`CONTAINER_GID` are ignored. |
+| `CONTAINER_USER` | `alice` | Name of the non-root user to create and switch to. If this user already exists in the container, it is reused and `CONTAINER_UID`/`CONTAINER_GID` are ignored. |
 | `CONTAINER_UID` | `1865` | UID of the non-root user to create. |
 | `CONTAINER_GID` | Same as `CONTAINER_UID` | GID of the non-root user to create. |
 
@@ -317,7 +317,7 @@ docker container run -it --rm \
     "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_open-mpi-5"
 ```
 
-If the container is already started as a non-root user (e.g., in most Apptainer environments), the user switching is skipped entirely.
+If the container is already started as a non-root user (e.g., in most Apptainer environments), the user creation is skipped entirely.
 
 ### Environment Configuration
 
@@ -388,9 +388,9 @@ docker container run -it --rm \
 
 Running a containerized MPI application on a single node should work out of the box.
 
-For running across multiple nodes, the containerized MPI libraries need to be compatible with the counterparts on the host. At least one process management interface (e.g., PMI1, PMI2, PMIx) also needs to match between both sides. If HPC network interconnects are available, the containerized user-space drivers additionally need to be compatible with the kernel-space counterparts on the host.
+For running across multiple nodes, the containerized MPI libraries need to be compatible with the counterparts on the host. At least one process management interface (e.g., PMI1, PMI2, PMIx) also needs to match on both sides. If HPC network interconnects are available, in order to make use of them, the containerized user-space driver components additionally need to be compatible with the kernel-space counterparts on the host.
 
-In general, the host MPI launcher (e.g., `mpiexec`, `mpirun`, `srun`) invokes the container on each node via `apptainer exec`:
+In general, the host MPI launcher (e.g., `mpiexec`, `mpirun`, `srun`) invokes the container on each node via `apptainer exec`, which in turn executes the MPI application inside the container:
 
 ```shell
 mpirun -n 4 apptainer exec \
@@ -398,7 +398,7 @@ mpirun -n 4 apptainer exec \
     /working/mpi-application
 ```
 
-Since `apptainer exec` bypasses the container entrypoint, source the container entrypoint hook to set up the environment before running the MPI application:
+Since `apptainer exec` bypasses the container entrypoint, `source` the container entrypoint hook to set up the environment before executing the MPI application:
 
 ```shell
 mpirun -n 4 apptainer exec \
@@ -470,7 +470,7 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
 
 ## Included Device Drivers
 
-The user-space drivers for the following devices are included in the container images.
+The user-space components for the following device drivers are included in the container images.
 
 * Cornelis Omni-Path Express Software 12.1.0.1.4
 * HPE Slingshot Host Software 12.0.2
@@ -481,7 +481,7 @@ They provide hardware enablement for their respective HPC network interconnects,
 
 ## Supported Transports
 
-The following high-speed and low-latency transports are supported by the container images. At run time, if the matching kernel-space drivers and the actual hardware are present, optimal MPI communication performance can be achieved out of the box.
+The following high-speed and low-latency transports are supported by the container images. At run time, if the matching kernel-space driver components and the actual hardware are present, optimal MPI communication performance can be achieved out of the box.
 
 * Intra-node Communication via Linux Kernel Features
   * Cross Memory Attach (CMA)
