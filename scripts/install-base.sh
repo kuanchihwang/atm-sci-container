@@ -23,10 +23,12 @@ dnf -y install \
     bzip2 gzip lz4 unzip xz zip zstd
 dnf -y install \
     bzip2-devel libzstd-devel lz4-devel xz-devel \
+    libnl3-devel pciutils \
+    numactl-devel \
     libpciaccess-devel libxml2-devel ncurses-devel systemd-devel \
-    fuse-devel libconfig-devel libnl3-devel libuv-devel libyaml-devel lm_sensors-devel \
+    fuse-devel libconfig-devel libuv-devel libyaml-devel lm_sensors-devel \
     json-c-devel libcurl-devel liburing-devel libuuid-devel \
-    libevent-devel numactl-devel zlib-devel \
+    libevent-devel zlib-devel \
     fuse3-devel libcap-devel \
     libtirpc-devel
 ln -s tirpc/netconfig.h /usr/include/netconfig.h
