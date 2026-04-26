@@ -422,8 +422,8 @@ compile_and_install_ucx() {
 
 compile_and_install_libfabric() {
     echo ">>>>> Preparing libfabric"
-    extract_archive "${INFRASTRUCTURE_PATH}/libfabric-2.4.0.tar.bz2"
-    stage_build_directory libfabric-2.4.0
+    extract_archive "${INFRASTRUCTURE_PATH}/libfabric-2.5.1.tar.bz2"
+    stage_build_directory libfabric-2.5.1
 
     echo ">>>>> Configuring libfabric"
     ../source/configure --help
