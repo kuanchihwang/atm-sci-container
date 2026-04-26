@@ -18,10 +18,31 @@ steps:
       apk --no-cache add git make
 
       make stage
-      ./cicd/make-all.sh build-hpc "${VERSION}"
+
+      if echo "${VERSION}" | grep -E -q "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"; then
+        # Build all combinations for a release.
+        ./cicd/make-all.sh build-hpc "${VERSION}"
+      else
+        # Build only one combination for testing.
+        make build-hpc VERSION="testing" COMPILER="gnu-11" MPI="open-mpi-5"
+      fi
+
       docker image ls
-      ./cicd/push-all.sh push-hpc "${DOCKER_HUB_REGISTRY}" "${NAMESPACE}" "${VERSION}"
-      ./cicd/push-all.sh push-hpc "${GITHUB_PACKAGE_REGISTRY}" "${NAMESPACE}" "${VERSION}"
+
+      if echo "${VERSION}" | grep -E -q "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"; then
+        # Push all combinations for a release.
+        ./cicd/push-all.sh push-hpc "${DOCKER_HUB_REGISTRY}" "${NAMESPACE}" "${VERSION}"
+        ./cicd/push-all.sh push-hpc "${GITHUB_PACKAGE_REGISTRY}" "${NAMESPACE}" "${VERSION}"
+
+        ./cicd/push-all.sh push-hpc-latest "${DOCKER_HUB_REGISTRY}" "${NAMESPACE}" "${VERSION}"
+        ./cicd/push-all.sh push-hpc-latest "${GITHUB_PACKAGE_REGISTRY}" "${NAMESPACE}" "${VERSION}"
+      else
+        # Push only one combination for testing.
+        make push-hpc REGISTRY="${DOCKER_HUB_REGISTRY}" NAMESPACE="${NAMESPACE}" VERSION="testing" COMPILER="gnu-11" MPI="open-mpi-5"
+        make push-hpc REGISTRY="${GITHUB_PACKAGE_REGISTRY}" NAMESPACE="${NAMESPACE}" VERSION="testing" COMPILER="gnu-11" MPI="open-mpi-5"
+      fi
+
+      docker image ls
   - name: 'docker:28.5.2-cli'
     entrypoint: 'sh'
     args:

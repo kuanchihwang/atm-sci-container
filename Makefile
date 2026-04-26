@@ -84,15 +84,24 @@ push: push-hpc push-atm-sci
 .PHONY: push-hpc
 push-hpc:
 	@$(DOCKER) image tag "$(HPC_IMAGE_NAME):$(IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(HPC_IMAGE_NAME)"):$(IMAGE_TAG)"
-	@$(DOCKER) image tag "$(HPC_IMAGE_NAME):$(IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(HPC_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)"
 	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(HPC_IMAGE_NAME)"):$(IMAGE_TAG)"
-	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(HPC_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)"
 
 .PHONY: push-atm-sci
 push-atm-sci:
 	@$(DOCKER) image tag "$(ATM_SCI_IMAGE_NAME):$(IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(ATM_SCI_IMAGE_NAME)"):$(IMAGE_TAG)"
-	@$(DOCKER) image tag "$(ATM_SCI_IMAGE_NAME):$(IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(ATM_SCI_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)"
 	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(ATM_SCI_IMAGE_NAME)"):$(IMAGE_TAG)"
+
+.PHONY: push-latest
+push-latest: push-hpc-latest push-atm-sci-latest
+
+.PHONY: push-hpc-latest
+push-hpc-latest:
+	@$(DOCKER) image tag "$(HPC_IMAGE_NAME):$(IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(HPC_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)"
+	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(HPC_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)"
+
+.PHONY: push-atm-sci-latest
+push-atm-sci-latest:
+	@$(DOCKER) image tag "$(ATM_SCI_IMAGE_NAME):$(IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(ATM_SCI_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)"
 	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(ATM_SCI_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)"
 
 .PHONY: login
