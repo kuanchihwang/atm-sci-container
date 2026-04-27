@@ -56,20 +56,20 @@ git config --global user.email "insider@atm-sci-container"
 # Download model input data.
 mkdir -pv "/working/cesm-data-root/inputdata/atm/cam/chem/trop_mozart/ub"
 wget -P "/working/cesm-data-root/inputdata/atm/cam/chem/trop_mozart/ub" \
-    "https://osdf-director.osg-htc.org/ncar/gdex/d651077/cesmdata/inputdata/atm/cam/chem/trop_mozart/ub/clim_p_trop.nc"
+    "https://data.gdex.ucar.edu/d651077/cesmdata/inputdata/atm/cam/chem/trop_mozart/ub/clim_p_trop.nc"
 mkdir -pv "/working/cesm-data-root/inputdata/atm/cam/inic/mpas"
 wget -P "/working/cesm-data-root/inputdata/atm/cam/inic/mpas" \
-    "https://osdf-director.osg-htc.org/ncar/gdex/d651077/cesmdata/inputdata/atm/cam/inic/mpas/mpasa480_L32_notopo_coords_c240507.nc"
+    "https://data.gdex.ucar.edu/d651077/cesmdata/inputdata/atm/cam/inic/mpas/mpasa480_L32_notopo_coords_c240507.nc"
 wget -P "/working/cesm-data-root/inputdata/atm/cam/inic/mpas" \
-    "https://osdf-director.osg-htc.org/ncar/gdex/d651077/cesmdata/inputdata/atm/cam/inic/mpas/mpasa480.graph.info"
+    "https://data.gdex.ucar.edu/d651077/cesmdata/inputdata/atm/cam/inic/mpas/mpasa480.graph.info"
 wget -P "/working/cesm-data-root/inputdata/atm/cam/inic/mpas" \
-    "https://osdf-director.osg-htc.org/ncar/gdex/d651077/cesmdata/inputdata/atm/cam/inic/mpas/mpasa480.graph.info.part.4"
+    "https://data.gdex.ucar.edu/d651077/cesmdata/inputdata/atm/cam/inic/mpas/mpasa480.graph.info.part.4"
 # These should not be needed, but CIME wants them anyway...
 mkdir -pv "/working/cesm-data-root/inputdata/share/meshes"
 wget -P "/working/cesm-data-root/inputdata/share/meshes" \
-    "https://osdf-director.osg-htc.org/ncar/gdex/d651077/cesmdata/inputdata/share/meshes/gx1v7_151008_ESMFmesh.nc"
+    "https://data.gdex.ucar.edu/d651077/cesmdata/inputdata/share/meshes/gx1v7_151008_ESMFmesh.nc"
 wget -P "/working/cesm-data-root/inputdata/share/meshes" \
-    "https://osdf-director.osg-htc.org/ncar/gdex/d651077/cesmdata/inputdata/share/meshes/mpasa480_ESMFmesh-211109.nc"
+    "https://data.gdex.ucar.edu/d651077/cesmdata/inputdata/share/meshes/mpasa480_ESMFmesh-211109.nc"
 
 # Clone model source code.
 git clone --branch development --depth 1 "https://github.com/ESCOMP/CAM-SIMA.git"
