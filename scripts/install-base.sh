@@ -31,6 +31,8 @@ dnf -y install \
     libevent-devel zlib-devel \
     fuse3-devel libcap-devel \
     libtirpc-devel
+# In `libtirpc-devel`, `/usr/include/tirpc/rpc/types.h` has `#include <netconfig.h>`, but `netconfig.h`
+# is not in the default include path, `/usr/include`. This causes WRF to fail to build.
 ln -s tirpc/netconfig.h /usr/include/netconfig.h
 
 # Install newer CMake than the distribution one.
