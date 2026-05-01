@@ -31,6 +31,10 @@ dnf -y install \
     libevent-devel zlib-devel \
     fuse3-devel libcap-devel \
     libtirpc-devel
+# In RHEL 9+, do not modify the system Python, and do not use `alternatives` to manage the unversioned Python.
+# https://developers.redhat.com/articles/2025/09/30/how-change-meaning-python-and-python3-rhel
+ln -s /usr/bin/python3.12 /usr/local/bin/python
+ln -s /usr/bin/python3.12 /usr/local/bin/python3
 # In `libtirpc-devel`, `/usr/include/tirpc/rpc/types.h` has `#include <netconfig.h>`, but `netconfig.h`
 # is not in the default include path, `/usr/include`. This causes WRF to fail to build.
 ln -s tirpc/netconfig.h /usr/include/netconfig.h
