@@ -19,7 +19,7 @@ dnf -y --disablerepo="*" --enablerepo="intel-efs" install \
     iefs-kernel-updates-devel
 
 # Install only the header files necessary for building the OPX provider in `libfabric`.
-# This can be achieved by installing `ifs-kernel-updates-devel` before, but recent versions (12-) of
+# This can be achieved by installing `ifs-kernel-updates-devel` before, but recent versions (12+) of
 # Cornelis OPX Software no longer package it independently. Resort to magic file surgery here.
 OPXS_KERNEL_UPDATES="$(find /mnt/drivers/cornelis-opxs -maxdepth 1 \
     -name "opxs-kernel-updates-*.src.rpm" -print | \

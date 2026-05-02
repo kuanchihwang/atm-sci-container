@@ -771,10 +771,6 @@ compile_and_install_lapack() {
     SELECTED_CC="${SELECTED_CC}" SELECTED_CFLAGS="${SELECTED_CFLAGS}" \
     SELECTED_FC="${SELECTED_FC}" SELECTED_FCFLAGS="${SELECTED_FCFLAGS}" \
     make_compile blaslib cblaslib lapacklib lapackelib tmglib
-    # COMPILER="${COMPILER}" \
-    # SELECTED_CC="${SELECTED_CC}" SELECTED_CFLAGS="${SELECTED_CFLAGS}" \
-    # SELECTED_FC="${SELECTED_FC}" SELECTED_FCFLAGS="${SELECTED_FCFLAGS}" \
-    # make_compile
 
     echo ">>>>> Installing LAPACK"
     mkdir -p "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/include"
