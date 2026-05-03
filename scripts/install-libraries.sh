@@ -703,20 +703,21 @@ compile_and_install_pio() {
     fi
 
     echo ">>>>> Preparing PIO"
-    if [ ! -d ParallelIO-pio2_6_8 ]; then
-        extract_archive "${LIBRARIES_PATH}/ParallelIO-2.6.8.tar.gz"
-        apply_patch_to_directory "${PATCHES_PATH}/ParallelIO-"*".patch" ParallelIO-pio2_6_8
+    if [ ! -d ParallelIO-pio2_6_10 ]; then
+        extract_archive "${LIBRARIES_PATH}/ParallelIO-2.6.10.tar.gz"
+        apply_patch_to_directory "${PATCHES_PATH}/ParallelIO-"*".patch" ParallelIO-pio2_6_10
     fi
     if [ ! -d genf90-genf90_200608 ]; then
         extract_archive "${LIBRARIES_PATH}/genf90-200608.tar.gz"
     fi
-    stage_build_directory ParallelIO-pio2_6_8
+    stage_build_directory ParallelIO-pio2_6_10
 
     echo ">>>>> Configuring PIO"
     prepend_ld_library_path "${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/lib:${LIBRARIES_PREFIX_MPI_SPECIFIC}/phdf5/lib:${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3/lib:${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/lib"
     CC="${SELECTED_MPICC}" CFLAGS="${SELECTED_CFLAGS}" \
     CXX="${SELECTED_MPICXX}" CXXFLAGS="${SELECTED_CXXFLAGS}" \
     FC="${SELECTED_MPIFC}" FFLAGS="${SELECTED_FCFLAGS}" \
+    CMAKE_PREFIX_PATH="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4:${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3" \
     cmake \
         -D CMAKE_BUILD_TYPE="Release" \
         -D CMAKE_INSTALL_LIBDIR="lib" \
@@ -724,8 +725,6 @@ compile_and_install_pio() {
         -D CMAKE_PREFIX_PATH="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4:${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3" \
         -D CMAKE_SKIP_RPATH=TRUE \
         -D GENF90_PATH="$(realpath ../genf90-genf90_200608)" \
-        -D NetCDF_PATH="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4" \
-        -D PnetCDF_PATH="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3" \
         -D BUILD_SHARED_LIBS=TRUE \
         -D PIO_ENABLE_COVERAGE=FALSE \
         -D PIO_ENABLE_DOC=FALSE \
