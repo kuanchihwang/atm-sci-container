@@ -156,7 +156,6 @@ compile_and_install_open_mpi_4() {
         --with-mpi-param-check="runtime" \
         --with-cma \
         --with-hwloc="${HWLOC_PREFIX}" \
-        --with-knem="$(LC_ALL=C find /opt -maxdepth 1 -iname "knem-*" -print | sort | tail -n 1)" \
         --with-libevent="${LIBEVENT_PREFIX}" \
         --with-ofi="${INFRASTRUCTURE_PREFIX}/libfabric" \
         --with-pmi="${INFRASTRUCTURE_PREFIX}/base" \
@@ -257,7 +256,6 @@ compile_and_install_open_mpi_5() {
         --without-tests-examples \
         --with-cma \
         --with-hwloc="${HWLOC_PREFIX}" \
-        --with-knem="$(LC_ALL=C find /opt -maxdepth 1 -iname "knem-*" -print | sort | tail -n 1)" \
         --with-libevent="${LIBEVENT_PREFIX}" \
         --with-ofi="${INFRASTRUCTURE_PREFIX}/libfabric" \
         --with-pmix="${INFRASTRUCTURE_PREFIX}/base" \
