@@ -418,6 +418,7 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
 </picture>
 
 * AlmaLinux Base Image 9.7
+  * [Package List](./scripts/install-base.sh)
 * Infrastructural Libraries
   * zlib 1.3.2
   * numactl (Distribution version)
@@ -428,7 +429,7 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
   * PRRTE 3.0.13
 * Communication Libraries
   * UCX 1.19.1
-  * libfabric 2.4.0
+  * libfabric 2.5.1
 * Compilers
   * GNU Compiler Collection 11 (C, C++, Fortran)
   * GNU Compiler Collection 12 (C, C++, Fortran)
@@ -449,7 +450,7 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
   * zstd 1.5.7
   * libjpeg 9f
   * JasPer 2.0.33
-  * libpng 1.6.56
+  * libpng 1.6.58
   * HDF5 1.14.6
     * Serial mode
     * Parallel mode
@@ -463,10 +464,11 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
     * Classic data model, Serial mode
     * Enhanced data model, Serial mode
     * Enhanced data model, Parallel mode
-  * ParallelIO 2.6.8
+  * cprnc 1.1.4
+  * ParallelIO 2.6.10
   * Netlib LAPACK 3.12.1
   * ESMF 8.9.1
-  * pFUnit 4.16.0
+  * pFUnit 4.18.0
 
 ## Included Device Drivers
 
@@ -475,7 +477,7 @@ The user-space components for the following device drivers are included in the c
 * Cornelis Omni-Path Express Software 12.1.0.1.4
 * HPE Slingshot Host Software 12.0.2
 * Intel Ethernet Fabric Suite 12.1.0.1.6
-* NVIDIA DOCA 2.9.4
+* NVIDIA DOCA 3.2.2
 
 They provide hardware enablement for their respective HPC network interconnects, described in the "[Supported Transports](#supported-transports)" section.
 
