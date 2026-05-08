@@ -8,7 +8,7 @@ CONTAINER_PRESET="${CONTAINER_PRESET:-}"
 
 case "${CONTAINER_PRESET}" in
     cesm)
-        CONTAINER_ENVIRONMENT="base+pnetcdf3+phdf5+pnetcdf4+pio+lapack+esmf${CONTAINER_ENVIRONMENT:++${CONTAINER_ENVIRONMENT}}"
+        CONTAINER_ENVIRONMENT="base+pnetcdf3+phdf5+pnetcdf4+pio+cprnc+lapack+esmf${CONTAINER_ENVIRONMENT:++${CONTAINER_ENVIRONMENT}}"
 
         export PNETCDF="${MPI_SPECIFIC_LIBRARY_PATH}/pnetcdf3"
         export NETCDF="${MPI_SPECIFIC_LIBRARY_PATH}/pnetcdf4"
@@ -68,6 +68,9 @@ while IFS="" read -r x; do
             export PATH="${COMPILER_SPECIFIC_LIBRARY_PATH}/netcdf4/bin${PATH:+:${PATH}}"
 
             export CMAKE_PREFIX_PATH="${COMPILER_SPECIFIC_LIBRARY_PATH}/netcdf4${CMAKE_PREFIX_PATH:+:${CMAKE_PREFIX_PATH}}"
+            ;;
+        cprnc)
+            export PATH="${MPI_SPECIFIC_LIBRARY_PATH}/cprnc/bin${PATH:+:${PATH}}"
             ;;
         esmf)
             export LD_LIBRARY_PATH="$(dirname "$(find "${MPI_SPECIFIC_LIBRARY_PATH}/esmf/lib" -name "libesmf.so" -type f -print -quit)")${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"

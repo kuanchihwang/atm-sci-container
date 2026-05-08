@@ -337,7 +337,7 @@ A preset is a named shortcut that loads a well-known combination of environment 
 
 | Preset | Environment Components Loaded | Variables Exported |
 | --- | --- | --- |
-| `cesm` | `base+pnetcdf3+phdf5+pnetcdf4+pio+lapack+esmf` | `PNETCDF`, `NETCDF`, `PIO`, `CESM_NTASKS_PER_NODE` |
+| `cesm` | `base+pnetcdf3+phdf5+pnetcdf4+pio+cprnc+lapack+esmf` | `PNETCDF`, `NETCDF`, `PIO`, `CESM_NTASKS_PER_NODE` |
 | `mpas` | `base+pnetcdf3+phdf5+pnetcdf4+pio` | `PNETCDF`, `NETCDF`, `PIO` |
 | `wrf` | `base+hdf5+netcdf4` | `JASPERINC`, `JASPERLIB`, `HDF5`, `NETCDF`, `WRFIO_NCD_NO_LARGE_FILE_SUPPORT` |
 
@@ -360,6 +360,7 @@ Individual libraries can be loaded directly without a preset by setting `CONTAIN
 | `lapack` | Netlib LAPACK | `LD_LIBRARY_PATH` |
 | `netcdf3` | NetCDF (Classic, Serial) | `PATH`, `LD_LIBRARY_PATH`, `CMAKE_PREFIX_PATH` |
 | `netcdf4` | NetCDF (Enhanced, Serial) | `PATH`, `LD_LIBRARY_PATH`, `CMAKE_PREFIX_PATH` |
+| `cprnc` | cprnc | `PATH` |
 | `esmf` | ESMF | `PATH`, `LD_LIBRARY_PATH`, `CMAKE_PREFIX_PATH`, `ESMFMKFILE` |
 | `pfunit` | pFUnit | `CC`, `CXX`, `FC`, `CMAKE_PREFIX_PATH` |
 | `phdf5` | HDF5 (Parallel) | `PATH`, `LD_LIBRARY_PATH` |

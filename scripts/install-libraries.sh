@@ -652,51 +652,6 @@ compile_and_install_netcdf_fortran() {
     set_milestone netcdf-fortran
 }
 
-compile_and_install_cprnc() {
-    if get_milestone cprnc; then
-        return 0
-    fi
-
-    echo ">>>>> Preparing cprnc"
-    if [ ! -d cprnc-1.1.4 ]; then
-        extract_archive "${LIBRARIES_PATH}/cprnc-1.1.4.tar.gz"
-    fi
-    if [ ! -d genf90-genf90_200608 ]; then
-        extract_archive "${LIBRARIES_PATH}/genf90-200608.tar.gz"
-    fi
-    stage_build_directory cprnc-1.1.4
-
-    echo ">>>>> Configuring cprnc"
-    prepend_ld_library_path "${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/lib:${LIBRARIES_PREFIX_MPI_SPECIFIC}/phdf5/lib:${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3/lib:${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/lib"
-    CC="${SELECTED_MPICC}" CFLAGS="${SELECTED_CFLAGS}" \
-    CXX="${SELECTED_MPICXX}" CXXFLAGS="${SELECTED_CXXFLAGS}" \
-    FC="${SELECTED_MPIFC}" FFLAGS="${SELECTED_FCFLAGS}" \
-    cmake \
-        -D CMAKE_BUILD_TYPE="Release" \
-        -D CMAKE_INSTALL_LIBDIR="lib" \
-        -D CMAKE_INSTALL_PREFIX="$(pwd)/cprnc-install" \
-        -D CMAKE_PREFIX_PATH="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4" \
-        -D CMAKE_SKIP_RPATH=TRUE \
-        -D GENF90_PATH="$(realpath ../genf90-genf90_200608)" \
-        -D BUILD_SHARED_LIBS=TRUE \
-        -B . \
-        -S ../source
-
-    echo ">>>>> Compiling cprnc"
-    make_compile
-
-    echo ">>>>> Installing cprnc"
-    make_install
-    cp -av cprnc-install/bin/cprnc /usr/local/bin
-
-    restore_ld_library_path
-
-    echo ">>>>> cprnc - OK"
-    popd
-
-    set_milestone cprnc
-}
-
 compile_and_install_pio() {
     if get_milestone pio; then
         return 0
@@ -749,6 +704,51 @@ compile_and_install_pio() {
     popd
 
     set_milestone pio
+}
+
+compile_and_install_cprnc() {
+    if get_milestone cprnc; then
+        return 0
+    fi
+
+    echo ">>>>> Preparing cprnc"
+    if [ ! -d cprnc-1.1.4 ]; then
+        extract_archive "${LIBRARIES_PATH}/cprnc-1.1.4.tar.gz"
+    fi
+    if [ ! -d genf90-genf90_200608 ]; then
+        extract_archive "${LIBRARIES_PATH}/genf90-200608.tar.gz"
+    fi
+    stage_build_directory cprnc-1.1.4
+
+    echo ">>>>> Configuring cprnc"
+    prepend_ld_library_path "${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/lib:${LIBRARIES_PREFIX_MPI_SPECIFIC}/phdf5/lib:${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3/lib:${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/lib"
+    CC="${SELECTED_MPICC}" CFLAGS="${SELECTED_CFLAGS}" \
+    CXX="${SELECTED_MPICXX}" CXXFLAGS="${SELECTED_CXXFLAGS}" \
+    FC="${SELECTED_MPIFC}" FFLAGS="${SELECTED_FCFLAGS}" \
+    cmake \
+        -D CMAKE_BUILD_TYPE="Release" \
+        -D CMAKE_INSTALL_LIBDIR="lib" \
+        -D CMAKE_INSTALL_PREFIX="$(pwd)/cprnc-install" \
+        -D CMAKE_PREFIX_PATH="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4" \
+        -D CMAKE_SKIP_RPATH=TRUE \
+        -D GENF90_PATH="$(realpath ../genf90-genf90_200608)" \
+        -D BUILD_SHARED_LIBS=TRUE \
+        -B . \
+        -S ../source
+
+    echo ">>>>> Compiling cprnc"
+    make_compile
+
+    echo ">>>>> Installing cprnc"
+    make_install
+    cp -av cprnc-install/bin/cprnc /usr/local/bin
+
+    restore_ld_library_path
+
+    echo ">>>>> cprnc - OK"
+    popd
+
+    set_milestone cprnc
 }
 
 compile_and_install_lapack() {
@@ -974,8 +974,8 @@ compile_and_install_hdf5
 compile_and_install_pnetcdf
 compile_and_install_netcdf_c
 compile_and_install_netcdf_fortran
-compile_and_install_cprnc
 compile_and_install_pio
+compile_and_install_cprnc
 compile_and_install_lapack
 compile_and_install_esmf
 compile_and_install_pfunit
@@ -996,6 +996,7 @@ patch_binary_to_set_rpath "${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/bin/"* ''
 patch_binary_to_set_rpath "${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/lib/"* ''
 patch_binary_to_set_rpath "${LIBRARIES_PREFIX_MPI_SPECIFIC}/pio/bin/"* ''
 patch_binary_to_set_rpath "${LIBRARIES_PREFIX_MPI_SPECIFIC}/pio/lib/"* ''
+patch_binary_to_set_rpath "${LIBRARIES_PREFIX_MPI_SPECIFIC}/cprnc/bin/"* ''
 patch_binary_to_set_rpath "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/bin/"* ''
 patch_binary_to_set_rpath "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/lib/"* ''
 patch_binary_to_set_rpath "${LIBRARIES_PREFIX_MPI_SPECIFIC}/esmf/bin/"*/*/* ''
