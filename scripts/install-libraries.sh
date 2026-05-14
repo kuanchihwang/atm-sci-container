@@ -662,6 +662,11 @@ compile_and_install_pio() {
         extract_archive "${LIBRARIES_PATH}/ParallelIO-2.6.10.tar.gz"
         apply_patch_to_directory "${PATCHES_PATH}/ParallelIO-"*".patch" ParallelIO-pio2_6_10
     fi
+    # PIO clones a couple of git repositories on the fly during its build,
+    # which is absolutely ridiculous. Prevent it from doing so.
+    if [ ! -d CMake_Fortran_utils-master ]; then
+        extract_archive "${LIBRARIES_PATH}/cmake-fortran-utils-201030.tar.gz"
+    fi
     if [ ! -d genf90-genf90_200608 ]; then
         extract_archive "${LIBRARIES_PATH}/genf90-200608.tar.gz"
     fi
@@ -688,6 +693,7 @@ compile_and_install_pio() {
         -D PIO_ENABLE_LOGGING=FALSE \
         -D PIO_ENABLE_TESTS=FALSE \
         -D PIO_ENABLE_TIMING=TRUE \
+        -D USER_CMAKE_MODULE_PATH="$(realpath ../CMake_Fortran_utils-master)" \
         -D WITH_PNETCDF=TRUE \
         -B . \
         -S ../source
