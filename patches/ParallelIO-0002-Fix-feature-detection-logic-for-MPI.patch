@@ -27,7 +27,7 @@ index 1562b29..b34790c 100644
 +# Check for MPI I/O capabilities
  
 -if(MPIF_H_PATH)
-+if(MPI_Fortran_HAVE_F77_HEADER)
++if(MPI_Fortran_HAVE_F90_MODULE)
    check_macro(MPI_HAS_MPIIO
      NAME TryMPIIO.f90
      HINTS ${CMAKE_MODULE_PATH}
