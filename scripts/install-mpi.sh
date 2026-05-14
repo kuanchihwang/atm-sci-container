@@ -131,9 +131,8 @@ compile_and_install_open_mpi_4() {
     esac
 
     echo ">>>>> Preparing Open MPI"
-    extract_archive "${MPI_PATH}/openmpi-4.1.8.tar.gz"
-    apply_patch_to_directory "${PATCHES_PATH}/openmpi-4-"*".patch" openmpi-4.1.8
-    stage_build_directory openmpi-4.1.8
+    extract_archive "${MPI_PATH}/openmpi-4.1.9a1.tar.gz"
+    stage_build_directory openmpi-4.1.9a1
 
     echo ">>>>> Configuring Open MPI"
     ../source/configure --help
