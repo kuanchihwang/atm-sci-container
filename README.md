@@ -26,7 +26,7 @@ For an overview of why containers remain valuable even for HPC scenarios, see th
 
 ## Prerequisites
 
-* An **x86-64 Linux system**, preferably on bare metal. Virtualization should also be fine, but usually incurs significant performance overhead. This constraint comes from the included device drivers, not from this project.
+* A computer running an **x86-64 Linux system**, preferably on bare metal. Virtualization should also be fine, but usually incurs significant performance overhead. The supported system architecture is constrained by the included device drivers, not by this project.
 * A **container runtime**: [Docker](https://docs.docker.com/engine/install), [Podman](https://podman.io/docs/installation), or [Apptainer](https://apptainer.org/get-started).
 
 ## Quick Start
