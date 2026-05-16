@@ -25,9 +25,10 @@ DATA_IMAGE_NAME ?= docker.io/kuanchihwang/atm-sci-container-data
 DATA_IMAGE_TAG ?= 2026-05-15
 
 DOCKER = $(shell which docker 1>/dev/null 2>&1 && echo docker || echo podman)
-HPC_IMAGE_NAME = localhost/build-artifact/hpc-container
-ATM_SCI_IMAGE_NAME = localhost/build-artifact/atm-sci-container
-IMAGE_TAG = $(VERSION)_$(COMPILER)_$(MPI)
+HPC_IMAGE_NAME ?= localhost/build-artifact/hpc-container
+HPC_IMAGE_TAG ?= $(VERSION)_$(COMPILER)_$(MPI)
+ATM_SCI_IMAGE_NAME ?= localhost/build-artifact/atm-sci-container
+ATM_SCI_IMAGE_TAG ?= $(VERSION)_$(COMPILER)_$(MPI)
 
 .NOTPARALLEL:
 
@@ -64,44 +65,44 @@ build-hpc:
 		--file Containerfile.hpc \
 		--label "org.opencontainers.image.revision=$$(git rev-parse --verify HEAD)" \
 		--label "org.opencontainers.image.version=$(VERSION)" \
-		--tag "$(HPC_IMAGE_NAME):$(IMAGE_TAG)" .
+		--tag "$(HPC_IMAGE_NAME):$(HPC_IMAGE_TAG)" .
 
 .PHONY: build-atm-sci
 build-atm-sci:
 	@$(DOCKER) image build \
 		--build-arg BASE_IMAGE_NAME="$(HPC_IMAGE_NAME)" \
-		--build-arg BASE_IMAGE_TAG="$(IMAGE_TAG)" \
+		--build-arg BASE_IMAGE_TAG="$(HPC_IMAGE_TAG)" \
 		--build-arg DATA_IMAGE_NAME="$(DATA_IMAGE_NAME)" \
 		--build-arg DATA_IMAGE_TAG="$(DATA_IMAGE_TAG)" \
 		--file Containerfile.atm-sci \
 		--label "org.opencontainers.image.revision=$$(git rev-parse --verify HEAD)" \
 		--label "org.opencontainers.image.version=$(VERSION)" \
-		--tag "$(ATM_SCI_IMAGE_NAME):$(IMAGE_TAG)" .
+		--tag "$(ATM_SCI_IMAGE_NAME):$(ATM_SCI_IMAGE_TAG)" .
 
 .PHONY: push
 push: push-hpc push-atm-sci
 
 .PHONY: push-hpc
 push-hpc:
-	@$(DOCKER) image tag "$(HPC_IMAGE_NAME):$(IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(HPC_IMAGE_NAME)"):$(IMAGE_TAG)"
-	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(HPC_IMAGE_NAME)"):$(IMAGE_TAG)"
+	@$(DOCKER) image tag "$(HPC_IMAGE_NAME):$(HPC_IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(HPC_IMAGE_NAME)"):$(HPC_IMAGE_TAG)"
+	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(HPC_IMAGE_NAME)"):$(HPC_IMAGE_TAG)"
 
 .PHONY: push-atm-sci
 push-atm-sci:
-	@$(DOCKER) image tag "$(ATM_SCI_IMAGE_NAME):$(IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(ATM_SCI_IMAGE_NAME)"):$(IMAGE_TAG)"
-	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(ATM_SCI_IMAGE_NAME)"):$(IMAGE_TAG)"
+	@$(DOCKER) image tag "$(ATM_SCI_IMAGE_NAME):$(ATM_SCI_IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(ATM_SCI_IMAGE_NAME)"):$(ATM_SCI_IMAGE_TAG)"
+	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(ATM_SCI_IMAGE_NAME)"):$(ATM_SCI_IMAGE_TAG)"
 
 .PHONY: push-latest
 push-latest: push-hpc-latest push-atm-sci-latest
 
 .PHONY: push-hpc-latest
 push-hpc-latest:
-	@$(DOCKER) image tag "$(HPC_IMAGE_NAME):$(IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(HPC_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)"
+	@$(DOCKER) image tag "$(HPC_IMAGE_NAME):$(HPC_IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(HPC_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)"
 	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(HPC_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)"
 
 .PHONY: push-atm-sci-latest
 push-atm-sci-latest:
-	@$(DOCKER) image tag "$(ATM_SCI_IMAGE_NAME):$(IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(ATM_SCI_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)"
+	@$(DOCKER) image tag "$(ATM_SCI_IMAGE_NAME):$(ATM_SCI_IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(ATM_SCI_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)"
 	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(ATM_SCI_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)"
 
 .PHONY: login
