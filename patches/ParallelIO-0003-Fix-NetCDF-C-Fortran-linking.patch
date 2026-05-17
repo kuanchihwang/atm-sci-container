@@ -22,7 +22,7 @@ index 18c64b5..e2e8a39 100644
      # netcdf.h needs this to be defined to use netCDF logging.
      target_compile_definitions (pioc
 diff --git a/src/flib/CMakeLists.txt b/src/flib/CMakeLists.txt
-index b34790c..b5aa2c5 100644
+index 6adac28..aa83a3f 100644
 --- a/src/flib/CMakeLists.txt
 +++ b/src/flib/CMakeLists.txt
 @@ -243,7 +243,7 @@ if(NetCDF_Fortran_FOUND)

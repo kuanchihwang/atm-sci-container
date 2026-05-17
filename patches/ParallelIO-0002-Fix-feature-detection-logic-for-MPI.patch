@@ -12,7 +12,7 @@ to attempt the same thing but unsuccessfully.
  2 files changed, 7 insertions(+), 28 deletions(-)
 
 diff --git a/src/flib/CMakeLists.txt b/src/flib/CMakeLists.txt
-index 1562b29..b34790c 100644
+index 1562b29..6adac28 100644
 --- a/src/flib/CMakeLists.txt
 +++ b/src/flib/CMakeLists.txt
 @@ -188,19 +188,14 @@ if(PIO_USE_MPISERIAL)
