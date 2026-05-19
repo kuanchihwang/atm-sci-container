@@ -1,5 +1,4 @@
 #!/bin/sh
-set -euo pipefail
 
 COMPILER_SPECIFIC_LIBRARY_PATH="/opt/hpc/compiler/${COMPILER}"
 MPI_SPECIFIC_LIBRARY_PATH="/opt/hpc/mpi/${COMPILER}/${MPI}"
