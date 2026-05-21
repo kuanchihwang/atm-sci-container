@@ -26,7 +26,7 @@ For an overview of why containers remain valuable even for HPC scenarios, see th
 
 ## Prerequisites
 
-* An **x86-64 Linux system**, preferably on bare metal. Virtualization should also be fine, but usually incurs significant performance overhead. This constraint comes from the included device drivers, not from this project.
+* A computer running an **x86-64 Linux system**, preferably on bare metal. Virtualization should also be fine, but usually incurs significant performance overhead. The supported system architecture is constrained by the included device drivers, not by this project.
 * A **container runtime**: [Docker](https://docs.docker.com/engine/install), [Podman](https://podman.io/docs/installation), or [Apptainer](https://apptainer.org/get-started).
 
 ## Quick Start
@@ -337,7 +337,7 @@ A preset is a named shortcut that loads a well-known combination of environment 
 
 | Preset | Environment Components Loaded | Variables Exported |
 | --- | --- | --- |
-| `cesm` | `base+pnetcdf3+phdf5+pnetcdf4+pio+lapack+esmf` | `PNETCDF`, `NETCDF`, `PIO`, `CESM_NTASKS_PER_NODE` |
+| `cesm` | `base+pnetcdf3+phdf5+pnetcdf4+pio+cprnc+lapack+esmf` | `PNETCDF`, `NETCDF`, `PIO`, `CESM_NTASKS_PER_NODE` |
 | `mpas` | `base+pnetcdf3+phdf5+pnetcdf4+pio` | `PNETCDF`, `NETCDF`, `PIO` |
 | `wrf` | `base+hdf5+netcdf4` | `JASPERINC`, `JASPERLIB`, `HDF5`, `NETCDF`, `WRFIO_NCD_NO_LARGE_FILE_SUPPORT` |
 
@@ -360,6 +360,7 @@ Individual libraries can be loaded directly without a preset by setting `CONTAIN
 | `lapack` | Netlib LAPACK | `LD_LIBRARY_PATH` |
 | `netcdf3` | NetCDF (Classic, Serial) | `PATH`, `LD_LIBRARY_PATH`, `CMAKE_PREFIX_PATH` |
 | `netcdf4` | NetCDF (Enhanced, Serial) | `PATH`, `LD_LIBRARY_PATH`, `CMAKE_PREFIX_PATH` |
+| `cprnc` | cprnc | `PATH` |
 | `esmf` | ESMF | `PATH`, `LD_LIBRARY_PATH`, `CMAKE_PREFIX_PATH`, `ESMFMKFILE` |
 | `pfunit` | pFUnit | `CC`, `CXX`, `FC`, `CMAKE_PREFIX_PATH` |
 | `phdf5` | HDF5 (Parallel) | `PATH`, `LD_LIBRARY_PATH` |
@@ -418,6 +419,7 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
 </picture>
 
 * AlmaLinux Base Image 9.7
+  * [Package List](./scripts/install-base.sh)
 * Infrastructural Libraries
   * zlib 1.3.2
   * numactl (Distribution version)
@@ -427,8 +429,8 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
   * PMIx 5.0.10
   * PRRTE 3.0.13
 * Communication Libraries
-  * UCX 1.19.1
-  * libfabric 2.4.0
+  * UCX 1.20.1
+  * libfabric 2.5.1
 * Compilers
   * GNU Compiler Collection 11 (C, C++, Fortran)
   * GNU Compiler Collection 12 (C, C++, Fortran)
@@ -439,7 +441,7 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
   * Intel oneAPI Compiler 2025.3.3 (C, C++, Fortran)
 * MPI Libraries
   * MPICH 4.3.2
-  * Open MPI 4.1.8
+  * Open MPI 4.1.9a1 (`v4.1.8-44-g4844e0c568`)
   * Open MPI 5.0.10
   * Intel MPI 2021.13.1 (Only when paired with Intel oneAPI Compiler 2024.2.1)
   * Intel MPI 2021.17.2 (Only when paired with Intel oneAPI Compiler 2025.3.3)
@@ -449,7 +451,7 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
   * zstd 1.5.7
   * libjpeg 9f
   * JasPer 2.0.33
-  * libpng 1.6.56
+  * libpng 1.6.58
   * HDF5 1.14.6
     * Serial mode
     * Parallel mode
@@ -463,10 +465,11 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
     * Classic data model, Serial mode
     * Enhanced data model, Serial mode
     * Enhanced data model, Parallel mode
-  * ParallelIO 2.6.8
+  * cprnc 1.1.4
+  * ParallelIO 2.6.10
   * Netlib LAPACK 3.12.1
   * ESMF 8.9.1
-  * pFUnit 4.16.0
+  * pFUnit 4.18.1
 
 ## Included Device Drivers
 
@@ -475,7 +478,7 @@ The user-space components for the following device drivers are included in the c
 * Cornelis Omni-Path Express Software 12.1.0.1.4
 * HPE Slingshot Host Software 12.0.2
 * Intel Ethernet Fabric Suite 12.1.0.1.6
-* NVIDIA DOCA 2.9.4
+* NVIDIA DOCA 3.2.2
 
 They provide hardware enablement for their respective HPC network interconnects, described in the "[Supported Transports](#supported-transports)" section.
 

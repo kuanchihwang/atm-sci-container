@@ -2,9 +2,11 @@
 set -euo pipefail
 
 dnf makecache
+# Only allow DNF to pick packages from the `doca` repository.
 dnf -y --disablerepo="*" --enablerepo="doca" install \
     knem libxpmem libxpmem-devel rdma-core rdma-core-devel \
     infiniband-diags libibverbs-utils librdmacm-utils
+# Only allow DNF to pick packages from the `cornelis-opxs` repository.
 LIBPSM2_DEVEL="$(dnf -q --disablerepo="*" --enablerepo="cornelis-opxs" repoquery \
     libpsm2-devel | \
     grep -E -v "cuda|rocm" | \
@@ -12,11 +14,12 @@ LIBPSM2_DEVEL="$(dnf -q --disablerepo="*" --enablerepo="cornelis-opxs" repoquery
 dnf -y --disablerepo="*" --enablerepo="cornelis-opxs" install \
     "${LIBPSM2_DEVEL}"
 unset -v LIBPSM2_DEVEL
+# Only allow DNF to pick packages from the `intel-efs` repository.
 dnf -y --disablerepo="*" --enablerepo="intel-efs" install \
     iefs-kernel-updates-devel
 
 # Install only the header files necessary for building the OPX provider in `libfabric`.
-# This can be achieved by installing `ifs-kernel-updates-devel` before, but recent versions (12-) of
+# This can be achieved by installing `ifs-kernel-updates-devel` before, but recent versions (12+) of
 # Cornelis OPX Software no longer package it independently. Resort to magic file surgery here.
 OPXS_KERNEL_UPDATES="$(find /mnt/drivers/cornelis-opxs -maxdepth 1 \
     -name "opxs-kernel-updates-*.src.rpm" -print | \

@@ -51,10 +51,10 @@ compile_and_install_libaec() {
     fi
 
     echo ">>>>> Preparing libaec"
-    if [ ! -d libaec-1.1.6 ]; then
-        extract_archive "${LIBRARIES_PATH}/libaec-1.1.6.tar.gz"
+    if [ ! -d libaec-1.1.7 ]; then
+        extract_archive "${LIBRARIES_PATH}/libaec-1.1.7.tar.gz"
     fi
-    stage_build_directory libaec-1.1.6
+    stage_build_directory libaec-1.1.7
 
     echo ">>>>> Configuring libaec"
     ../source/configure --help
@@ -281,10 +281,10 @@ compile_and_install_libpng() {
     fi
 
     echo ">>>>> Preparing libpng"
-    if [ ! -d libpng-1.6.56 ]; then
-        extract_archive "${LIBRARIES_PATH}/libpng-1.6.56.tar.gz"
+    if [ ! -d libpng-1.6.58 ]; then
+        extract_archive "${LIBRARIES_PATH}/libpng-1.6.58.tar.gz"
     fi
-    stage_build_directory libpng-1.6.56
+    stage_build_directory libpng-1.6.58
 
     echo ">>>>> Configuring libpng"
     ../source/configure --help
@@ -658,26 +658,33 @@ compile_and_install_pio() {
     fi
 
     echo ">>>>> Preparing PIO"
-    if [ ! -d ParallelIO-pio2_6_8 ]; then
-        extract_archive "${LIBRARIES_PATH}/ParallelIO-2.6.8.tar.gz"
-        apply_patch_to_directory "${PATCHES_PATH}/ParallelIO-"*".patch" ParallelIO-pio2_6_8
+    if [ ! -d ParallelIO-pio2_6_10 ]; then
+        extract_archive "${LIBRARIES_PATH}/ParallelIO-2.6.10.tar.gz"
+        apply_patch_to_directory "${PATCHES_PATH}/ParallelIO-"*".patch" ParallelIO-pio2_6_10
     fi
-    stage_build_directory ParallelIO-pio2_6_8
+    # PIO clones a couple of git repositories on the fly during its build,
+    # which is absolutely ridiculous. Prevent it from doing so.
+    if [ ! -d CMake_Fortran_utils-master ]; then
+        extract_archive "${LIBRARIES_PATH}/cmake-fortran-utils-201030.tar.gz"
+    fi
+    if [ ! -d genf90-genf90_200608 ]; then
+        extract_archive "${LIBRARIES_PATH}/genf90-200608.tar.gz"
+    fi
+    stage_build_directory ParallelIO-pio2_6_10
 
     echo ">>>>> Configuring PIO"
     prepend_ld_library_path "${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/lib:${LIBRARIES_PREFIX_MPI_SPECIFIC}/phdf5/lib:${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3/lib:${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/lib"
     CC="${SELECTED_MPICC}" CFLAGS="${SELECTED_CFLAGS}" \
     CXX="${SELECTED_MPICXX}" CXXFLAGS="${SELECTED_CXXFLAGS}" \
     FC="${SELECTED_MPIFC}" FFLAGS="${SELECTED_FCFLAGS}" \
+    CMAKE_PREFIX_PATH="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4:${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3" \
     cmake \
         -D CMAKE_BUILD_TYPE="Release" \
         -D CMAKE_INSTALL_LIBDIR="lib" \
         -D CMAKE_INSTALL_PREFIX="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pio" \
         -D CMAKE_PREFIX_PATH="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4:${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3" \
         -D CMAKE_SKIP_RPATH=TRUE \
-        -D GENF90_PATH="$(realpath ../source/scripts)" \
-        -D NetCDF_PATH="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4" \
-        -D PnetCDF_PATH="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3" \
+        -D GENF90_PATH="$(realpath ../genf90-genf90_200608)" \
         -D BUILD_SHARED_LIBS=TRUE \
         -D PIO_ENABLE_COVERAGE=FALSE \
         -D PIO_ENABLE_DOC=FALSE \
@@ -686,6 +693,7 @@ compile_and_install_pio() {
         -D PIO_ENABLE_LOGGING=FALSE \
         -D PIO_ENABLE_TESTS=FALSE \
         -D PIO_ENABLE_TIMING=TRUE \
+        -D USER_CMAKE_MODULE_PATH="$(realpath ../CMake_Fortran_utils-master)" \
         -D WITH_PNETCDF=TRUE \
         -B . \
         -S ../source
@@ -702,6 +710,51 @@ compile_and_install_pio() {
     popd
 
     set_milestone pio
+}
+
+compile_and_install_cprnc() {
+    if get_milestone cprnc; then
+        return 0
+    fi
+
+    echo ">>>>> Preparing cprnc"
+    if [ ! -d cprnc-1.1.4 ]; then
+        extract_archive "${LIBRARIES_PATH}/cprnc-1.1.4.tar.gz"
+    fi
+    if [ ! -d genf90-genf90_200608 ]; then
+        extract_archive "${LIBRARIES_PATH}/genf90-200608.tar.gz"
+    fi
+    stage_build_directory cprnc-1.1.4
+
+    echo ">>>>> Configuring cprnc"
+    prepend_ld_library_path "${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/lib:${LIBRARIES_PREFIX_MPI_SPECIFIC}/phdf5/lib:${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3/lib:${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/lib"
+    CC="${SELECTED_MPICC}" CFLAGS="${SELECTED_CFLAGS}" \
+    CXX="${SELECTED_MPICXX}" CXXFLAGS="${SELECTED_CXXFLAGS}" \
+    FC="${SELECTED_MPIFC}" FFLAGS="${SELECTED_FCFLAGS}" \
+    cmake \
+        -D CMAKE_BUILD_TYPE="Release" \
+        -D CMAKE_INSTALL_LIBDIR="lib" \
+        -D CMAKE_INSTALL_PREFIX="$(pwd)/cprnc-install" \
+        -D CMAKE_PREFIX_PATH="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4" \
+        -D CMAKE_SKIP_RPATH=TRUE \
+        -D GENF90_PATH="$(realpath ../genf90-genf90_200608)" \
+        -D BUILD_SHARED_LIBS=TRUE \
+        -B . \
+        -S ../source
+
+    echo ">>>>> Compiling cprnc"
+    make_compile
+
+    echo ">>>>> Installing cprnc"
+    make_install
+    cp -av cprnc-install/bin/cprnc /usr/local/bin
+
+    restore_ld_library_path
+
+    echo ">>>>> cprnc - OK"
+    popd
+
+    set_milestone cprnc
 }
 
 compile_and_install_lapack() {
@@ -723,10 +776,6 @@ compile_and_install_lapack() {
     SELECTED_CC="${SELECTED_CC}" SELECTED_CFLAGS="${SELECTED_CFLAGS}" \
     SELECTED_FC="${SELECTED_FC}" SELECTED_FCFLAGS="${SELECTED_FCFLAGS}" \
     make_compile blaslib cblaslib lapacklib lapackelib tmglib
-    # COMPILER="${COMPILER}" \
-    # SELECTED_CC="${SELECTED_CC}" SELECTED_CFLAGS="${SELECTED_CFLAGS}" \
-    # SELECTED_FC="${SELECTED_FC}" SELECTED_FCFLAGS="${SELECTED_FCFLAGS}" \
-    # make_compile
 
     echo ">>>>> Installing LAPACK"
     mkdir -p "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/include"
@@ -853,10 +902,10 @@ compile_and_install_pfunit() {
     fi
 
     echo ">>>>> Preparing pFUnit"
-    if [ ! -d pFUnit-v4.16.0 ]; then
-        extract_archive "${LIBRARIES_PATH}/pFUnit-v4.16.0.tar"
+    if [ ! -d pFUnit-v4.18.1 ]; then
+        extract_archive "${LIBRARIES_PATH}/pFUnit-v4.18.1.tar"
     fi
-    stage_build_directory pFUnit-v4.16.0
+    stage_build_directory pFUnit-v4.18.1
 
     echo ">>>>> Configuring pFUnit"
     CC="${SELECTED_CC}" CFLAGS="${SELECTED_CFLAGS}" \
@@ -932,6 +981,7 @@ compile_and_install_pnetcdf
 compile_and_install_netcdf_c
 compile_and_install_netcdf_fortran
 compile_and_install_pio
+compile_and_install_cprnc
 compile_and_install_lapack
 compile_and_install_esmf
 compile_and_install_pfunit
@@ -952,6 +1002,7 @@ patch_binary_to_set_rpath "${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/bin/"* ''
 patch_binary_to_set_rpath "${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/lib/"* ''
 patch_binary_to_set_rpath "${LIBRARIES_PREFIX_MPI_SPECIFIC}/pio/bin/"* ''
 patch_binary_to_set_rpath "${LIBRARIES_PREFIX_MPI_SPECIFIC}/pio/lib/"* ''
+patch_binary_to_set_rpath "${LIBRARIES_PREFIX_MPI_SPECIFIC}/cprnc/bin/"* ''
 patch_binary_to_set_rpath "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/bin/"* ''
 patch_binary_to_set_rpath "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/lib/"* ''
 patch_binary_to_set_rpath "${LIBRARIES_PREFIX_MPI_SPECIFIC}/esmf/bin/"*/*/* ''

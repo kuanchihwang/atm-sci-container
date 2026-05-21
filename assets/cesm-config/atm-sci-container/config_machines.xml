@@ -12,6 +12,7 @@
     <DIN_LOC_ROOT>/working/cesm-data-root/inputdata</DIN_LOC_ROOT>
     <DIN_LOC_ROOT_CLMFORC>/working/cesm-data-root/inputdata/atm/datm7</DIN_LOC_ROOT_CLMFORC>
     <DOUT_S_ROOT>$CIME_OUTPUT_ROOT/archive/$CASE</DOUT_S_ROOT>
+    <CCSM_CPRNC>cprnc</CCSM_CPRNC>
     <GMAKE>make</GMAKE>
     <GMAKE_J>4</GMAKE_J>
     <BATCH_SYSTEM>none</BATCH_SYSTEM>
@@ -50,7 +51,7 @@
       <env name="PIO_TYPENAME_VALID_VALUES">netcdf,pnetcdf,netcdf4c,netcdf4p</env>
       <env name="PIO_VERSION_MAJOR">2</env>
       <env name="PIO_VERSION_MINOR">6</env>
-      <env name="PIO_VERSION_PATCH">8</env>
+      <env name="PIO_VERSION_PATCH">10</env>
     </environment_variables>
     <environment_variables comp_interface="nuopc">
       <env name="ESMF_RUNTIME_PROFILE">ON</env>
