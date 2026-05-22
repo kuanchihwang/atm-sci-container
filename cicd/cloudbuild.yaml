@@ -8,14 +8,20 @@ steps:
     args:
       - '-c'
       - >-
-        echo "$${DOCKER_HUB_PAT}" | docker login --username "$${NAMESPACE}" --password-stdin "$${DOCKER_HUB_REGISTRY}";
-        echo "$${GITHUB_PACKAGE_REGISTRY_PAT}" | docker login --username "$${NAMESPACE}" --password-stdin "$${GITHUB_PACKAGE_REGISTRY}"
+        mkdir -p /workspace/pat;
+        chmod 0700 /workspace/pat;
+        echo "$${DOCKER_HUB_PAT}" > /workspace/pat/docker-hub;
+        echo "$${GITHUB_PACKAGE_REGISTRY_PAT}" > /workspace/pat/github-package-registry;
+        ls -l /workspace/pat
   - name: 'docker:28.5.2-cli'
     script: |
       #!/bin/sh
       set -euo pipefail
 
       apk --no-cache add git make
+
+      cat /workspace/pat/docker-hub | docker login --username "${NAMESPACE}" --password-stdin "${DOCKER_HUB_REGISTRY}"
+      cat /workspace/pat/github-package-registry | docker login --username "${NAMESPACE}" --password-stdin "${GITHUB_PACKAGE_REGISTRY}"
 
       make stage
 
@@ -28,6 +34,9 @@ steps:
       fi
 
       docker image ls
+
+      cat /workspace/pat/docker-hub | docker login --username "${NAMESPACE}" --password-stdin "${DOCKER_HUB_REGISTRY}"
+      cat /workspace/pat/github-package-registry | docker login --username "${NAMESPACE}" --password-stdin "${GITHUB_PACKAGE_REGISTRY}"
 
       if echo "${VERSION}" | grep -E -q "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"; then
         # Push all combinations for a release.
@@ -43,13 +52,11 @@ steps:
       fi
 
       docker image ls
-  - name: 'docker:28.5.2-cli'
-    entrypoint: 'sh'
-    args:
-      - '-c'
-      - >-
-        docker logout "$${DOCKER_HUB_REGISTRY}";
-        docker logout "$${GITHUB_PACKAGE_REGISTRY}"
+
+      docker logout "${DOCKER_HUB_REGISTRY}"
+      docker logout "${GITHUB_PACKAGE_REGISTRY}"
+
+      rm -fr /workspace/pat
 availableSecrets:
   secretManager:
     - versionName: 'projects/${PROJECT_ID}/secrets/docker-hub-pat/versions/latest'
