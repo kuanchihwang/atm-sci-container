@@ -29,13 +29,23 @@ for MPI in "mpich-4" "open-mpi-4" "open-mpi-5" "intel-mpi"; do
         echo "    VERSION=\"${VERSION}\""
         echo "    COMPILER=\"${COMPILER}\""
         echo "    MPI=\"${MPI}\""
-        make "${TARGET}" \
+        if ! make "${TARGET}" \
             REGISTRY="${REGISTRY}" \
             NAMESPACE="${NAMESPACE}" \
             VERSION="${VERSION}" \
             COMPILER="${COMPILER}" \
             MPI="${MPI}" \
-            1>"logs/${TARGET}_${REGISTRY}_${NAMESPACE}_${VERSION}_${COMPILER}_${MPI}.log" 2>&1
+            1>"logs/${TARGET}_${REGISTRY}_${NAMESPACE}_${VERSION}_${COMPILER}_${MPI}.log" 2>&1; then
+            echo "[$(date -u "+%FT%TZ")] Failed to push container!"
+
+            if [ -f "logs/${TARGET}_${REGISTRY}_${NAMESPACE}_${VERSION}_${COMPILER}_${MPI}.log" ]; then
+                echo "----- BEGIN LOG DUMP -----"
+                cat "logs/${TARGET}_${REGISTRY}_${NAMESPACE}_${VERSION}_${COMPILER}_${MPI}.log"
+                echo "------ END LOG DUMP ------"
+            fi
+
+            exit 1
+        fi
     done
 done
 
