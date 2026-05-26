@@ -446,7 +446,7 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
   * Intel MPI 2021.13.1 (Only when paired with Intel oneAPI Compiler 2024.2.1)
   * Intel MPI 2021.17.2 (Only when paired with Intel oneAPI Compiler 2025.3.3)
 * Libraries
-  * libaec 1.1.6
+  * libaec 1.1.7
   * zlib 1.3.2
   * zstd 1.5.7
   * libjpeg 9f
