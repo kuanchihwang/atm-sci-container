@@ -418,7 +418,7 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
   <img alt="Container Software Stack" src="./README-Container-Software-Stack-Light.svg">
 </picture>
 
-* AlmaLinux Base Image 9.7
+* AlmaLinux Base Image 9.8
   * [Package List](./scripts/install-base.sh)
 * Infrastructural Libraries
   * zlib 1.3.2

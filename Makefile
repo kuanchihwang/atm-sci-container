@@ -20,7 +20,7 @@ COMPILER ?= gnu-11
 MPI ?= open-mpi-5
 
 BASE_IMAGE_NAME ?= docker.io/almalinux/9-base
-BASE_IMAGE_TAG ?= 9.7
+BASE_IMAGE_TAG ?= 9.8
 DATA_IMAGE_NAME ?= docker.io/kuanchihwang/atm-sci-container-data
 DATA_IMAGE_TAG ?= 2026-05-20
 
