@@ -562,10 +562,10 @@ compile_and_install_netcdf_fortran() {
     fi
 
     echo ">>>>> Preparing NetCDF (Fortran, 3, Serial)"
-    if [ ! -d netcdf-fortran-4.6.2 ]; then
-        extract_archive "${LIBRARIES_PATH}/netcdf-fortran-4.6.2.tar.gz"
+    if [ ! -d netcdf-fortran-4.6.3 ]; then
+        extract_archive "${LIBRARIES_PATH}/netcdf-fortran-4.6.3.tar.gz"
     fi
-    stage_build_directory netcdf-fortran-4.6.2 netcdf-fortran-4.6.2-3-serial
+    stage_build_directory netcdf-fortran-4.6.3 netcdf-fortran-4.6.3-3-serial
 
     echo ">>>>> Configuring NetCDF (Fortran, 3, Serial)"
     ../source/configure --help
@@ -594,7 +594,7 @@ compile_and_install_netcdf_fortran() {
     popd
 
     echo ">>>>> Preparing NetCDF (Fortran, 4, Serial)"
-    stage_build_directory netcdf-fortran-4.6.2 netcdf-fortran-4.6.2-4-serial
+    stage_build_directory netcdf-fortran-4.6.3 netcdf-fortran-4.6.3-4-serial
 
     echo ">>>>> Configuring NetCDF (Fortran, 4, Serial)"
     prepend_ld_library_path "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/netcdf4/lib:${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/hdf5/lib:${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/lib"
@@ -622,7 +622,7 @@ compile_and_install_netcdf_fortran() {
     popd
 
     echo ">>>>> Preparing NetCDF (Fortran, 4, Parallel)"
-    stage_build_directory netcdf-fortran-4.6.2 netcdf-fortran-4.6.2-4-parallel
+    stage_build_directory netcdf-fortran-4.6.3 netcdf-fortran-4.6.3-4-parallel
 
     echo ">>>>> Configuring NetCDF (Fortran, 4, Parallel)"
     prepend_ld_library_path "${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/lib:${LIBRARIES_PREFIX_MPI_SPECIFIC}/phdf5/lib:${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3/lib:${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/lib"
