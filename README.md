@@ -441,7 +441,7 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
   * Intel oneAPI Compiler 2025.3.3 (C, C++, Fortran)
 * MPI Libraries
   * MPICH 4.3.2
-  * Open MPI 4.1.9a1 (`v4.1.8-44-g4844e0c568`)
+  * Open MPI 4.1.9a1 (`v4.1.8-46-gfc1b4c5278`)
   * Open MPI 5.0.10
   * Intel MPI 2021.13.1 (Only when paired with Intel oneAPI Compiler 2024.2.1)
   * Intel MPI 2021.17.2 (Only when paired with Intel oneAPI Compiler 2025.3.3)
