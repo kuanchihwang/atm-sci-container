@@ -20,11 +20,11 @@ COMPILER ?= gnu-11
 MPI ?= open-mpi-5
 
 BASE_IMAGE_NAME ?= docker.io/almalinux/9-base
-BASE_IMAGE_TAG ?= 9.7
+BASE_IMAGE_TAG ?= 9.8
 DATA_IMAGE_NAME ?= docker.io/kuanchihwang/atm-sci-container-data
-DATA_IMAGE_TAG ?= 2026-05-20
+DATA_IMAGE_TAG ?= 2026-06-12
 
-DOCKER = $(shell which docker 1>/dev/null 2>&1 && echo docker || echo podman)
+DOCKER = $(shell command -v docker 1>/dev/null 2>&1 && echo docker || echo podman)
 HPC_IMAGE_NAME ?= localhost/build-artifact/hpc-container
 HPC_IMAGE_TAG ?= $(VERSION)_$(COMPILER)_$(MPI)
 ATM_SCI_IMAGE_NAME ?= localhost/build-artifact/atm-sci-container

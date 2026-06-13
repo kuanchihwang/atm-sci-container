@@ -109,6 +109,8 @@ while IFS="" read -r x; do
             ;;
         pio)
             export LD_LIBRARY_PATH="${MPI_SPECIFIC_LIBRARY_PATH}/pio/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+
+            export CMAKE_PREFIX_PATH="${MPI_SPECIFIC_LIBRARY_PATH}/pio${CMAKE_PREFIX_PATH:+:${CMAKE_PREFIX_PATH}}"
             ;;
         pnetcdf3)
             export LD_LIBRARY_PATH="${MPI_SPECIFIC_LIBRARY_PATH}/pnetcdf3/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"

@@ -418,7 +418,7 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
   <img alt="Container Software Stack" src="./README-Container-Software-Stack-Light.svg">
 </picture>
 
-* AlmaLinux Base Image 9.7
+* AlmaLinux Base Image 9.8
   * [Package List](./scripts/install-base.sh)
 * Infrastructural Libraries
   * zlib 1.3.2
@@ -441,12 +441,12 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
   * Intel oneAPI Compiler 2025.3.3 (C, C++, Fortran)
 * MPI Libraries
   * MPICH 4.3.2
-  * Open MPI 4.1.9a1 (`v4.1.8-44-g4844e0c568`)
+  * Open MPI 4.1.9a1 (`v4.1.8-46-gfc1b4c5278`)
   * Open MPI 5.0.10
   * Intel MPI 2021.13.1 (Only when paired with Intel oneAPI Compiler 2024.2.1)
   * Intel MPI 2021.17.2 (Only when paired with Intel oneAPI Compiler 2025.3.3)
 * Libraries
-  * libaec 1.1.6
+  * libaec 1.1.7
   * zlib 1.3.2
   * zstd 1.5.7
   * libjpeg 9f
@@ -461,7 +461,7 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
     * Classic data model, Serial mode
     * Enhanced data model, Serial mode
     * Enhanced data model, Parallel mode
-  * NetCDF-Fortran 4.6.2
+  * NetCDF-Fortran 4.6.3
     * Classic data model, Serial mode
     * Enhanced data model, Serial mode
     * Enhanced data model, Parallel mode
@@ -469,7 +469,7 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
   * ParallelIO 2.6.10
   * Netlib LAPACK 3.12.1
   * ESMF 8.9.1
-  * pFUnit 4.18.1
+  * pFUnit 4.18.2
 
 ## Included Device Drivers
 
