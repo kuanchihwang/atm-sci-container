@@ -908,9 +908,9 @@ compile_and_install_pfunit() {
     stage_build_directory pFUnit-v4.18.2
 
     echo ">>>>> Configuring pFUnit"
-    CC="${SELECTED_CC}" CFLAGS="${SELECTED_CFLAGS}" \
-    CXX="${SELECTED_CXX}" CXXFLAGS="${SELECTED_CXXFLAGS}" \
-    FC="${SELECTED_FC}" FFLAGS="${SELECTED_FCFLAGS}" \
+    CC="${SELECTED_MPICC}" CFLAGS="${SELECTED_CFLAGS}" \
+    CXX="${SELECTED_MPICXX}" CXXFLAGS="${SELECTED_CXXFLAGS}" \
+    FC="${SELECTED_MPIFC}" FFLAGS="${SELECTED_FCFLAGS}" \
     cmake \
         -D CMAKE_BUILD_TYPE="Release" \
         -D CMAKE_INSTALL_LIBDIR="lib" \
