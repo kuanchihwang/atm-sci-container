@@ -136,6 +136,12 @@ while IFS="" read -r x; do
 
             export CMAKE_PREFIX_PATH="${MPI_SPECIFIC_LIBRARY_PATH}/pnetcdf4${CMAKE_PREFIX_PATH:+:${CMAKE_PREFIX_PATH}}"
             ;;
+        scotch)
+            export LD_LIBRARY_PATH="${MPI_SPECIFIC_LIBRARY_PATH}/scotch/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+            export PATH="${MPI_SPECIFIC_LIBRARY_PATH}/scotch/bin${PATH:+:${PATH}}"
+
+            export CMAKE_PREFIX_PATH="${MPI_SPECIFIC_LIBRARY_PATH}/scotch${CMAKE_PREFIX_PATH:+:${CMAKE_PREFIX_PATH}}"
+            ;;
         *)
             # No or unsupported environment is specified. Nothing to do.
             :

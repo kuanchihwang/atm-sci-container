@@ -941,6 +941,45 @@ compile_and_install_pfunit() {
     set_milestone pfunit
 }
 
+compile_and_install_scotch() {
+    if get_milestone scotch; then
+        return 0
+    fi
+
+    echo ">>>>> Preparing Scotch"
+    if [ ! -d scotch-v7.0.12 ]; then
+        extract_archive "${LIBRARIES_PATH}/scotch-v7.0.12.tar.gz"
+    fi
+    stage_build_directory scotch-v7.0.12
+
+    echo ">>>>> Configuring Scotch"
+    CC="${SELECTED_MPICC}" CFLAGS="${SELECTED_CFLAGS}" \
+    CXX="${SELECTED_MPICXX}" CXXFLAGS="${SELECTED_CXXFLAGS}" \
+    FC="${SELECTED_MPIFC}" FFLAGS="${SELECTED_FCFLAGS}" \
+    cmake \
+        -D CMAKE_BUILD_TYPE="Release" \
+        -D CMAKE_INSTALL_LIBDIR="lib" \
+        -D CMAKE_INSTALL_PREFIX="${LIBRARIES_PREFIX_MPI_SPECIFIC}/scotch" \
+        -D CMAKE_PREFIX_PATH="${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base" \
+        -D CMAKE_SKIP_RPATH=TRUE \
+        -D BUILD_SHARED_LIBS=TRUE \
+        -D ENABLE_TESTS=FALSE \
+        -D SCOTCH_DETERMINISTIC="FULL" \
+        -B . \
+        -S ../source
+
+    echo ">>>>> Compiling Scotch"
+    make_compile
+
+    echo ">>>>> Installing Scotch"
+    make_install
+
+    echo ">>>>> Scotch - OK"
+    popd
+
+    set_milestone scotch
+}
+
 ###
 ### Main
 ###
@@ -985,6 +1024,7 @@ compile_and_install_cprnc
 compile_and_install_lapack
 compile_and_install_esmf
 compile_and_install_pfunit
+compile_and_install_scotch
 
 patch_binary_to_set_rpath "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/bin/"* ''
 patch_binary_to_set_rpath "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/lib/"* ''
@@ -1007,6 +1047,8 @@ patch_binary_to_set_rpath "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/bin/"* '
 patch_binary_to_set_rpath "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/lib/"* ''
 patch_binary_to_set_rpath "${LIBRARIES_PREFIX_MPI_SPECIFIC}/esmf/bin/"*/*/* ''
 patch_binary_to_set_rpath "${LIBRARIES_PREFIX_MPI_SPECIFIC}/esmf/lib/"*/*/* ''
+patch_binary_to_set_rpath "${LIBRARIES_PREFIX_MPI_SPECIFIC}/scotch/bin/"* ''
+patch_binary_to_set_rpath "${LIBRARIES_PREFIX_MPI_SPECIFIC}/scotch/lib/"* ''
 
 remove_documentation_from_directory "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/"*
 remove_documentation_from_directory "${LIBRARIES_PREFIX_MPI_SPECIFIC}/"*

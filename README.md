@@ -367,6 +367,7 @@ Individual libraries can be loaded directly without a preset by setting `CONTAIN
 | `pio` | ParallelIO | `LD_LIBRARY_PATH` |
 | `pnetcdf3` | PNetCDF (Classic, Parallel) | `PATH`, `LD_LIBRARY_PATH`, `CMAKE_PREFIX_PATH` |
 | `pnetcdf4` | NetCDF (Enhanced, Parallel) | `PATH`, `LD_LIBRARY_PATH`, `CMAKE_PREFIX_PATH` |
+| `scotch` | Scotch / PT-Scotch | `PATH`, `LD_LIBRARY_PATH`, `CMAKE_PREFIX_PATH` |
 
 For example, to load only pFUnit, pass its name via `CONTAINER_ENVIRONMENT`:
 
@@ -470,6 +471,7 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
   * Netlib LAPACK 3.12.1
   * ESMF 8.9.1
   * pFUnit 4.18.2
+  * Scotch / PT-Scotch 7.0.12
 
 ## Included Device Drivers
 
