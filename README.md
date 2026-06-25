@@ -427,7 +427,7 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
   * hwloc 2.12.2
   * libevent (Distribution version)
   * PMI2 from Slurm 24.11.7
-  * PMIx 5.0.10
+  * PMIx 5.0.11
   * PRRTE 3.0.13
 * Communication Libraries
   * UCX 1.20.1

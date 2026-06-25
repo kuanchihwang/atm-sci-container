@@ -311,8 +311,8 @@ compile_and_install_pmi2() {
 
 compile_and_install_pmix() {
     echo ">>>>> Preparing PMIx"
-    extract_archive "${INFRASTRUCTURE_PATH}/pmix-5.0.10.tar.gz"
-    stage_build_directory pmix-5.0.10
+    extract_archive "${INFRASTRUCTURE_PATH}/pmix-5.0.11.tar.gz"
+    stage_build_directory pmix-5.0.11
 
     echo ">>>>> Configuring PMIx"
     ../source/configure --help
