@@ -344,8 +344,8 @@ compile_and_install_pmix() {
 
 compile_and_install_prrte() {
     echo ">>>>> Preparing PRRTE"
-    extract_archive "${INFRASTRUCTURE_PATH}/prrte-3.0.13.tar.gz"
-    stage_build_directory prrte-3.0.13
+    extract_archive "${INFRASTRUCTURE_PATH}/prrte-3.0.14.tar.gz"
+    stage_build_directory prrte-3.0.14
 
     echo ">>>>> Configuring PRRTE"
     ../source/configure --help
