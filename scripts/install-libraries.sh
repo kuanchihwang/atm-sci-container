@@ -949,6 +949,7 @@ compile_and_install_scotch() {
     echo ">>>>> Preparing Scotch"
     if [ ! -d scotch-v7.0.12 ]; then
         extract_archive "${LIBRARIES_PATH}/scotch-v7.0.12.tar.gz"
+        apply_patch_to_directory "${PATCHES_PATH}/scotch-"*".patch" scotch-v7.0.12
     fi
     stage_build_directory scotch-v7.0.12
 
