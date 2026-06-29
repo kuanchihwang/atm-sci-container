@@ -94,7 +94,7 @@ export CESM_NTASKS_PER_NODE="4"
     --run-unsupported
 cd /working/cesm-case-root/cam-sima-development
 ./case.setup
-cat > user_nl_cam << EOF
+cat > user_nl_cam << "EOF"
 debug_output = 3
 hist_add_inst_fields;h0: U,V,T,Q,PMID
 hist_file_type;h0: history
@@ -105,6 +105,7 @@ EOF
 
 # Build model.
 ./case.build
+
 # Run model, which only takes about half a minute to complete.
 ./case.submit
 
@@ -141,7 +142,7 @@ You are now in an interactive shell session inside the created container. Contin
 
 ```shell
 # Clone model source code.
-git clone --branch develop --depth 1 "https://github.com/MPAS-Dev/MPAS-Model.git"
+git clone --branch master --depth 1 "https://github.com/MPAS-Dev/MPAS-Model.git"
 
 # Build model.
 cd MPAS-Model
@@ -174,11 +175,11 @@ You are now in an interactive shell session inside the created container. Contin
 
 ```shell
 # Clone model source code.
-git clone --branch v4.7.1 --depth 1 "https://github.com/wrf-model/WRF.git"
+git clone --branch master --depth 1 "https://github.com/wrf-model/WRF.git"
 cd WRF
 git submodule update --init --recursive
 cd ..
-git clone --branch v4.6.0 --depth 1 "https://github.com/wrf-model/WPS.git"
+git clone --branch master --depth 1 "https://github.com/wrf-model/WPS.git"
 cd WPS
 # WPS demands a very narrow JasPer version range, which is completely unreasonable. Relax it a bit.
 sed -e "s/1.900.1...1.900.29/1.900.1...2.0.33/g" -i CMakeLists.txt
@@ -364,7 +365,7 @@ Individual libraries can be loaded directly without a preset by setting `CONTAIN
 | `esmf` | ESMF | `PATH`, `LD_LIBRARY_PATH`, `CMAKE_PREFIX_PATH`, `ESMFMKFILE` |
 | `pfunit` | pFUnit | `CC`, `CXX`, `FC`, `CMAKE_PREFIX_PATH` |
 | `phdf5` | HDF5 (Parallel) | `PATH`, `LD_LIBRARY_PATH` |
-| `pio` | ParallelIO | `LD_LIBRARY_PATH` |
+| `pio` | ParallelIO | `LD_LIBRARY_PATH`, `CMAKE_PREFIX_PATH` |
 | `pnetcdf3` | PNetCDF (Classic, Parallel) | `PATH`, `LD_LIBRARY_PATH`, `CMAKE_PREFIX_PATH` |
 | `pnetcdf4` | NetCDF (Enhanced, Parallel) | `PATH`, `LD_LIBRARY_PATH`, `CMAKE_PREFIX_PATH` |
 | `scotch` | Scotch / PT-Scotch | `PATH`, `LD_LIBRARY_PATH`, `CMAKE_PREFIX_PATH` |
