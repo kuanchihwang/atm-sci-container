@@ -31,9 +31,8 @@ HAVE_EXTERNAL_ZLIB="${HAVE_EXTERNAL_ZLIB:-false}"
 
 compile_and_install_patchelf() {
     echo ">>>>> Preparing patchelf"
-    extract_archive "${INFRASTRUCTURE_PATH}/patchelf-0.18.0.tar.gz"
-    apply_patch_to_directory "${PATCHES_PATH}/patchelf-"*".patch" patchelf-0.18.0
-    stage_build_directory patchelf-0.18.0
+    extract_archive "${INFRASTRUCTURE_PATH}/patchelf-0.19.1.tar.gz"
+    stage_build_directory patchelf-0.19.1
 
     echo ">>>>> Configuring patchelf"
     ../source/configure --help
