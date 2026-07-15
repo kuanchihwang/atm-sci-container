@@ -255,8 +255,8 @@ compile_and_install_libevent() {
     LIBEVENT_PREFIX="${INFRASTRUCTURE_PREFIX}/base"
 
     echo ">>>>> Preparing libevent"
-    extract_archive "${INFRASTRUCTURE_PATH}/libevent-2.1.12-stable.tar.gz"
-    stage_build_directory libevent-2.1.12-stable
+    extract_archive "${INFRASTRUCTURE_PATH}/libevent-2.1.13-stable.tar.gz"
+    stage_build_directory libevent-2.1.13-stable
 
     echo ">>>>> Configuring libevent"
     ../source/configure --help
