@@ -481,7 +481,7 @@ The user-space components for the following device drivers are included in the c
 * Cornelis Omni-Path Express Software 12.1.0.1.4
 * HPE Slingshot Host Software 12.0.2
 * Intel Ethernet Fabric Suite 12.1.0.1.6
-* NVIDIA DOCA 3.2.2
+* NVIDIA DOCA 3.2.3
 
 They provide hardware enablement for their respective HPC network interconnects, described in the "[Supported Transports](#supported-transports)" section.
 

@@ -34,7 +34,7 @@ RUN --mount=type=tmpfs,target=/tmp \
     --mount=type=bind,from=data-image,source=drivers/cornelis-opxs/x86_64,target=/mnt/drivers/cornelis-opxs,ro \
     --mount=type=bind,from=data-image,source=drivers/intel-efs/x86_64,target=/mnt/drivers/intel-efs,ro \
     --mount=type=bind,from=data-image,source=drivers/nvidia-doca/x86_64/etc/yum.repos.d/doca.repo,target=/etc/yum.repos.d/doca.repo,ro \
-    --mount=type=bind,from=data-image,source=drivers/nvidia-doca/x86_64/usr/share/doca-host-3.2.2,target=/usr/share/doca-host-3.2.2,ro \
+    --mount=type=bind,from=data-image,source=drivers/nvidia-doca/x86_64/usr/share/doca-host-3.2.3,target=/usr/share/doca-host-3.2.3,ro \
     --mount=type=bind,source=assets/cornelis-opxs.repo,target=/etc/yum.repos.d/cornelis-opxs.repo,ro \
     --mount=type=bind,source=assets/intel-efs.repo,target=/etc/yum.repos.d/intel-efs.repo,ro \
     --mount=type=bind,source=scripts,target=/mnt/scripts,ro \
