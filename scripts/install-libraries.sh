@@ -718,13 +718,13 @@ compile_and_install_cprnc() {
     fi
 
     echo ">>>>> Preparing cprnc"
-    if [ ! -d cprnc-1.1.4 ]; then
-        extract_archive "${LIBRARIES_PATH}/cprnc-1.1.4.tar.gz"
+    if [ ! -d cprnc-1.1.5 ]; then
+        extract_archive "${LIBRARIES_PATH}/cprnc-1.1.5.tar.gz"
     fi
     if [ ! -d genf90-genf90_200608 ]; then
         extract_archive "${LIBRARIES_PATH}/genf90-200608.tar.gz"
     fi
-    stage_build_directory cprnc-1.1.4
+    stage_build_directory cprnc-1.1.5
 
     echo ">>>>> Configuring cprnc"
     prepend_ld_library_path "${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/lib:${LIBRARIES_PREFIX_MPI_SPECIFIC}/phdf5/lib:${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3/lib:${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/lib"
