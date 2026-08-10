@@ -49,7 +49,7 @@ docker container run -it --rm \
 You are now in an interactive shell session inside the created container. Continue with:
 
 ```shell
-# Set up git user name and email because CIME demands that you have them...
+# Set up Git username and email because CIME demands that you have them...
 git config --global user.name "Insider"
 git config --global user.email "insider@atm-sci-container"
 
@@ -308,7 +308,7 @@ By default, the container entrypoint creates and switches to a non-root user nam
 | `CONTAINER_UID` | `1865` | UID of the non-root user to create. |
 | `CONTAINER_GID` | Same as `CONTAINER_UID` | GID of the non-root user to create. |
 
-To match the container user to your host user, pass your user name, UID, and GID:
+To match the container user to your host user, pass your username, UID, and GID:
 
 ```shell
 docker container run -it --rm \
@@ -522,7 +522,7 @@ To build the container images from source, use the `Containerfile` directly or t
     make build-atm-sci [VERSION=...] [COMPILER=...] [MPI=...]
     ```
 
-3. Alternatively, simply run the `cicd/make-all.sh` shell script to build all possible combinations and variants in one pass. This can take several hours to complete.
+3. Alternatively, simply run the `.github/scripts/build-all.sh` shell script to build all possible combinations and variants in one pass. This can take several hours to complete.
 
 4. Clean up built and dangling container images. The `clean-hpc` target cleans the `hpc-container` variant, the `clean-atm-sci` target cleans the `atm-sci-container` variant, and the `clean` target cleans both.
 
