@@ -21,25 +21,12 @@ for MPI in "mpich-4" "open-mpi-4" "open-mpi-5" "intel-mpi"; do
                 ;;
         esac
 
-        echo "[$(date -u "+%FT%TZ")] Building container with"
-        echo "    VERSION=\"${VERSION}\""
-        echo "    COMPILER=\"${COMPILER}\""
-        echo "    MPI=\"${MPI}\""
-        if ! make "${TARGET}" \
+        make "${TARGET}" \
             VERSION="${VERSION}" \
             COMPILER="${COMPILER}" \
             MPI="${MPI}" \
-            1>"logs/${TARGET}_${VERSION}_${COMPILER}_${MPI}.log" 2>&1; then
-            echo "[$(date -u "+%FT%TZ")] Failed to build container!"
-
-            if [ -f "logs/${TARGET}_${VERSION}_${COMPILER}_${MPI}.log" ]; then
-                echo "----- BEGIN LOG DUMP -----"
-                cat "logs/${TARGET}_${VERSION}_${COMPILER}_${MPI}.log"
-                echo "------ END LOG DUMP ------"
-            fi
-
-            exit 1
-        fi
+            2>&1 | tee "logs/${TARGET}_${VERSION}_${COMPILER}_${MPI}.log" | \
+            { grep -E '^\[[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z\] ' || true; }
     done
 done
 
