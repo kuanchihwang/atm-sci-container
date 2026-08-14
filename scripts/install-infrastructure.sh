@@ -165,6 +165,7 @@ compile_and_install_hwloc() {
         --enable-libudev \
         --enable-libxml2 \
         --enable-pci \
+        --enable-plugins \
         --without-x
     patch_libtool_to_disable_rpath
 
