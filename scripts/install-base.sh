@@ -18,7 +18,7 @@ dnf makecache
 dnf -y install \
     binutils gcc gcc-c++ gcc-gfortran autoconf automake libtool gdb \
     diffstat diffutils git git-lfs make patch patchutils pkgconf pkgconf-pkg-config \
-    bash-completion coreutils-common coreutils-single jq less perl-interpreter procps-ng psmisc python-unversioned-command python3 python3-pip python3-setuptools python3.12 python3.12-pip python3.12-setuptools tcsh time vim-minimal yq \
+    bash-completion coreutils-common coreutils-single cpio file less perl-interpreter procps-ng psmisc python-unversioned-command python3 python3-pip python3-setuptools python3.12 python3.12-pip python3.12-setuptools tcsh time vim-minimal \
     ca-certificates curl-minimal hostname openssh-clients rsync wget \
     bzip2 gzip lz4 unzip xz zip zstd
 dnf -y install \
@@ -47,4 +47,18 @@ wget -nv -O - "https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSI
 tar -xf "cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz" -C /opt/hpc/core/cmake --no-same-owner --strip-components=1
 rm -fr "cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz"
 rm -fr /opt/hpc/core/cmake/doc /opt/hpc/core/cmake/man
-unset -v CMAKE_VERSION
+unset CMAKE_VERSION
+
+# Install newer jq than the distribution one.
+JQ_VERSION="1.8.2"
+wget -O /usr/local/bin/jq \
+    "https://github.com/jqlang/jq/releases/download/jq-${JQ_VERSION}/jq-linux-amd64"
+chmod 0755 /usr/local/bin/jq
+unset JQ_VERSION
+
+# Install newer yq than the distribution one.
+YQ_VERSION="4.53.3"
+wget -O /usr/local/bin/yq \
+    "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_amd64"
+chmod 0755 /usr/local/bin/yq
+unset YQ_VERSION
