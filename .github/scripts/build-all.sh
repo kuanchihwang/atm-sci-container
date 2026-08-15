@@ -26,7 +26,7 @@ for MPI in "mpich-4" "open-mpi-4" "open-mpi-5" "intel-mpi"; do
             COMPILER="${COMPILER}" \
             MPI="${MPI}" \
             2>&1 | tee "logs/${TARGET}_${VERSION}_${COMPILER}_${MPI}.log" | \
-            { grep -E '^\[[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z\] ' || true; }
+            { grep -E --line-buffered '^\[[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z\] ' || true; }
     done
 done
 

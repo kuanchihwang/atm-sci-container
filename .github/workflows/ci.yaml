@@ -193,7 +193,7 @@ jobs:
               make build \
                 VERSION="${VERSION}" \
                 2>&1 | tee "logs/build_default.log" | \
-                { grep -E '^\[[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z\] ' || true; }
+                { grep -E --line-buffered '^\[[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z\] ' || true; }
               ;;
             all)
               ./.github/scripts/build-all.sh build "${VERSION}"
