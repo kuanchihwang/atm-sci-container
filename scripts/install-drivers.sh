@@ -13,7 +13,7 @@ LIBPSM2_DEVEL="$(dnf -q --disablerepo="*" --enablerepo="cornelis-opxs" repoquery
     head -n 1)"
 dnf -y --disablerepo="*" --enablerepo="cornelis-opxs" install \
     "${LIBPSM2_DEVEL}"
-unset -v LIBPSM2_DEVEL
+unset LIBPSM2_DEVEL
 # Only allow DNF to pick packages from the `intel-efs` repository.
 dnf -y --disablerepo="*" --enablerepo="intel-efs" install \
     iefs-kernel-updates-devel
@@ -32,4 +32,4 @@ cat "${OPXS_KERNEL_UPDATES}" | \
 tar -xf opxs-kernel-updates/opxs-kernel-updates-*.tgz -C opxs-kernel-updates --no-same-owner --strip-components=1
 cp -av opxs-kernel-updates/include/uapi /usr/include
 rm -fr opxs-kernel-updates
-unset -v OPXS_KERNEL_UPDATES
+unset OPXS_KERNEL_UPDATES

@@ -131,8 +131,8 @@ compile_and_install_zlib() {
     # Static libraries are not desired. Delete them afterwards.
     remove_static_library_from_directory "${ZLIB_PREFIX}"
 
-    unset -v SELECTED_ZLIB_CFLAGS
-    unset -v SELECTED_ZLIB_CXXFLAGS
+    unset SELECTED_ZLIB_CFLAGS
+    unset SELECTED_ZLIB_CXXFLAGS
 
     echo ">>>>> zlib - OK"
     popd
@@ -195,8 +195,8 @@ compile_and_install_zstd() {
     # Static libraries are not desired. Delete them afterwards.
     remove_static_library_from_directory "${ZSTD_PREFIX}"
 
-    unset -v SELECTED_ZSTD_CFLAGS
-    unset -v SELECTED_ZSTD_CXXFLAGS
+    unset SELECTED_ZSTD_CFLAGS
+    unset SELECTED_ZSTD_CXXFLAGS
 
     echo ">>>>> zstd - OK"
     popd
@@ -884,11 +884,11 @@ compile_and_install_esmf() {
     # Static libraries are not desired. Delete them afterwards.
     remove_static_library_from_directory "${LIBRARIES_PREFIX_MPI_SPECIFIC}/esmf"
 
-    unset -v SELECTED_ESMF_COMPILER
-    unset -v SELECTED_ESMF_COMM
-    unset -v SELECTED_CFLAGS_NO_PIC
-    unset -v SELECTED_CXXFLAGS_NO_PIC
-    unset -v SELECTED_FCFLAGS_NO_PIC
+    unset SELECTED_ESMF_COMPILER
+    unset SELECTED_ESMF_COMM
+    unset SELECTED_CFLAGS_NO_PIC
+    unset SELECTED_CXXFLAGS_NO_PIC
+    unset SELECTED_FCFLAGS_NO_PIC
 
     echo ">>>>> ESMF - OK"
     popd

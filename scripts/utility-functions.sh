@@ -46,9 +46,9 @@ set_selected_compiler() {
     if ! command -v "${SELECTED_CC}" 1>/dev/null 2>&1 || \
         ! command -v "${SELECTED_CXX}" 1>/dev/null 2>&1 || \
         ! command -v "${SELECTED_FC}" 1>/dev/null 2>&1; then
-        unset -v SELECTED_CC SELECTED_CFLAGS
-        unset -v SELECTED_CXX SELECTED_CXXFLAGS
-        unset -v SELECTED_FC SELECTED_FCFLAGS
+        unset SELECTED_CC SELECTED_CFLAGS
+        unset SELECTED_CXX SELECTED_CXXFLAGS
+        unset SELECTED_FC SELECTED_FCFLAGS
 
         return 1
     fi
@@ -97,9 +97,9 @@ set_selected_mpi_compiler() {
     if ! command -v "${SELECTED_MPICC}" 1>/dev/null 2>&1 || \
         ! command -v "${SELECTED_MPICXX}" 1>/dev/null 2>&1 || \
         ! command -v "${SELECTED_MPIFC}" 1>/dev/null 2>&1; then
-        unset -v SELECTED_MPICC
-        unset -v SELECTED_MPICXX
-        unset -v SELECTED_MPIFC
+        unset SELECTED_MPICC
+        unset SELECTED_MPICXX
+        unset SELECTED_MPIFC
 
         return 1
     fi
@@ -113,11 +113,11 @@ confirm_to_continue() {
         read -r USER_RESPONSE
 
         if [ "${USER_RESPONSE}" = "Y" ] || [ "${USER_RESPONSE}" = "y" ]; then
-            unset -v USER_RESPONSE
+            unset USER_RESPONSE
 
             return 0
         elif [ "${USER_RESPONSE}" = "N" ] || [ "${USER_RESPONSE}" = "n" ]; then
-            unset -v USER_RESPONSE
+            unset USER_RESPONSE
 
             return 1
         else
@@ -181,7 +181,7 @@ apply_patch_to_directory() {
     done
 
     if [ ! -d "${d}" ]; then
-        unset -v d
+        unset d
 
         return 1
     fi
@@ -191,7 +191,7 @@ apply_patch_to_directory() {
             echo "[Utility] Applying patch ${1} to directory ${d}"
             git -C "${d}" apply "${1}"
         else
-            unset -v d
+            unset d
 
             return 1
         fi
@@ -199,7 +199,7 @@ apply_patch_to_directory() {
         shift
     done
 
-    unset -v d
+    unset d
 
     return 0
 }
@@ -216,7 +216,7 @@ stage_build_directory() {
     fi
 
     if [ ! -d "${sd}" ]; then
-        unset -v bd sd
+        unset bd sd
 
         return 1
     fi
@@ -231,7 +231,7 @@ stage_build_directory() {
 
     pushd "${bd}" || return 1
 
-    unset -v bd sd
+    unset bd sd
 
     return 0
 }
@@ -283,7 +283,7 @@ remove_documentation_from_directory() {
         fi
     done
 
-    unset -v d
+    unset d
 
     return 0
 }
@@ -303,7 +303,7 @@ remove_libtool_archive_from_directory() {
         find "${d}" -name "*.la" -type l -print -delete
     done
 
-    unset -v d
+    unset d
 
     return 0
 }
@@ -323,7 +323,7 @@ remove_pkgconfig_from_directory() {
         find "${d}" -depth -name "*pkgconfig*" -type l -print -execdir rm -fr "{}" ";"
     done
 
-    unset -v d
+    unset d
 
     return 0
 }
@@ -343,7 +343,7 @@ remove_static_library_from_directory() {
         find "${d}" -name "*.a" -type l -print -delete
     done
 
-    unset -v d
+    unset d
 
     return 0
 }
@@ -370,7 +370,7 @@ patch_binary_to_set_rpath() {
                     ;;
                 *)
                     if [ ! -d "${d}" ]; then
-                        unset -v d
+                        unset d
 
                         return 1
                     fi
@@ -380,7 +380,7 @@ patch_binary_to_set_rpath() {
 $(printf "%s\n" "${r}" | tr ":" "\n")
 EOF
 
-        unset -v d
+        unset d
     fi
 
     while [ "${1}" != "${r}" ]; do
@@ -413,7 +413,7 @@ EOF
         shift
     done
 
-    unset -v r
+    unset r
 
     return 0
 }
@@ -447,7 +447,7 @@ prepend_ld_library_path() {
 
     while IFS="" read -r d; do
         if [ ! -d "${d}" ]; then
-            unset -v d
+            unset d
 
             return 1
         fi
@@ -455,7 +455,7 @@ prepend_ld_library_path() {
 $(printf "%s\n" "${1}" | tr ":" "\n")
 EOF
 
-    unset -v d
+    unset d
 
     LD_LIBRARY_PATH_SAVE="${LD_LIBRARY_PATH:-}"
 
@@ -469,7 +469,7 @@ EOF
 restore_ld_library_path() {
     export LD_LIBRARY_PATH="${LD_LIBRARY_PATH_SAVE:-}"
 
-    unset -v LD_LIBRARY_PATH_SAVE
+    unset LD_LIBRARY_PATH_SAVE
 
     echo "[Utility] LD_LIBRARY_PATH set to: ${LD_LIBRARY_PATH}"
 
