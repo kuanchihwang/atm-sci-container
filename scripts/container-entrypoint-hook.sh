@@ -80,21 +80,33 @@ while IFS="" read -r x; do
             ;;
         pfunit)
             # pFUnit typically requires CMake. Give it hints to find the correct compilers.
-            case "${COMPILER}" in
-                gnu-*)
-                    export CC="gcc"
-                    export CXX="g++"
-                    export FC="gfortran"
+            case "${MPI}" in
+                intel-mpi)
+                    case "${COMPILER}" in
+                        intel-2024)
+                            export CC="mpiicx"
+                            export CXX="mpiicpx"
+                            export FC="mpiifort"
+                            ;;
+                        intel-2025)
+                            export CC="mpiicx"
+                            export CXX="mpiicpx"
+                            export FC="mpiifx"
+                            ;;
+                        *)
+                            exit 1
+                            ;;
+                    esac
                     ;;
-                intel-2024)
-                    export CC="icx"
-                    export CXX="icpx"
-                    export FC="ifort"
+                mpich-4)
+                    export CC="mpicc"
+                    export CXX="mpic++"
+                    export FC="mpifort"
                     ;;
-                intel-2025)
-                    export CC="icx"
-                    export CXX="icpx"
-                    export FC="ifx"
+                open-mpi-4|open-mpi-5)
+                    export CC="mpicc"
+                    export CXX="mpic++"
+                    export FC="mpifort"
                     ;;
                 *)
                     exit 1
@@ -124,6 +136,12 @@ while IFS="" read -r x; do
 
             export CMAKE_PREFIX_PATH="${MPI_SPECIFIC_LIBRARY_PATH}/pnetcdf4${CMAKE_PREFIX_PATH:+:${CMAKE_PREFIX_PATH}}"
             ;;
+        scotch)
+            export LD_LIBRARY_PATH="${MPI_SPECIFIC_LIBRARY_PATH}/scotch/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+            export PATH="${MPI_SPECIFIC_LIBRARY_PATH}/scotch/bin${PATH:+:${PATH}}"
+
+            export CMAKE_PREFIX_PATH="${MPI_SPECIFIC_LIBRARY_PATH}/scotch${CMAKE_PREFIX_PATH:+:${CMAKE_PREFIX_PATH}}"
+            ;;
         *)
             # No or unsupported environment is specified. Nothing to do.
             :
@@ -133,5 +151,8 @@ done << EOF
 $(printf "%s\n" "${CONTAINER_ENVIRONMENT}" | tr "+" "\n")
 EOF
 
-unset -v COMPILER_SPECIFIC_LIBRARY_PATH
-unset -v MPI_SPECIFIC_LIBRARY_PATH
+unset COMPILER_SPECIFIC_LIBRARY_PATH
+unset MPI_SPECIFIC_LIBRARY_PATH
+
+unset CONTAINER_PRESET
+unset CONTAINER_ENVIRONMENT

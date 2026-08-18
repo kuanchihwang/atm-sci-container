@@ -31,9 +31,8 @@ HAVE_EXTERNAL_ZLIB="${HAVE_EXTERNAL_ZLIB:-false}"
 
 compile_and_install_patchelf() {
     echo ">>>>> Preparing patchelf"
-    extract_archive "${INFRASTRUCTURE_PATH}/patchelf-0.18.0.tar.gz"
-    apply_patch_to_directory "${PATCHES_PATH}/patchelf-"*".patch" patchelf-0.18.0
-    stage_build_directory patchelf-0.18.0
+    extract_archive "${INFRASTRUCTURE_PATH}/patchelf-0.19.1.tar.gz"
+    stage_build_directory patchelf-0.19.1
 
     echo ">>>>> Configuring patchelf"
     ../source/configure --help
@@ -166,6 +165,7 @@ compile_and_install_hwloc() {
         --enable-libudev \
         --enable-libxml2 \
         --enable-pci \
+        --enable-plugins \
         --without-x
     patch_libtool_to_disable_rpath
 
@@ -255,8 +255,8 @@ compile_and_install_libevent() {
     LIBEVENT_PREFIX="${INFRASTRUCTURE_PREFIX}/base"
 
     echo ">>>>> Preparing libevent"
-    extract_archive "${INFRASTRUCTURE_PATH}/libevent-2.1.12-stable.tar.gz"
-    stage_build_directory libevent-2.1.12-stable
+    extract_archive "${INFRASTRUCTURE_PATH}/libevent-2.1.13-stable.tar.gz"
+    stage_build_directory libevent-2.1.13-stable
 
     echo ">>>>> Configuring libevent"
     ../source/configure --help
@@ -311,8 +311,8 @@ compile_and_install_pmi2() {
 
 compile_and_install_pmix() {
     echo ">>>>> Preparing PMIx"
-    extract_archive "${INFRASTRUCTURE_PATH}/pmix-5.0.10.tar.gz"
-    stage_build_directory pmix-5.0.10
+    extract_archive "${INFRASTRUCTURE_PATH}/pmix-5.0.11.tar.gz"
+    stage_build_directory pmix-5.0.11
 
     echo ">>>>> Configuring PMIx"
     ../source/configure --help
@@ -344,8 +344,8 @@ compile_and_install_pmix() {
 
 compile_and_install_prrte() {
     echo ">>>>> Preparing PRRTE"
-    extract_archive "${INFRASTRUCTURE_PATH}/prrte-3.0.13.tar.gz"
-    stage_build_directory prrte-3.0.13
+    extract_archive "${INFRASTRUCTURE_PATH}/prrte-3.0.14.tar.gz"
+    stage_build_directory prrte-3.0.14
 
     echo ">>>>> Configuring PRRTE"
     ../source/configure --help

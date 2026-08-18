@@ -1,0 +1,34 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Kuan-Chih Wang <kuanchihwang@outlook.com>
+Date: Thu, 25 Jun 2026 15:51:22 +0800
+Subject: [PATCH] Work around failed feature detection for
+ `MPI_THREAD_MULTIPLE`
+
+The `CheckMpiThreadMultiple` CMake module compiles and executes a test program to
+check if the `MPI_THREAD_MULTIPLE` feature is available in an MPI library.
+
+However, because the `mpirun` launcher in Open MPI refuses to run as root by default,
+the feature detection for `MPI_THREAD_MULTIPLE` will always fail when compiling Scotch
+as root.
+
+Work around this issue by executing the test program directly instead.
+---
+ cmake/Modules/CheckMpiThreadMultiple.cmake | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cmake/Modules/CheckMpiThreadMultiple.cmake b/cmake/Modules/CheckMpiThreadMultiple.cmake
+index 1bbfe3d..c2881e4 100644
+--- a/cmake/Modules/CheckMpiThreadMultiple.cmake
++++ b/cmake/Modules/CheckMpiThreadMultiple.cmake
+@@ -13,7 +13,7 @@ if(MPI_FOUND)
+   file(WRITE ${tmp_name} ${CODE_MPI_THREAD_MULTIPLE})
+   execute_process(COMMAND ${MPI_C_COMPILER} -o ${tmp_name}.x ${tmp_name} RESULT_VARIABLE _res_compiles)
+   if (NOT _res_compiles)
+-    execute_process(COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 3 ${tmp_name}.x ERROR_QUIET OUTPUT_QUIET OUTPUT_VARIABLE _out RESULT_VARIABLE _res_run)
++    execute_process(COMMAND ${tmp_name}.x ERROR_QUIET OUTPUT_QUIET OUTPUT_VARIABLE _out RESULT_VARIABLE _res_run)
+     if (NOT _res_run)
+       set(MPI_THREAD_MULTIPLE_OK ON)
+     endif(NOT _res_run)
+-- 
+2.52.0
+

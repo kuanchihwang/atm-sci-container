@@ -22,7 +22,7 @@ MPI ?= open-mpi-5
 BASE_IMAGE_NAME ?= docker.io/almalinux/9-base
 BASE_IMAGE_TAG ?= 9.8
 DATA_IMAGE_NAME ?= docker.io/kuanchihwang/atm-sci-container-data
-DATA_IMAGE_TAG ?= 2026-06-12
+DATA_IMAGE_TAG ?= 2026-08-08
 
 DOCKER = $(shell command -v docker 1>/dev/null 2>&1 && echo docker || echo podman)
 HPC_IMAGE_NAME ?= localhost/build-artifact/hpc-container
@@ -55,6 +55,7 @@ build: build-hpc build-atm-sci
 
 .PHONY: build-hpc
 build-hpc:
+	@echo "[$$(date -u "+%FT%TZ")] Building $(HPC_IMAGE_NAME):$(HPC_IMAGE_TAG)"
 	@$(DOCKER) image build \
 		--build-arg BASE_IMAGE_NAME="$(BASE_IMAGE_NAME)" \
 		--build-arg BASE_IMAGE_TAG="$(BASE_IMAGE_TAG)" \
@@ -69,6 +70,7 @@ build-hpc:
 
 .PHONY: build-atm-sci
 build-atm-sci:
+	@echo "[$$(date -u "+%FT%TZ")] Building $(ATM_SCI_IMAGE_NAME):$(ATM_SCI_IMAGE_TAG)"
 	@$(DOCKER) image build \
 		--build-arg BASE_IMAGE_NAME="$(HPC_IMAGE_NAME)" \
 		--build-arg BASE_IMAGE_TAG="$(HPC_IMAGE_TAG)" \
@@ -84,11 +86,13 @@ push: push-hpc push-atm-sci
 
 .PHONY: push-hpc
 push-hpc:
+	@echo "[$$(date -u "+%FT%TZ")] Pushing $(REGISTRY)/$(NAMESPACE)/$$(basename "$(HPC_IMAGE_NAME)"):$(HPC_IMAGE_TAG)"
 	@$(DOCKER) image tag "$(HPC_IMAGE_NAME):$(HPC_IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(HPC_IMAGE_NAME)"):$(HPC_IMAGE_TAG)"
 	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(HPC_IMAGE_NAME)"):$(HPC_IMAGE_TAG)"
 
 .PHONY: push-atm-sci
 push-atm-sci:
+	@echo "[$$(date -u "+%FT%TZ")] Pushing $(REGISTRY)/$(NAMESPACE)/$$(basename "$(ATM_SCI_IMAGE_NAME)"):$(ATM_SCI_IMAGE_TAG)"
 	@$(DOCKER) image tag "$(ATM_SCI_IMAGE_NAME):$(ATM_SCI_IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(ATM_SCI_IMAGE_NAME)"):$(ATM_SCI_IMAGE_TAG)"
 	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(ATM_SCI_IMAGE_NAME)"):$(ATM_SCI_IMAGE_TAG)"
 
@@ -97,11 +101,13 @@ push-latest: push-hpc-latest push-atm-sci-latest
 
 .PHONY: push-hpc-latest
 push-hpc-latest:
+	@echo "[$$(date -u "+%FT%TZ")] Pushing $(REGISTRY)/$(NAMESPACE)/$$(basename "$(HPC_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)"
 	@$(DOCKER) image tag "$(HPC_IMAGE_NAME):$(HPC_IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(HPC_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)"
 	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(HPC_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)"
 
 .PHONY: push-atm-sci-latest
 push-atm-sci-latest:
+	@echo "[$$(date -u "+%FT%TZ")] Pushing $(REGISTRY)/$(NAMESPACE)/$$(basename "$(ATM_SCI_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)"
 	@$(DOCKER) image tag "$(ATM_SCI_IMAGE_NAME):$(ATM_SCI_IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(ATM_SCI_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)"
 	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(ATM_SCI_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)"
 

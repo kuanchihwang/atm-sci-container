@@ -1,7 +1,7 @@
 # The hacky logic below is copied from the upstream `ccs_config`. It is set on a "machine-by-machine" basis,
 # so it needs to be duplicated here...
 
-if (COMP_NAME STREQUAL "gptl")
+if(COMP_NAME STREQUAL "gptl")
     string(APPEND CPPDEFS " -DBIT64 -DHAVE_COMM_F2C -DHAVE_GETTIMEOFDAY -DHAVE_NANOTIME -DHAVE_SLASHPROC -DHAVE_TIMES")
 endif()
 

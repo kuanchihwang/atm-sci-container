@@ -49,7 +49,7 @@ docker container run -it --rm \
 You are now in an interactive shell session inside the created container. Continue with:
 
 ```shell
-# Set up git user name and email because CIME demands that you have them...
+# Set up Git username and email because CIME demands that you have them...
 git config --global user.name "Insider"
 git config --global user.email "insider@atm-sci-container"
 
@@ -94,7 +94,7 @@ export CESM_NTASKS_PER_NODE="4"
     --run-unsupported
 cd /working/cesm-case-root/cam-sima-development
 ./case.setup
-cat > user_nl_cam << EOF
+cat > user_nl_cam << "EOF"
 debug_output = 3
 hist_add_inst_fields;h0: U,V,T,Q,PMID
 hist_file_type;h0: history
@@ -105,6 +105,7 @@ EOF
 
 # Build model.
 ./case.build
+
 # Run model, which only takes about half a minute to complete.
 ./case.submit
 
@@ -141,7 +142,7 @@ You are now in an interactive shell session inside the created container. Contin
 
 ```shell
 # Clone model source code.
-git clone --branch develop --depth 1 "https://github.com/MPAS-Dev/MPAS-Model.git"
+git clone --branch master --depth 1 "https://github.com/MPAS-Dev/MPAS-Model.git"
 
 # Build model.
 cd MPAS-Model
@@ -174,11 +175,11 @@ You are now in an interactive shell session inside the created container. Contin
 
 ```shell
 # Clone model source code.
-git clone --branch v4.7.1 --depth 1 "https://github.com/wrf-model/WRF.git"
+git clone --branch master --depth 1 "https://github.com/wrf-model/WRF.git"
 cd WRF
 git submodule update --init --recursive
 cd ..
-git clone --branch v4.6.0 --depth 1 "https://github.com/wrf-model/WPS.git"
+git clone --branch master --depth 1 "https://github.com/wrf-model/WPS.git"
 cd WPS
 # WPS demands a very narrow JasPer version range, which is completely unreasonable. Relax it a bit.
 sed -e "s/1.900.1...1.900.29/1.900.1...2.0.33/g" -i CMakeLists.txt
@@ -307,7 +308,7 @@ By default, the container entrypoint creates and switches to a non-root user nam
 | `CONTAINER_UID` | `1865` | UID of the non-root user to create. |
 | `CONTAINER_GID` | Same as `CONTAINER_UID` | GID of the non-root user to create. |
 
-To match the container user to your host user, pass your user name, UID, and GID:
+To match the container user to your host user, pass your username, UID, and GID:
 
 ```shell
 docker container run -it --rm \
@@ -364,9 +365,10 @@ Individual libraries can be loaded directly without a preset by setting `CONTAIN
 | `esmf` | ESMF | `PATH`, `LD_LIBRARY_PATH`, `CMAKE_PREFIX_PATH`, `ESMFMKFILE` |
 | `pfunit` | pFUnit | `CC`, `CXX`, `FC`, `CMAKE_PREFIX_PATH` |
 | `phdf5` | HDF5 (Parallel) | `PATH`, `LD_LIBRARY_PATH` |
-| `pio` | ParallelIO | `LD_LIBRARY_PATH` |
+| `pio` | ParallelIO | `LD_LIBRARY_PATH`, `CMAKE_PREFIX_PATH` |
 | `pnetcdf3` | PNetCDF (Classic, Parallel) | `PATH`, `LD_LIBRARY_PATH`, `CMAKE_PREFIX_PATH` |
 | `pnetcdf4` | NetCDF (Enhanced, Parallel) | `PATH`, `LD_LIBRARY_PATH`, `CMAKE_PREFIX_PATH` |
+| `scotch` | Scotch / PT-Scotch | `PATH`, `LD_LIBRARY_PATH`, `CMAKE_PREFIX_PATH` |
 
 For example, to load only pFUnit, pass its name via `CONTAINER_ENVIRONMENT`:
 
@@ -426,8 +428,8 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
   * hwloc 2.12.2
   * libevent (Distribution version)
   * PMI2 from Slurm 24.11.7
-  * PMIx 5.0.10
-  * PRRTE 3.0.13
+  * PMIx 5.0.11
+  * PRRTE 3.0.14
 * Communication Libraries
   * UCX 1.20.1
   * libfabric 2.5.1
@@ -465,11 +467,12 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
     * Classic data model, Serial mode
     * Enhanced data model, Serial mode
     * Enhanced data model, Parallel mode
-  * cprnc 1.1.4
+  * cprnc 1.1.5
   * ParallelIO 2.6.10
   * Netlib LAPACK 3.12.1
   * ESMF 8.9.1
   * pFUnit 4.18.2
+  * Scotch / PT-Scotch 7.0.13
 
 ## Included Device Drivers
 
@@ -478,7 +481,7 @@ The user-space components for the following device drivers are included in the c
 * Cornelis Omni-Path Express Software 12.1.0.1.4
 * HPE Slingshot Host Software 12.0.2
 * Intel Ethernet Fabric Suite 12.1.0.1.6
-* NVIDIA DOCA 3.2.2
+* NVIDIA DOCA 3.2.3
 
 They provide hardware enablement for their respective HPC network interconnects, described in the "[Supported Transports](#supported-transports)" section.
 
@@ -519,7 +522,7 @@ To build the container images from source, use the `Containerfile` directly or t
     make build-atm-sci [VERSION=...] [COMPILER=...] [MPI=...]
     ```
 
-3. Alternatively, simply run the `cicd/make-all.sh` shell script to build all possible combinations and variants in one pass. This can take several hours to complete.
+3. Alternatively, simply run the `.github/scripts/build-all.sh` shell script to build all possible combinations and variants in one pass. This can take several hours to complete.
 
 4. Clean up built and dangling container images. The `clean-hpc` target cleans the `hpc-container` variant, the `clean-atm-sci` target cleans the `atm-sci-container` variant, and the `clean` target cleans both.
 

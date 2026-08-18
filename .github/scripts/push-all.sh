@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -euo pipefail
 
 mkdir -p logs
@@ -23,29 +23,14 @@ for MPI in "mpich-4" "open-mpi-4" "open-mpi-5" "intel-mpi"; do
                 ;;
         esac
 
-        echo "[$(date -u "+%FT%TZ")] Pushing container with"
-        echo "    REGISTRY=\"${REGISTRY}\""
-        echo "    NAMESPACE=\"${NAMESPACE}\""
-        echo "    VERSION=\"${VERSION}\""
-        echo "    COMPILER=\"${COMPILER}\""
-        echo "    MPI=\"${MPI}\""
-        if ! make "${TARGET}" \
+        make "${TARGET}" \
             REGISTRY="${REGISTRY}" \
             NAMESPACE="${NAMESPACE}" \
             VERSION="${VERSION}" \
             COMPILER="${COMPILER}" \
             MPI="${MPI}" \
-            1>"logs/${TARGET}_${REGISTRY}_${NAMESPACE}_${VERSION}_${COMPILER}_${MPI}.log" 2>&1; then
-            echo "[$(date -u "+%FT%TZ")] Failed to push container!"
-
-            if [ -f "logs/${TARGET}_${REGISTRY}_${NAMESPACE}_${VERSION}_${COMPILER}_${MPI}.log" ]; then
-                echo "----- BEGIN LOG DUMP -----"
-                cat "logs/${TARGET}_${REGISTRY}_${NAMESPACE}_${VERSION}_${COMPILER}_${MPI}.log"
-                echo "------ END LOG DUMP ------"
-            fi
-
-            exit 1
-        fi
+            2>&1 | tee "logs/${TARGET}_${REGISTRY}_${NAMESPACE}_${VERSION}_${COMPILER}_${MPI}.log" | \
+            { grep -E --line-buffered '^\[[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z\] ' || true; }
     done
 done
 

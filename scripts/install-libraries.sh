@@ -131,8 +131,8 @@ compile_and_install_zlib() {
     # Static libraries are not desired. Delete them afterwards.
     remove_static_library_from_directory "${ZLIB_PREFIX}"
 
-    unset -v SELECTED_ZLIB_CFLAGS
-    unset -v SELECTED_ZLIB_CXXFLAGS
+    unset SELECTED_ZLIB_CFLAGS
+    unset SELECTED_ZLIB_CXXFLAGS
 
     echo ">>>>> zlib - OK"
     popd
@@ -195,8 +195,8 @@ compile_and_install_zstd() {
     # Static libraries are not desired. Delete them afterwards.
     remove_static_library_from_directory "${ZSTD_PREFIX}"
 
-    unset -v SELECTED_ZSTD_CFLAGS
-    unset -v SELECTED_ZSTD_CXXFLAGS
+    unset SELECTED_ZSTD_CFLAGS
+    unset SELECTED_ZSTD_CXXFLAGS
 
     echo ">>>>> zstd - OK"
     popd
@@ -718,13 +718,13 @@ compile_and_install_cprnc() {
     fi
 
     echo ">>>>> Preparing cprnc"
-    if [ ! -d cprnc-1.1.4 ]; then
-        extract_archive "${LIBRARIES_PATH}/cprnc-1.1.4.tar.gz"
+    if [ ! -d cprnc-1.1.5 ]; then
+        extract_archive "${LIBRARIES_PATH}/cprnc-1.1.5.tar.gz"
     fi
     if [ ! -d genf90-genf90_200608 ]; then
         extract_archive "${LIBRARIES_PATH}/genf90-200608.tar.gz"
     fi
-    stage_build_directory cprnc-1.1.4
+    stage_build_directory cprnc-1.1.5
 
     echo ">>>>> Configuring cprnc"
     prepend_ld_library_path "${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/lib:${LIBRARIES_PREFIX_MPI_SPECIFIC}/phdf5/lib:${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3/lib:${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/lib"
@@ -884,11 +884,11 @@ compile_and_install_esmf() {
     # Static libraries are not desired. Delete them afterwards.
     remove_static_library_from_directory "${LIBRARIES_PREFIX_MPI_SPECIFIC}/esmf"
 
-    unset -v SELECTED_ESMF_COMPILER
-    unset -v SELECTED_ESMF_COMM
-    unset -v SELECTED_CFLAGS_NO_PIC
-    unset -v SELECTED_CXXFLAGS_NO_PIC
-    unset -v SELECTED_FCFLAGS_NO_PIC
+    unset SELECTED_ESMF_COMPILER
+    unset SELECTED_ESMF_COMM
+    unset SELECTED_CFLAGS_NO_PIC
+    unset SELECTED_CXXFLAGS_NO_PIC
+    unset SELECTED_FCFLAGS_NO_PIC
 
     echo ">>>>> ESMF - OK"
     popd
@@ -908,9 +908,9 @@ compile_and_install_pfunit() {
     stage_build_directory pFUnit-v4.18.2
 
     echo ">>>>> Configuring pFUnit"
-    CC="${SELECTED_CC}" CFLAGS="${SELECTED_CFLAGS}" \
-    CXX="${SELECTED_CXX}" CXXFLAGS="${SELECTED_CXXFLAGS}" \
-    FC="${SELECTED_FC}" FFLAGS="${SELECTED_FCFLAGS}" \
+    CC="${SELECTED_MPICC}" CFLAGS="${SELECTED_CFLAGS}" \
+    CXX="${SELECTED_MPICXX}" CXXFLAGS="${SELECTED_CXXFLAGS}" \
+    FC="${SELECTED_MPIFC}" FFLAGS="${SELECTED_FCFLAGS}" \
     cmake \
         -D CMAKE_BUILD_TYPE="Release" \
         -D CMAKE_INSTALL_LIBDIR="lib" \
@@ -939,6 +939,46 @@ compile_and_install_pfunit() {
     popd
 
     set_milestone pfunit
+}
+
+compile_and_install_scotch() {
+    if get_milestone scotch; then
+        return 0
+    fi
+
+    echo ">>>>> Preparing Scotch"
+    if [ ! -d scotch-v7.0.13 ]; then
+        extract_archive "${LIBRARIES_PATH}/scotch-v7.0.13.tar.gz"
+        apply_patch_to_directory "${PATCHES_PATH}/scotch-"*".patch" scotch-v7.0.13
+    fi
+    stage_build_directory scotch-v7.0.13
+
+    echo ">>>>> Configuring Scotch"
+    CC="${SELECTED_MPICC}" CFLAGS="${SELECTED_CFLAGS}" \
+    CXX="${SELECTED_MPICXX}" CXXFLAGS="${SELECTED_CXXFLAGS}" \
+    FC="${SELECTED_MPIFC}" FFLAGS="${SELECTED_FCFLAGS}" \
+    cmake \
+        -D CMAKE_BUILD_TYPE="Release" \
+        -D CMAKE_INSTALL_LIBDIR="lib" \
+        -D CMAKE_INSTALL_PREFIX="${LIBRARIES_PREFIX_MPI_SPECIFIC}/scotch" \
+        -D CMAKE_PREFIX_PATH="${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base" \
+        -D CMAKE_SKIP_RPATH=TRUE \
+        -D BUILD_SHARED_LIBS=TRUE \
+        -D ENABLE_TESTS=FALSE \
+        -D SCOTCH_DETERMINISTIC="FULL" \
+        -B . \
+        -S ../source
+
+    echo ">>>>> Compiling Scotch"
+    make_compile
+
+    echo ">>>>> Installing Scotch"
+    make_install
+
+    echo ">>>>> Scotch - OK"
+    popd
+
+    set_milestone scotch
 }
 
 ###
@@ -985,6 +1025,7 @@ compile_and_install_cprnc
 compile_and_install_lapack
 compile_and_install_esmf
 compile_and_install_pfunit
+compile_and_install_scotch
 
 patch_binary_to_set_rpath "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/bin/"* ''
 patch_binary_to_set_rpath "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/lib/"* ''
@@ -1007,6 +1048,8 @@ patch_binary_to_set_rpath "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/bin/"* '
 patch_binary_to_set_rpath "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/lib/"* ''
 patch_binary_to_set_rpath "${LIBRARIES_PREFIX_MPI_SPECIFIC}/esmf/bin/"*/*/* ''
 patch_binary_to_set_rpath "${LIBRARIES_PREFIX_MPI_SPECIFIC}/esmf/lib/"*/*/* ''
+patch_binary_to_set_rpath "${LIBRARIES_PREFIX_MPI_SPECIFIC}/scotch/bin/"* ''
+patch_binary_to_set_rpath "${LIBRARIES_PREFIX_MPI_SPECIFIC}/scotch/lib/"* ''
 
 remove_documentation_from_directory "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/"*
 remove_documentation_from_directory "${LIBRARIES_PREFIX_MPI_SPECIFIC}/"*
