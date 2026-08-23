@@ -57,7 +57,7 @@ chmod 0755 /usr/local/bin/jq
 unset JQ_VERSION
 
 # Install newer yq than the distribution one.
-YQ_VERSION="4.53.3"
+YQ_VERSION="4.53.6"
 wget -O /usr/local/bin/yq \
     "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_amd64"
 chmod 0755 /usr/local/bin/yq
