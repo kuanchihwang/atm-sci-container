@@ -557,7 +557,7 @@ patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/libfabric/lib/"* '$ORIGIN'":
 
 remove_documentation_from_directory "${INFRASTRUCTURE_PREFIX}/"*
 remove_libtool_archive_from_directory "${INFRASTRUCTURE_PREFIX}/"*
-remove_pkgconfig_from_directory "${INFRASTRUCTURE_PREFIX}/"*
+remove_package_config_from_directory "${INFRASTRUCTURE_PREFIX}/"*
 
 echo ""
 echo "SUCCESSFUL COMPLETION!"
