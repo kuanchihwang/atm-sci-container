@@ -186,6 +186,8 @@ jobs:
 
       - name: Build container images
         run: |
+          set -euo pipefail
+
           make stage
 
           case "${BUILD}" in
