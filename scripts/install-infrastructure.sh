@@ -270,6 +270,7 @@ compile_and_install_libcxi() {
     CXX="${SELECTED_CXX}" CXXFLAGS="${SELECTED_CXXFLAGS}" \
     CPPFLAGS="-I${LIBCXI_PREFIX}/include -I${NUMACTL_PREFIX}/include" \
     LDFLAGS="-L${LIBCXI_PREFIX}/lib -L${NUMACTL_PREFIX}/lib" \
+    PKG_CONFIG_PATH="${NUMACTL_PREFIX}/lib/pkgconfig" \
     ./configure --disable-static --enable-shared --prefix="${LIBCXI_PREFIX}" \
         --without-systemdsystemunitdir \
         --without-udevrulesdir
