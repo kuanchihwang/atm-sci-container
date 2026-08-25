@@ -425,6 +425,7 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
 * Infrastructural Libraries
   * zlib 1.3.2
   * numactl (Distribution version)
+  * libxml2 2.13.9
   * hwloc 2.12.2
   * libevent (Distribution version)
   * PMI2 from Slurm 24.11.7

@@ -22,6 +22,7 @@ INFRASTRUCTURE_PREFIX="${INFRASTRUCTURE_PREFIX:-/opt/hpc/infrastructure}"
 HAVE_EXTERNAL_HWLOC="${HAVE_EXTERNAL_HWLOC:-false}"
 HAVE_EXTERNAL_LIBCXI="${HAVE_EXTERNAL_LIBCXI:-false}"
 HAVE_EXTERNAL_LIBEVENT="${HAVE_EXTERNAL_LIBEVENT:-false}"
+HAVE_EXTERNAL_LIBXML2="${HAVE_EXTERNAL_LIBXML2:-false}"
 HAVE_EXTERNAL_NUMACTL="${HAVE_EXTERNAL_NUMACTL:-false}"
 HAVE_EXTERNAL_ZLIB="${HAVE_EXTERNAL_ZLIB:-false}"
 
@@ -129,6 +130,52 @@ compile_and_install_numactl() {
     popd
 }
 
+compile_and_install_libxml2() {
+    case "${HAVE_EXTERNAL_LIBXML2}" in
+        true)
+            LIBXML2_PREFIX="${LIBXML2_PREFIX:-/usr}"
+
+            return 0
+            ;;
+        false)
+            :
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+
+    LIBXML2_PREFIX="${INFRASTRUCTURE_PREFIX}/base"
+
+    echo ">>>>> Preparing libxml2"
+    extract_archive "${INFRASTRUCTURE_PATH}/libxml2-2.13.9.tar.xz"
+    stage_build_directory libxml2-2.13.9
+
+    echo ">>>>> Configuring libxml2"
+    ../source/configure --help
+    CC="${SELECTED_CC}" CFLAGS="${SELECTED_CFLAGS}" \
+    CXX="${SELECTED_CXX}" CXXFLAGS="${SELECTED_CXXFLAGS}" \
+    ../source/configure --disable-static --enable-shared --prefix="${LIBXML2_PREFIX}" \
+        --with-legacy \
+        --without-ftp \
+        --without-http \
+        --without-lzma \
+        --without-modules \
+        --without-python \
+        --without-schematron \
+        --without-zlib
+    patch_libtool_to_disable_rpath
+
+    echo ">>>>> Compiling libxml2"
+    make_compile
+
+    echo ">>>>> Installing libxml2"
+    make_install
+
+    echo ">>>>> libxml2 - OK"
+    popd
+}
+
 compile_and_install_hwloc() {
     case "${HAVE_EXTERNAL_HWLOC}" in
         true)
@@ -154,8 +201,9 @@ compile_and_install_hwloc() {
     ../source/configure --help
     CC="${SELECTED_CC}" CFLAGS="${SELECTED_CFLAGS}" \
     CXX="${SELECTED_CXX}" CXXFLAGS="${SELECTED_CXXFLAGS}" \
-    CPPFLAGS="-I${NUMACTL_PREFIX}/include" \
-    LDFLAGS="-L${NUMACTL_PREFIX}/lib" \
+    CPPFLAGS="-I${LIBXML2_PREFIX}/include/libxml2 -I${NUMACTL_PREFIX}/include" \
+    LDFLAGS="-L${LIBXML2_PREFIX}/lib -L${NUMACTL_PREFIX}/lib" \
+    PKG_CONFIG_PATH="${LIBXML2_PREFIX}/lib/pkgconfig:${NUMACTL_PREFIX}/lib/pkgconfig" \
     ../source/configure --disable-static --enable-shared --prefix="${HWLOC_PREFIX}" \
         --disable-cairo \
         --disable-debug \
@@ -487,6 +535,7 @@ echo ""
 compile_and_install_patchelf
 compile_and_install_zlib
 compile_and_install_numactl
+compile_and_install_libxml2
 compile_and_install_hwloc
 compile_and_install_libcxi
 compile_and_install_libevent
