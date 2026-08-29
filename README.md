@@ -464,7 +464,7 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
     * Classic data model, Serial mode
     * Enhanced data model, Serial mode
     * Enhanced data model, Parallel mode
-  * NetCDF-Fortran 4.6.3
+  * NetCDF-Fortran 4.6.4
     * Classic data model, Serial mode
     * Enhanced data model, Serial mode
     * Enhanced data model, Parallel mode
