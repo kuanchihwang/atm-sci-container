@@ -425,8 +425,8 @@ compile_and_install_prrte() {
 
 compile_and_install_ucx() {
     echo ">>>>> Preparing UCX"
-    extract_archive "${INFRASTRUCTURE_PATH}/ucx-1.20.1.tar.gz"
-    stage_build_directory ucx-1.20.1
+    extract_archive "${INFRASTRUCTURE_PATH}/ucx-1.21.0.tar.gz"
+    stage_build_directory ucx-1.21.0
 
     echo ">>>>> Configuring UCX"
     ../source/contrib/configure-release-mt --help
