@@ -433,7 +433,7 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
   * PRRTE 3.0.14
 * Communication Libraries
   * UCX 1.21.0
-  * libfabric 2.5.1
+  * libfabric 2.6.0
 * Compilers
   * GNU Compiler Collection 11 (C, C++, Fortran)
   * GNU Compiler Collection 12 (C, C++, Fortran)
