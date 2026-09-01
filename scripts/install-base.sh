@@ -11,8 +11,8 @@ echo "tsflags=nodocs" >> /etc/dnf/dnf.conf
 dnf makecache
 dnf -y update
 
-dnf -y install epel-release
-sed -i "/^ *\[crb\]/,/^ *\[/{/^ *enabled *= *0 *$/s//enabled=1/}" /etc/yum.repos.d/almalinux-crb.repo
+dnf -y config-manager --set-enabled crb
+dnf -y install "https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm"
 
 dnf makecache
 dnf -y install \
