@@ -947,11 +947,11 @@ compile_and_install_scotch() {
     fi
 
     echo ">>>>> Preparing Scotch"
-    if [ ! -d scotch-v7.0.13 ]; then
-        extract_archive "${LIBRARIES_PATH}/scotch-v7.0.13.tar.gz"
-        apply_patch_to_directory "${PATCHES_PATH}/scotch-"*".patch" scotch-v7.0.13
+    if [ ! -d scotch-v7.0.14 ]; then
+        extract_archive "${LIBRARIES_PATH}/scotch-v7.0.14.tar.gz"
+        apply_patch_to_directory "${PATCHES_PATH}/scotch-"*".patch" scotch-v7.0.14
     fi
-    stage_build_directory scotch-v7.0.13
+    stage_build_directory scotch-v7.0.14
 
     echo ">>>>> Configuring Scotch"
     CC="${SELECTED_MPICC}" CFLAGS="${SELECTED_CFLAGS}" \
