@@ -186,11 +186,15 @@ compile_and_install_zstd() {
     # There is no way to prevent zstd from building static libraries.
     CC="${SELECTED_CC}" CFLAGS="${SELECTED_ZSTD_CFLAGS}" \
     CXX="${SELECTED_CXX}" CXXFLAGS="${SELECTED_ZSTD_CXXFLAGS}" \
+    CPPFLAGS="-I${ZLIB_PREFIX}/include" \
+    LDFLAGS="-L${ZLIB_PREFIX}/lib" \
     make_compile prefix="${ZSTD_PREFIX}"
 
     echo ">>>>> Installing zstd"
     CC="${SELECTED_CC}" CFLAGS="${SELECTED_ZSTD_CFLAGS}" \
     CXX="${SELECTED_CXX}" CXXFLAGS="${SELECTED_ZSTD_CXXFLAGS}" \
+    CPPFLAGS="-I${ZLIB_PREFIX}/include" \
+    LDFLAGS="-L${ZLIB_PREFIX}/lib" \
     make_install prefix="${ZSTD_PREFIX}"
     # Static libraries are not desired. Delete them afterwards.
     remove_static_library_from_directory "${ZSTD_PREFIX}"
@@ -290,11 +294,12 @@ compile_and_install_libpng() {
     ../source/configure --help
     CC="${SELECTED_CC}" CFLAGS="${SELECTED_CFLAGS}" \
     CXX="${SELECTED_CXX}" CXXFLAGS="${SELECTED_CXXFLAGS}" \
+    CPPFLAGS="-I${ZLIB_PREFIX}/include" \
+    LDFLAGS="-L${ZLIB_PREFIX}/lib" \
     ../source/configure --disable-static --enable-shared --prefix="${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base" \
         --disable-tests \
         --enable-hardware-optimizations \
-        --enable-tools \
-        --with-zlib-prefix="${ZLIB_PREFIX}"
+        --enable-tools
     patch_libtool_to_disable_rpath
 
     echo ">>>>> Compiling libpng"

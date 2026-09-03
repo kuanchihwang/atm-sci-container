@@ -28,7 +28,7 @@ dnf -y install \
     libpciaccess-devel ncurses-devel systemd-devel \
     fuse-devel libconfig-devel libuv-devel libyaml-devel lm_sensors-devel \
     json-c-devel libcurl-devel liburing-devel libuuid-devel \
-    libevent-devel zlib-devel \
+    libevent-devel \
     fuse3-devel libcap-devel \
     libtirpc-devel
 # In RHEL 9+, do not modify the system Python, and do not use `alternatives` to manage the unversioned Python.
