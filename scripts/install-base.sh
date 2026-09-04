@@ -51,14 +51,14 @@ unset CMAKE_VERSION
 
 # Install newer jq than the distribution one.
 JQ_VERSION="1.8.2"
-wget -O /usr/local/bin/jq \
+wget -nv -O /usr/local/bin/jq \
     "https://github.com/jqlang/jq/releases/download/jq-${JQ_VERSION}/jq-linux-amd64"
 chmod 0755 /usr/local/bin/jq
 unset JQ_VERSION
 
 # Install newer yq than the distribution one.
 YQ_VERSION="4.53.6"
-wget -O /usr/local/bin/yq \
+wget -nv -O /usr/local/bin/yq \
     "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_amd64"
 chmod 0755 /usr/local/bin/yq
 unset YQ_VERSION
