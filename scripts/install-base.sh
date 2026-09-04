@@ -43,7 +43,7 @@ ln -s tirpc/netconfig.h /usr/include/netconfig.h
 CMAKE_VERSION="3.31.12"
 mkdir -p /opt/hpc/core/cmake
 wget -nv "https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz"
-wget -nv -O - "https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-SHA-256.txt" | grep -i "cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz" | sha256sum -c -
+wget -nv -O - "https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-SHA-256.txt" | grep -i "cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz" | sha256sum -c
 tar -xf "cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz" -C /opt/hpc/core/cmake --no-same-owner --strip-components=1
 rm -fr "cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz"
 rm -fr /opt/hpc/core/cmake/doc /opt/hpc/core/cmake/man
