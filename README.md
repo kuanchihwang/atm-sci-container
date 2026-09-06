@@ -77,8 +77,8 @@ cd CAM-SIMA
 ./bin/git-fleximod update
 cd ..
 
-# Copy model configuration files.
-cp -av /usr/local/share/cesm-config/atm-sci-container CAM-SIMA/ccs_config/machines
+# Link model configuration files.
+ln -sv /usr/local/share/cesm-config/atm-sci-container CAM-SIMA/ccs_config/machines
 
 # Configure model.
 # Normally, `CESM_NTASKS_PER_NODE` is auto-detected at the container entrypoint.
@@ -96,11 +96,11 @@ cd /working/cesm-case-root/cam-sima-development
 ./case.setup
 cat > user_nl_cam << "EOF"
 debug_output = 3
-hist_add_inst_fields;h0: U,V,T,Q,PMID
+hist_add_inst_fields;h0: U,V,OMEGA,PMID,T,Q,CLDLIQ,RAINQM
 hist_file_type;h0: history
 hist_max_frames;h0: 24
 hist_output_frequency;h0: hours
-hist_write_nstep0;h0: .true.
+hist_write_nstep0;h0: .false.
 EOF
 
 # Build model.
