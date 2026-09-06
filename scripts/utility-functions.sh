@@ -273,8 +273,8 @@ remove_documentation_from_directory() {
 
         echo "[Utility] Removing documentation from directory ${d}"
 
-        rm -f -r -v "${d}/share/doc"
-        rm -f -r -v "${d}/share/man"
+        rm -f -r -v "${d}/share/"*doc*
+        rm -f -r -v "${d}/share/"*man*
 
         set -- "${d}/share/"*
 
@@ -308,7 +308,7 @@ remove_libtool_archive_from_directory() {
     return 0
 }
 
-remove_pkgconfig_from_directory() {
+remove_package_config_from_directory() {
     if [ "${#}" -lt 1 ]; then
         return 1
     fi
@@ -318,7 +318,9 @@ remove_pkgconfig_from_directory() {
             continue
         fi
 
-        echo "[Utility] Removing pkgconfig from directory ${d}"
+        echo "[Utility] Removing package config from directory ${d}"
+        find "${d}" -depth -name "*cmake*" -type d -print -execdir rm -fr "{}" ";"
+        find "${d}" -depth -name "*cmake*" -type l -print -execdir rm -fr "{}" ";"
         find "${d}" -depth -name "*pkgconfig*" -type d -print -execdir rm -fr "{}" ";"
         find "${d}" -depth -name "*pkgconfig*" -type l -print -execdir rm -fr "{}" ";"
     done

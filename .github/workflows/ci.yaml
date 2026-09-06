@@ -159,6 +159,7 @@ jobs:
     if: ${{ needs.configure-pipeline.outputs.build != '' && needs.configure-pipeline.outputs.version != '' }}
     runs-on: self-hosted
     env:
+      BUILDX_NO_DEFAULT_ATTESTATIONS: 1
       DOCKER_HUB_REGISTRY: docker.io
       GITHUB_PACKAGE_REGISTRY: ghcr.io
       NAMESPACE: kuanchihwang
@@ -185,6 +186,8 @@ jobs:
 
       - name: Build container images
         run: |
+          set -euo pipefail
+
           make stage
 
           case "${BUILD}" in

@@ -77,8 +77,8 @@ cd CAM-SIMA
 ./bin/git-fleximod update
 cd ..
 
-# Copy model configuration files.
-cp -av /usr/local/share/cesm-config/atm-sci-container CAM-SIMA/ccs_config/machines
+# Link model configuration files.
+ln -sv /usr/local/share/cesm-config/atm-sci-container CAM-SIMA/ccs_config/machines
 
 # Configure model.
 # Normally, `CESM_NTASKS_PER_NODE` is auto-detected at the container entrypoint.
@@ -96,11 +96,11 @@ cd /working/cesm-case-root/cam-sima-development
 ./case.setup
 cat > user_nl_cam << "EOF"
 debug_output = 3
-hist_add_inst_fields;h0: U,V,T,Q,PMID
+hist_add_inst_fields;h0: U,V,OMEGA,PMID,T,Q,CLDLIQ,RAINQM
 hist_file_type;h0: history
 hist_max_frames;h0: 24
 hist_output_frequency;h0: hours
-hist_write_nstep0;h0: .true.
+hist_write_nstep0;h0: .false.
 EOF
 
 # Build model.
@@ -425,14 +425,15 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
 * Infrastructural Libraries
   * zlib 1.3.2
   * numactl (Distribution version)
+  * libxml2 2.13.9
   * hwloc 2.12.2
   * libevent (Distribution version)
   * PMI2 from Slurm 24.11.7
   * PMIx 5.0.11
   * PRRTE 3.0.14
 * Communication Libraries
-  * UCX 1.20.1
-  * libfabric 2.5.1
+  * UCX 1.21.0
+  * libfabric 2.6.0
 * Compilers
   * GNU Compiler Collection 11 (C, C++, Fortran)
   * GNU Compiler Collection 12 (C, C++, Fortran)
@@ -443,7 +444,7 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
   * Intel oneAPI Compiler 2025.3.3 (C, C++, Fortran)
 * MPI Libraries
   * MPICH 4.3.2
-  * Open MPI 4.1.9a1 (`v4.1.8-46-gfc1b4c5278`)
+  * Open MPI 4.1.9a1 (`v4.1.8-48-gdadb5bfe94`)
   * Open MPI 5.0.10
   * Intel MPI 2021.13.1 (Only when paired with Intel oneAPI Compiler 2024.2.1)
   * Intel MPI 2021.17.2 (Only when paired with Intel oneAPI Compiler 2025.3.3)
@@ -463,7 +464,7 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
     * Classic data model, Serial mode
     * Enhanced data model, Serial mode
     * Enhanced data model, Parallel mode
-  * NetCDF-Fortran 4.6.3
+  * NetCDF-Fortran 4.6.4
     * Classic data model, Serial mode
     * Enhanced data model, Serial mode
     * Enhanced data model, Parallel mode
@@ -471,14 +472,14 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
   * ParallelIO 2.6.10
   * Netlib LAPACK 3.12.1
   * ESMF 8.9.1
-  * pFUnit 4.18.2
-  * Scotch / PT-Scotch 7.0.13
+  * pFUnit 4.19.0
+  * Scotch / PT-Scotch 7.0.14
 
 ## Included Device Drivers
 
 The user-space components for the following device drivers are included in the container images.
 
-* Cornelis Omni-Path Express Software 12.1.0.1.4
+* Cornelis Omni-Path Express Software 12.3.0.1.7
 * HPE Slingshot Host Software 12.0.2
 * Intel Ethernet Fabric Suite 12.1.0.1.6
 * NVIDIA DOCA 3.2.3

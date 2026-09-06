@@ -11,8 +11,8 @@ echo "tsflags=nodocs" >> /etc/dnf/dnf.conf
 dnf makecache
 dnf -y update
 
-dnf -y install epel-release
-sed -i "/^ *\[crb\]/,/^ *\[/{/^ *enabled *= *0 *$/s//enabled=1/}" /etc/yum.repos.d/almalinux-crb.repo
+dnf -y config-manager --set-enabled crb
+dnf -y install "https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm"
 
 dnf makecache
 dnf -y install \
@@ -25,10 +25,10 @@ dnf -y install \
     bzip2-devel libzstd-devel lz4-devel xz-devel \
     libnl3-devel pciutils \
     numactl-devel \
-    libpciaccess-devel libxml2-devel ncurses-devel systemd-devel \
+    libpciaccess-devel ncurses-devel systemd-devel \
     fuse-devel libconfig-devel libuv-devel libyaml-devel lm_sensors-devel \
     json-c-devel libcurl-devel liburing-devel libuuid-devel \
-    libevent-devel zlib-devel \
+    libevent-devel \
     fuse3-devel libcap-devel \
     libtirpc-devel
 # In RHEL 9+, do not modify the system Python, and do not use `alternatives` to manage the unversioned Python.
@@ -43,7 +43,7 @@ ln -s tirpc/netconfig.h /usr/include/netconfig.h
 CMAKE_VERSION="3.31.12"
 mkdir -p /opt/hpc/core/cmake
 wget -nv "https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz"
-wget -nv -O - "https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-SHA-256.txt" | grep -i "cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz" | sha256sum -c -
+wget -nv -O - "https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-SHA-256.txt" | grep -i "cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz" | sha256sum -c
 tar -xf "cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz" -C /opt/hpc/core/cmake --no-same-owner --strip-components=1
 rm -fr "cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz"
 rm -fr /opt/hpc/core/cmake/doc /opt/hpc/core/cmake/man
@@ -51,14 +51,14 @@ unset CMAKE_VERSION
 
 # Install newer jq than the distribution one.
 JQ_VERSION="1.8.2"
-wget -O /usr/local/bin/jq \
+wget -nv -O /usr/local/bin/jq \
     "https://github.com/jqlang/jq/releases/download/jq-${JQ_VERSION}/jq-linux-amd64"
 chmod 0755 /usr/local/bin/jq
 unset JQ_VERSION
 
 # Install newer yq than the distribution one.
-YQ_VERSION="4.53.3"
-wget -O /usr/local/bin/yq \
+YQ_VERSION="4.53.6"
+wget -nv -O /usr/local/bin/yq \
     "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_amd64"
 chmod 0755 /usr/local/bin/yq
 unset YQ_VERSION

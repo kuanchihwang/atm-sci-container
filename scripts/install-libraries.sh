@@ -186,11 +186,15 @@ compile_and_install_zstd() {
     # There is no way to prevent zstd from building static libraries.
     CC="${SELECTED_CC}" CFLAGS="${SELECTED_ZSTD_CFLAGS}" \
     CXX="${SELECTED_CXX}" CXXFLAGS="${SELECTED_ZSTD_CXXFLAGS}" \
+    CPPFLAGS="-I${ZLIB_PREFIX}/include" \
+    LDFLAGS="-L${ZLIB_PREFIX}/lib" \
     make_compile prefix="${ZSTD_PREFIX}"
 
     echo ">>>>> Installing zstd"
     CC="${SELECTED_CC}" CFLAGS="${SELECTED_ZSTD_CFLAGS}" \
     CXX="${SELECTED_CXX}" CXXFLAGS="${SELECTED_ZSTD_CXXFLAGS}" \
+    CPPFLAGS="-I${ZLIB_PREFIX}/include" \
+    LDFLAGS="-L${ZLIB_PREFIX}/lib" \
     make_install prefix="${ZSTD_PREFIX}"
     # Static libraries are not desired. Delete them afterwards.
     remove_static_library_from_directory "${ZSTD_PREFIX}"
@@ -290,11 +294,12 @@ compile_and_install_libpng() {
     ../source/configure --help
     CC="${SELECTED_CC}" CFLAGS="${SELECTED_CFLAGS}" \
     CXX="${SELECTED_CXX}" CXXFLAGS="${SELECTED_CXXFLAGS}" \
+    CPPFLAGS="-I${ZLIB_PREFIX}/include" \
+    LDFLAGS="-L${ZLIB_PREFIX}/lib" \
     ../source/configure --disable-static --enable-shared --prefix="${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base" \
         --disable-tests \
         --enable-hardware-optimizations \
-        --enable-tools \
-        --with-zlib-prefix="${ZLIB_PREFIX}"
+        --enable-tools
     patch_libtool_to_disable_rpath
 
     echo ">>>>> Compiling libpng"
@@ -562,10 +567,10 @@ compile_and_install_netcdf_fortran() {
     fi
 
     echo ">>>>> Preparing NetCDF (Fortran, 3, Serial)"
-    if [ ! -d netcdf-fortran-4.6.3 ]; then
-        extract_archive "${LIBRARIES_PATH}/netcdf-fortran-4.6.3.tar.gz"
+    if [ ! -d netcdf-fortran-4.6.4 ]; then
+        extract_archive "${LIBRARIES_PATH}/netcdf-fortran-4.6.4.tar.gz"
     fi
-    stage_build_directory netcdf-fortran-4.6.3 netcdf-fortran-4.6.3-3-serial
+    stage_build_directory netcdf-fortran-4.6.4 netcdf-fortran-4.6.4-3-serial
 
     echo ">>>>> Configuring NetCDF (Fortran, 3, Serial)"
     ../source/configure --help
@@ -594,7 +599,7 @@ compile_and_install_netcdf_fortran() {
     popd
 
     echo ">>>>> Preparing NetCDF (Fortran, 4, Serial)"
-    stage_build_directory netcdf-fortran-4.6.3 netcdf-fortran-4.6.3-4-serial
+    stage_build_directory netcdf-fortran-4.6.4 netcdf-fortran-4.6.4-4-serial
 
     echo ">>>>> Configuring NetCDF (Fortran, 4, Serial)"
     prepend_ld_library_path "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/netcdf4/lib:${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/hdf5/lib:${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/lib"
@@ -622,7 +627,7 @@ compile_and_install_netcdf_fortran() {
     popd
 
     echo ">>>>> Preparing NetCDF (Fortran, 4, Parallel)"
-    stage_build_directory netcdf-fortran-4.6.3 netcdf-fortran-4.6.3-4-parallel
+    stage_build_directory netcdf-fortran-4.6.4 netcdf-fortran-4.6.4-4-parallel
 
     echo ">>>>> Configuring NetCDF (Fortran, 4, Parallel)"
     prepend_ld_library_path "${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/lib:${LIBRARIES_PREFIX_MPI_SPECIFIC}/phdf5/lib:${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3/lib:${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/lib"
@@ -902,10 +907,10 @@ compile_and_install_pfunit() {
     fi
 
     echo ">>>>> Preparing pFUnit"
-    if [ ! -d pFUnit-v4.18.2 ]; then
-        extract_archive "${LIBRARIES_PATH}/pFUnit-v4.18.2.tar"
+    if [ ! -d pFUnit-v4.19.0 ]; then
+        extract_archive "${LIBRARIES_PATH}/pFUnit-v4.19.0.tar"
     fi
-    stage_build_directory pFUnit-v4.18.2
+    stage_build_directory pFUnit-v4.19.0
 
     echo ">>>>> Configuring pFUnit"
     CC="${SELECTED_MPICC}" CFLAGS="${SELECTED_CFLAGS}" \
@@ -947,11 +952,11 @@ compile_and_install_scotch() {
     fi
 
     echo ">>>>> Preparing Scotch"
-    if [ ! -d scotch-v7.0.13 ]; then
-        extract_archive "${LIBRARIES_PATH}/scotch-v7.0.13.tar.gz"
-        apply_patch_to_directory "${PATCHES_PATH}/scotch-"*".patch" scotch-v7.0.13
+    if [ ! -d scotch-v7.0.14 ]; then
+        extract_archive "${LIBRARIES_PATH}/scotch-v7.0.14.tar.gz"
+        apply_patch_to_directory "${PATCHES_PATH}/scotch-"*".patch" scotch-v7.0.14
     fi
-    stage_build_directory scotch-v7.0.13
+    stage_build_directory scotch-v7.0.14
 
     echo ">>>>> Configuring Scotch"
     CC="${SELECTED_MPICC}" CFLAGS="${SELECTED_CFLAGS}" \
