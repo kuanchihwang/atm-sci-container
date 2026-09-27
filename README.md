@@ -472,7 +472,7 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
   * ParallelIO 2.6.10
   * Netlib LAPACK 3.12.1
   * ESMF 8.9.1
-  * pFUnit 4.19.0
+  * pFUnit 4.20.1
   * Scotch / PT-Scotch 7.0.14
 
 ## Included Device Drivers
