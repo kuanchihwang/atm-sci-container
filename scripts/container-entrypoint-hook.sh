@@ -151,6 +151,8 @@ done << EOF
 $(printf "%s\n" "${CONTAINER_ENVIRONMENT}" | tr "+" "\n")
 EOF
 
+unset x
+
 unset COMPILER_SPECIFIC_LIBRARY_PATH
 unset MPI_SPECIFIC_LIBRARY_PATH
 
