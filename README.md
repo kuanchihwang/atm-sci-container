@@ -433,7 +433,7 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
   * PRRTE 3.0.14
 * Communication Libraries
   * UCX 1.21.0
-  * libfabric 2.6.0
+  * libfabric 2.7.0
 * Compilers
   * GNU Compiler Collection 11 (C, C++, Fortran)
   * GNU Compiler Collection 12 (C, C++, Fortran)
@@ -444,8 +444,8 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
   * Intel oneAPI Compiler 2025.3.3 (C, C++, Fortran)
 * MPI Libraries
   * MPICH 4.3.2
-  * Open MPI 4.1.9a1 (`v4.1.8-48-gdadb5bfe94`)
-  * Open MPI 5.0.10
+  * Open MPI 4.1.9a1 (`v4.1.8-51-ga69dbc09fa`)
+  * Open MPI 5.0.11
   * Intel MPI 2021.13.1 (Only when paired with Intel oneAPI Compiler 2024.2.1)
   * Intel MPI 2021.17.2 (Only when paired with Intel oneAPI Compiler 2025.3.3)
 * Libraries
@@ -472,8 +472,8 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
   * ParallelIO 2.6.10
   * Netlib LAPACK 3.12.1
   * ESMF 8.9.1
-  * pFUnit 4.19.0
-  * Scotch / PT-Scotch 7.0.14
+  * pFUnit 4.20.1
+  * Scotch / PT-Scotch 7.0.16
 
 ## Included Device Drivers
 

@@ -26,8 +26,7 @@ OPXS_KERNEL_UPDATES="$(find /mnt/drivers/cornelis-opxs -maxdepth 1 \
     grep -E -v "cuda|rocm" | \
     head -n 1)"
 mkdir -p opxs-kernel-updates
-cat "${OPXS_KERNEL_UPDATES}" | \
-    rpm2archive -n - | \
+rpm2archive -n < "${OPXS_KERNEL_UPDATES}" | \
     tar -xf - -C opxs-kernel-updates --no-same-owner
 tar -xf opxs-kernel-updates/opxs-kernel-updates-*.tgz -C opxs-kernel-updates --no-same-owner --strip-components=1
 cp -av opxs-kernel-updates/include/uapi /usr/include
