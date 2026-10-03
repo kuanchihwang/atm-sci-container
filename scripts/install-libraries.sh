@@ -849,6 +849,9 @@ compile_and_install_esmf() {
     ESMF_COMM="${SELECTED_ESMF_COMM}" \
     ESMF_DIR="$(pwd)" \
     ESMF_INSTALL_PREFIX="${LIBRARIES_PREFIX_MPI_SPECIFIC}/esmf" \
+    ESMF_INSTALL_BINDIR="bin" \
+    ESMF_INSTALL_LIBDIR="lib" \
+    ESMF_INSTALL_MODDIR="include" \
     ESMF_ABI="64" \
     ESMF_LAPACK="netlib" ESMF_LAPACK_LIBPATH="${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/lib" \
     ESMF_NETCDF="split" ESMF_NETCDF_INCLUDE="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/include" ESMF_NETCDF_LIBPATH="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/lib ${LIBRARIES_PREFIX_MPI_SPECIFIC}/phdf5/lib ${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3/lib ${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/lib" \
@@ -864,6 +867,9 @@ compile_and_install_esmf() {
     ESMF_COMM="${SELECTED_ESMF_COMM}" \
     ESMF_DIR="$(pwd)" \
     ESMF_INSTALL_PREFIX="${LIBRARIES_PREFIX_MPI_SPECIFIC}/esmf" \
+    ESMF_INSTALL_BINDIR="bin" \
+    ESMF_INSTALL_LIBDIR="lib" \
+    ESMF_INSTALL_MODDIR="include" \
     ESMF_ABI="64" \
     ESMF_LAPACK="netlib" ESMF_LAPACK_LIBPATH="${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/lib" \
     ESMF_NETCDF="split" ESMF_NETCDF_INCLUDE="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/include" ESMF_NETCDF_LIBPATH="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/lib ${LIBRARIES_PREFIX_MPI_SPECIFIC}/phdf5/lib ${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3/lib ${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/lib" \
@@ -880,6 +886,9 @@ compile_and_install_esmf() {
     ESMF_COMM="${SELECTED_ESMF_COMM}" \
     ESMF_DIR="$(pwd)" \
     ESMF_INSTALL_PREFIX="${LIBRARIES_PREFIX_MPI_SPECIFIC}/esmf" \
+    ESMF_INSTALL_BINDIR="bin" \
+    ESMF_INSTALL_LIBDIR="lib" \
+    ESMF_INSTALL_MODDIR="include" \
     ESMF_ABI="64" \
     ESMF_LAPACK="netlib" ESMF_LAPACK_LIBPATH="${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/lib" \
     ESMF_NETCDF="split" ESMF_NETCDF_INCLUDE="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/include" ESMF_NETCDF_LIBPATH="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/lib ${LIBRARIES_PREFIX_MPI_SPECIFIC}/phdf5/lib ${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3/lib ${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/lib" \
@@ -907,10 +916,10 @@ compile_and_install_pfunit() {
     fi
 
     echo ">>>>> Preparing pFUnit"
-    if [ ! -d pFUnit-v4.19.0 ]; then
-        extract_archive "${LIBRARIES_PATH}/pFUnit-v4.19.0.tar"
+    if [ ! -d pFUnit-v4.20.1 ]; then
+        extract_archive "${LIBRARIES_PATH}/pFUnit-v4.20.1.tar"
     fi
-    stage_build_directory pFUnit-v4.19.0
+    stage_build_directory pFUnit-v4.20.1
 
     echo ">>>>> Configuring pFUnit"
     CC="${SELECTED_MPICC}" CFLAGS="${SELECTED_CFLAGS}" \
@@ -952,11 +961,11 @@ compile_and_install_scotch() {
     fi
 
     echo ">>>>> Preparing Scotch"
-    if [ ! -d scotch-v7.0.14 ]; then
-        extract_archive "${LIBRARIES_PATH}/scotch-v7.0.14.tar.gz"
-        apply_patch_to_directory "${PATCHES_PATH}/scotch-"*".patch" scotch-v7.0.14
+    if [ ! -d scotch-v7.0.16 ]; then
+        extract_archive "${LIBRARIES_PATH}/scotch-v7.0.16.tar.gz"
+        apply_patch_to_directory "${PATCHES_PATH}/scotch-"*".patch" scotch-v7.0.16
     fi
-    stage_build_directory scotch-v7.0.14
+    stage_build_directory scotch-v7.0.16
 
     echo ">>>>> Configuring Scotch"
     CC="${SELECTED_MPICC}" CFLAGS="${SELECTED_CFLAGS}" \
