@@ -450,7 +450,7 @@ compile_and_install_ucx() {
         --enable-optimizations \
         --with-avx \
         --with-fuse3="/usr" \
-        --with-knem="$(LC_ALL=C find /opt -maxdepth 1 -iname "knem-*" -print | sort | tail -n 1)" \
+        --with-knem="$(find /opt -maxdepth 1 -iname "knem-*" -print | LC_ALL=C sort | tail -n 1)" \
         --with-mad="/usr" \
         --with-rdmacm="/usr" \
         --with-verbs="/usr" \
