@@ -454,7 +454,7 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
   * zstd 1.5.7
   * libjpeg 9f
   * JasPer 2.0.33
-  * libpng 1.6.58
+  * libpng 1.6.59
   * HDF5 1.14.6
     * Serial mode
     * Parallel mode

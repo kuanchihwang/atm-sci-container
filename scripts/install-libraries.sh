@@ -285,10 +285,10 @@ compile_and_install_libpng() {
     fi
 
     echo ">>>>> Preparing libpng"
-    if [ ! -d libpng-1.6.58 ]; then
-        extract_archive "${LIBRARIES_PATH}/libpng-1.6.58.tar.gz"
+    if [ ! -d libpng-1.6.59 ]; then
+        extract_archive "${LIBRARIES_PATH}/libpng-1.6.59.tar.gz"
     fi
-    stage_build_directory libpng-1.6.58
+    stage_build_directory libpng-1.6.59
 
     echo ">>>>> Configuring libpng"
     ../source/configure --help
