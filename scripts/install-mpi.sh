@@ -54,18 +54,24 @@ compile_and_install_mpich_4() {
     F77="${SELECTED_FC}" MPICHLIB_FFLAGS="${SELECTED_FCFLAGS}" \
     FC="${SELECTED_FC}" MPICHLIB_FCFLAGS="${SELECTED_FCFLAGS}" \
     ../source/configure --disable-static --enable-shared --prefix="${MPI_PREFIX}" \
+        --disable-checkpointing \
+        --disable-coverage \
         --disable-cxx \
         --disable-debuginfo \
         --disable-doc \
+        --disable-echo \
         --disable-g \
+        --disable-mpi-abi \
         --disable-mutex-timing \
+        --disable-qmpi \
         --disable-timing \
         --enable-error-checking="runtime" \
         --enable-fast="avx,ndebug" \
+        --enable-fortran --enable-f77 --enable-f90 --enable-f08 \
+        --enable-romio \
         --enable-threads="multiple" \
-        --with-device="ch4:ofi" \
+        --with-device="ch4:ofi" --with-libfabric="${INFRASTRUCTURE_PREFIX}/libfabric" \
         --with-hwloc="${HWLOC_PREFIX}" \
-        --with-libfabric="${INFRASTRUCTURE_PREFIX}/libfabric" \
         --with-pm="hydra" \
         --with-wrapper-dl-type="none" \
         --with-xpmem="/usr"
