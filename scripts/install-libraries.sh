@@ -3,7 +3,7 @@ set -euo pipefail
 
 SCRIPTS_PATH="$(dirname "$(realpath "${0}")")"
 PATCHES_PATH="$(dirname "${SCRIPTS_PATH}")/patches"
-LIBRARIES_PATH="$(dirname "${SCRIPTS_PATH}")/libraries"
+LIBRARIES_PATH="$(dirname "${SCRIPTS_PATH}")/src/libraries"
 
 . "${SCRIPTS_PATH}/utility-functions.sh"
 

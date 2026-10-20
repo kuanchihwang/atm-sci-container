@@ -2,7 +2,7 @@
 set -euo pipefail
 
 SCRIPTS_PATH="$(dirname "$(realpath "${0}")")"
-COMPILERS_PATH="$(dirname "${SCRIPTS_PATH}")/compilers"
+COMPILERS_PATH="$(dirname "${SCRIPTS_PATH}")/bin/compilers"
 
 ###
 ### User options

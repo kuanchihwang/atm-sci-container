@@ -3,7 +3,7 @@ set -euo pipefail
 
 SCRIPTS_PATH="$(dirname "$(realpath "${0}")")"
 PATCHES_PATH="$(dirname "${SCRIPTS_PATH}")/patches"
-MPI_PATH="$(dirname "${SCRIPTS_PATH}")/mpi"
+MPI_PATH="$(dirname "${SCRIPTS_PATH}")/src/mpi"
 
 . "${SCRIPTS_PATH}/utility-functions.sh"
 
@@ -46,6 +46,63 @@ compile_and_install_mpich_4() {
     echo ">>>>> Preparing MPICH"
     extract_archive "${MPI_PATH}/mpich-4.3.2.tar.gz"
     stage_build_directory mpich-4.3.2
+
+    echo ">>>>> Configuring MPICH"
+    ../source/configure --help
+    CC="${SELECTED_CC}" MPICHLIB_CFLAGS="${SELECTED_CFLAGS}" \
+    CXX="${SELECTED_CXX}" MPICHLIB_CXXFLAGS="${SELECTED_CXXFLAGS}" \
+    F77="${SELECTED_FC}" MPICHLIB_FFLAGS="${SELECTED_FCFLAGS}" \
+    FC="${SELECTED_FC}" MPICHLIB_FCFLAGS="${SELECTED_FCFLAGS}" \
+    ../source/configure --disable-static --enable-shared --prefix="${MPI_PREFIX}" \
+        --disable-checkpointing \
+        --disable-coverage \
+        --disable-cxx \
+        --disable-debuginfo \
+        --disable-doc \
+        --disable-echo \
+        --disable-g \
+        --disable-mpi-abi \
+        --disable-mutex-timing \
+        --disable-qmpi \
+        --disable-timing \
+        --enable-error-checking="runtime" \
+        --enable-fast="avx,ndebug" \
+        --enable-fortran --enable-f77 --enable-f90 --enable-f08 \
+        --enable-romio \
+        --enable-threads="multiple" \
+        --with-device="ch4:ofi" --with-libfabric="${INFRASTRUCTURE_PREFIX}/libfabric" \
+        --with-hwloc="${HWLOC_PREFIX}" \
+        --with-pm="hydra" \
+        --with-wrapper-dl-type="none" \
+        --with-xpmem="/usr"
+    patch_libtool_to_disable_rpath
+
+    echo ">>>>> Compiling MPICH"
+    make_compile
+
+    echo ">>>>> Installing MPICH"
+    make_install
+
+    echo ">>>>> MPICH - OK"
+    popd
+}
+
+compile_and_install_mpich_5() {
+    case "${HAVE_EXTERNAL_HWLOC}" in
+        true)
+            HWLOC_PREFIX="${HWLOC_PREFIX:-/usr}"
+            ;;
+        false)
+            HWLOC_PREFIX="${INFRASTRUCTURE_PREFIX}/base"
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+
+    echo ">>>>> Preparing MPICH"
+    extract_archive "${MPI_PATH}/mpich-5.0.2.tar.gz"
+    stage_build_directory mpich-5.0.2
 
     echo ">>>>> Configuring MPICH"
     ../source/configure --help
@@ -306,6 +363,8 @@ echo ""
 
 case "${MPI}" in
     intel-mpi)
+        MPI_PATH="$(dirname "${SCRIPTS_PATH}")/bin/mpi"
+
         case "${COMPILER}" in
             intel-2024)
                 sh "${MPI_PATH}/l_mpi_oneapi_p_2021.13.1.769_offline.sh" \
@@ -336,6 +395,15 @@ case "${MPI}" in
         ;;
     mpich-4)
         compile_and_install_mpich_4
+
+        patch_binary_to_set_rpath "${MPI_PREFIX}/bin/"* ''
+        patch_binary_to_set_rpath "${MPI_PREFIX}/lib/"* '$ORIGIN'":${INFRASTRUCTURE_PREFIX}/base/lib"
+
+        remove_documentation_from_directory "${MPI_PREFIX}"
+        remove_libtool_archive_from_directory "${MPI_PREFIX}"
+        ;;
+    mpich-5)
+        compile_and_install_mpich_5
 
         patch_binary_to_set_rpath "${MPI_PREFIX}/bin/"* ''
         patch_binary_to_set_rpath "${MPI_PREFIX}/lib/"* '$ORIGIN'":${INFRASTRUCTURE_PREFIX}/base/lib"

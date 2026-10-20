@@ -79,7 +79,7 @@ set_selected_mpi_compiler() {
                     ;;
             esac
             ;;
-        mpich-4)
+        mpich-4|mpich-5)
             SELECTED_MPICC="${SELECTED_MPICC:-mpicc}"
             SELECTED_MPICXX="${SELECTED_MPICXX:-mpic++}"
             SELECTED_MPIFC="${SELECTED_MPIFC:-mpifort}"

@@ -228,7 +228,7 @@ Both variants are tagged in the `${VERSION}_${COMPILER}_${MPI}` format, where:
 
 * `${VERSION}` indicates the **version** of the container image. It should correspond to a Git tag in this project, or `latest`.
 * `${COMPILER}` indicates the **compiler toolchain** available in the container image. It should be one of `gnu-11`, `gnu-12`, `gnu-13`, `gnu-14`, `gnu-15`, `intel-2024`, or `intel-2025`.
-* `${MPI}` indicates the **MPI library** available in the container image. It should be one of `mpich-4`, `open-mpi-4`, `open-mpi-5`, or `intel-mpi`.
+* `${MPI}` indicates the **MPI library** available in the container image. It should be one of `mpich-4`, `mpich-5`, `open-mpi-4`, `open-mpi-5`, or `intel-mpi`.
 
 For each variant and `${VERSION}`, there are currently **23** combinations of compiler toolchains and MPI libraries available.
 
@@ -444,6 +444,7 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
   * Intel oneAPI Compiler 2025.3.3 (C, C++, Fortran)
 * MPI Libraries
   * MPICH 4.3.2
+  * MPICH 5.0.2
   * Open MPI 4.1.9a1 (`v4.1.8-51-ga69dbc09fa`)
   * Open MPI 5.0.11
   * Intel MPI 2021.13.1 (Only when paired with Intel oneAPI Compiler 2024.2.1)

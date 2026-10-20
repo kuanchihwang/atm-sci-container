@@ -15,6 +15,7 @@ COMPILER ?= gnu-11
 # MPI choices are:
 # * intel-mpi
 # * mpich-4
+# * mpich-5
 # * open-mpi-4
 # * open-mpi-5
 MPI ?= open-mpi-5
@@ -22,7 +23,8 @@ MPI ?= open-mpi-5
 BASE_IMAGE_NAME ?= docker.io/almalinux/9-base
 BASE_IMAGE_TAG ?= 9.8
 DATA_IMAGE_NAME ?= docker.io/kuanchihwang/atm-sci-container-data
-DATA_IMAGE_TAG ?= 2026-10-02
+BINARY_DATA_TAG ?= testing_binary
+SOURCE_DATA_TAG ?= testing_source
 
 DOCKER = $(shell command -v docker 1>/dev/null 2>&1 && echo docker || echo podman)
 HPC_IMAGE_NAME ?= localhost/build-artifact/hpc-container
@@ -48,7 +50,8 @@ all:
 .PHONY: stage
 stage:
 	@$(DOCKER) image pull $(BASE_IMAGE_NAME):$(BASE_IMAGE_TAG)
-	@$(DOCKER) image pull $(DATA_IMAGE_NAME):$(DATA_IMAGE_TAG)
+	@$(DOCKER) image pull $(DATA_IMAGE_NAME):$(BINARY_DATA_TAG)
+	@$(DOCKER) image pull $(DATA_IMAGE_NAME):$(SOURCE_DATA_TAG)
 
 .PHONY: build
 build: build-hpc build-atm-sci
@@ -60,7 +63,8 @@ build-hpc:
 		--build-arg BASE_IMAGE_NAME="$(BASE_IMAGE_NAME)" \
 		--build-arg BASE_IMAGE_TAG="$(BASE_IMAGE_TAG)" \
 		--build-arg DATA_IMAGE_NAME="$(DATA_IMAGE_NAME)" \
-		--build-arg DATA_IMAGE_TAG="$(DATA_IMAGE_TAG)" \
+		--build-arg BINARY_DATA_TAG="$(BINARY_DATA_TAG)" \
+		--build-arg SOURCE_DATA_TAG="$(SOURCE_DATA_TAG)" \
 		--build-arg COMPILER="$(COMPILER)" \
 		--build-arg MPI="$(MPI)" \
 		--file Containerfile.hpc \
@@ -75,7 +79,7 @@ build-atm-sci:
 		--build-arg BASE_IMAGE_NAME="$(HPC_IMAGE_NAME)" \
 		--build-arg BASE_IMAGE_TAG="$(HPC_IMAGE_TAG)" \
 		--build-arg DATA_IMAGE_NAME="$(DATA_IMAGE_NAME)" \
-		--build-arg DATA_IMAGE_TAG="$(DATA_IMAGE_TAG)" \
+		--build-arg SOURCE_DATA_TAG="$(SOURCE_DATA_TAG)" \
 		--file Containerfile.atm-sci \
 		--label "org.opencontainers.image.revision=$$(git rev-parse --verify HEAD)" \
 		--label "org.opencontainers.image.version=$(VERSION)" \

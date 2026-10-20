@@ -98,7 +98,7 @@ while IFS="" read -r x; do
                             ;;
                     esac
                     ;;
-                mpich-4)
+                mpich-4|mpich-5)
                     export CC="mpicc"
                     export CXX="mpic++"
                     export FC="mpifort"
