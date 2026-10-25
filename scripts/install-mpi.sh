@@ -222,6 +222,7 @@ compile_and_install_open_mpi_4() {
         --with-ofi="${INFRASTRUCTURE_PREFIX}/libfabric" \
         --with-pmi="${INFRASTRUCTURE_PREFIX}/base" \
         --with-pmix="${INFRASTRUCTURE_PREFIX}/base" \
+        --with-ucc="${INFRASTRUCTURE_PREFIX}/ucc" \
         --with-ucx="${INFRASTRUCTURE_PREFIX}/ucx" \
         --with-verbs="/usr" \
         --with-xpmem="/usr" \
@@ -322,6 +323,7 @@ compile_and_install_open_mpi_5() {
         --with-ofi="${INFRASTRUCTURE_PREFIX}/libfabric" \
         --with-pmix="${INFRASTRUCTURE_PREFIX}/base" \
         --with-prrte="${INFRASTRUCTURE_PREFIX}/base" \
+        --with-ucc="${INFRASTRUCTURE_PREFIX}/ucc" \
         --with-ucx="${INFRASTRUCTURE_PREFIX}/ucx" \
         --with-xpmem="/usr" \
         --with-zlib="${ZLIB_PREFIX}"

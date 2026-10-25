@@ -432,6 +432,7 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
   * PMIx 5.0.11
   * PRRTE 3.0.14
 * Communication Libraries
+  * UCC 1.9.0
   * UCX 1.21.0
   * libfabric 2.7.0
 * Compilers

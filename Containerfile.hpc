@@ -65,11 +65,13 @@ RUN --mount=type=tmpfs,target=/tmp \
     echo "/opt/hpc/infrastructure/libcxi/lib"    >> /etc/ld.so.conf.d/hpc-infrastructure.conf && \
     echo "/opt/hpc/infrastructure/libfabric/lib" >> /etc/ld.so.conf.d/hpc-infrastructure.conf && \
     echo "/opt/hpc/infrastructure/ucx/lib"       >> /etc/ld.so.conf.d/hpc-infrastructure.conf && \
+    echo "/opt/hpc/infrastructure/ucc/lib"       >> /etc/ld.so.conf.d/hpc-infrastructure.conf && \
     ldconfig
 ENV PATH="/opt/hpc/infrastructure/base/bin${PATH:+:${PATH}}"
 ENV PATH="/opt/hpc/infrastructure/libcxi/bin${PATH:+:${PATH}}"
 ENV PATH="/opt/hpc/infrastructure/libfabric/bin${PATH:+:${PATH}}"
 ENV PATH="/opt/hpc/infrastructure/ucx/bin${PATH:+:${PATH}}"
+ENV PATH="/opt/hpc/infrastructure/ucc/bin${PATH:+:${PATH}}"
 
 FROM install-infrastructure AS install-compilers
 ARG COMPILER

@@ -469,6 +469,43 @@ compile_and_install_ucx() {
     popd
 }
 
+compile_and_install_ucc() {
+    echo ">>>>> Preparing UCC"
+    extract_archive "${INFRASTRUCTURE_PATH}/ucc-1.9.0.tar.gz"
+    pushd ucc-1.9.0
+    ./autogen.sh
+    popd
+    stage_build_directory ucc-1.9.0
+
+    echo ">>>>> Configuring UCC"
+    ../source/configure --help
+    CC="${SELECTED_CC}" CFLAGS="${SELECTED_CFLAGS}" \
+    CXX="${SELECTED_CXX}" CXXFLAGS="${SELECTED_CXXFLAGS}" \
+    ../source/configure --disable-static --enable-shared --prefix="${INFRASTRUCTURE_PREFIX}/ucc" \
+        --disable-assert \
+        --disable-debug \
+        --disable-doxygen-doc \
+        --disable-frame-pointer \
+        --disable-gtest \
+        --disable-profiling \
+        --enable-optimizations \
+        --with-avx \
+        --with-ibverbs \
+        --with-rdmacm \
+        --with-tls="all" \
+        --with-ucx="${INFRASTRUCTURE_PREFIX}/ucx"
+    patch_libtool_to_disable_rpath
+
+    echo ">>>>> Compiling UCC"
+    make_compile
+
+    echo ">>>>> Installing UCC"
+    make_install
+
+    echo ">>>>> UCC - OK"
+    popd
+}
+
 compile_and_install_libfabric() {
     echo ">>>>> Preparing libfabric"
     extract_archive "${INFRASTRUCTURE_PATH}/libfabric-2.7.0.tar.bz2"
@@ -544,6 +581,7 @@ compile_and_install_pmi2
 compile_and_install_pmix
 compile_and_install_prrte
 compile_and_install_ucx
+compile_and_install_ucc
 compile_and_install_libfabric
 
 patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/base/bin/"* ''
@@ -552,6 +590,8 @@ patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/libcxi/bin/"* ''
 patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/libcxi/lib/"* '$ORIGIN'":${INFRASTRUCTURE_PREFIX}/base/lib"
 patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/ucx/bin/"* ''
 patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/ucx/lib/"* '$ORIGIN'":${INFRASTRUCTURE_PREFIX}/base/lib"
+patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/ucc/bin/"* ''
+patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/ucc/lib/"* '$ORIGIN'":${INFRASTRUCTURE_PREFIX}/base/lib"
 patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/libfabric/bin/"* ''
 patch_binary_to_set_rpath "${INFRASTRUCTURE_PREFIX}/libfabric/lib/"* '$ORIGIN'":${INFRASTRUCTURE_PREFIX}/base/lib"
 
