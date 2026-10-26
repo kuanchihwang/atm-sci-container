@@ -516,8 +516,8 @@ compile_and_install_libfabric() {
     # The CXI provider requires `--enable-static` to build successfully.
     CC="${SELECTED_CC}" CFLAGS="${SELECTED_CFLAGS}" \
     CXX="${SELECTED_CXX}" CXXFLAGS="${SELECTED_CXXFLAGS}" \
-    CPPFLAGS="-I${INFRASTRUCTURE_PREFIX}/ucx/include -I${LIBCXI_PREFIX}/include -I${HWLOC_PREFIX}/include -I${NUMACTL_PREFIX}/include" \
-    LDFLAGS="-L${INFRASTRUCTURE_PREFIX}/ucx/lib -L${LIBCXI_PREFIX}/lib -L${HWLOC_PREFIX}/lib -L${NUMACTL_PREFIX}/lib" \
+    CPPFLAGS="-I${LIBCXI_PREFIX}/include -I${HWLOC_PREFIX}/include -I${NUMACTL_PREFIX}/include" \
+    LDFLAGS="-L${LIBCXI_PREFIX}/lib -L${HWLOC_PREFIX}/lib -L${NUMACTL_PREFIX}/lib" \
     ../source/configure --enable-static --enable-shared --prefix="${INFRASTRUCTURE_PREFIX}/libfabric" \
         --disable-debug \
         --disable-monitor \
@@ -528,7 +528,6 @@ compile_and_install_libfabric() {
         --enable-opx="/usr" \
         --enable-psm2="/usr" \
         --enable-psm3="/usr" \
-        --enable-ucx="${INFRASTRUCTURE_PREFIX}/ucx" \
         --enable-verbs="/usr" \
         --enable-xpmem="/usr" \
         --with-numa="${NUMACTL_PREFIX}"
