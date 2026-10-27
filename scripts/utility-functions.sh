@@ -8,19 +8,19 @@ set_selected_compiler() {
     case "${1}" in
         gnu-11|gnu-12|gnu-13|gnu-14)
             SELECTED_CC="${SELECTED_CC:-gcc}"
-            SELECTED_CFLAGS="${SELECTED_CFLAGS:--fPIC -march=x86-64-v3 -mtune=znver3 -O3}"
+            SELECTED_CFLAGS="${SELECTED_CFLAGS:--fPIC -march=x86-64-v3 -mtune=znver3 -O3 -pipe}"
             SELECTED_CXX="${SELECTED_CXX:-g++}"
-            SELECTED_CXXFLAGS="${SELECTED_CXXFLAGS:--fPIC -march=x86-64-v3 -mtune=znver3 -O3}"
+            SELECTED_CXXFLAGS="${SELECTED_CXXFLAGS:--fPIC -march=x86-64-v3 -mtune=znver3 -O3 -pipe}"
             SELECTED_FC="${SELECTED_FC:-gfortran}"
-            SELECTED_FCFLAGS="${SELECTED_FCFLAGS:--fPIC -march=x86-64-v3 -mtune=znver3 -O3}"
+            SELECTED_FCFLAGS="${SELECTED_FCFLAGS:--fPIC -march=x86-64-v3 -mtune=znver3 -O3 -pipe}"
             ;;
         gnu-15)
             SELECTED_CC="${SELECTED_CC:-gcc}"
-            SELECTED_CFLAGS="${SELECTED_CFLAGS:--fPIC -march=x86-64-v3 -mtune=znver3 -O3 -std=gnu17}"
+            SELECTED_CFLAGS="${SELECTED_CFLAGS:--fPIC -march=x86-64-v3 -mtune=znver3 -O3 -pipe -std=gnu17}"
             SELECTED_CXX="${SELECTED_CXX:-g++}"
-            SELECTED_CXXFLAGS="${SELECTED_CXXFLAGS:--fPIC -march=x86-64-v3 -mtune=znver3 -O3 -std=gnu++17}"
+            SELECTED_CXXFLAGS="${SELECTED_CXXFLAGS:--fPIC -march=x86-64-v3 -mtune=znver3 -O3 -pipe -std=gnu++17}"
             SELECTED_FC="${SELECTED_FC:-gfortran}"
-            SELECTED_FCFLAGS="${SELECTED_FCFLAGS:--fPIC -march=x86-64-v3 -mtune=znver3 -O3}"
+            SELECTED_FCFLAGS="${SELECTED_FCFLAGS:--fPIC -march=x86-64-v3 -mtune=znver3 -O3 -pipe}"
             ;;
         intel-2024)
             SELECTED_CC="${SELECTED_CC:-icx}"
