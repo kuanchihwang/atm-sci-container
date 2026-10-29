@@ -481,7 +481,7 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
 
 The user-space components for the following device drivers are included in the container images.
 
-* Cornelis Omni-Path Express Software 12.3.0.1.7
+* Cornelis Omni-Path Express Software 12.4.0.0.16
 * HPE Slingshot Host Software 12.0.2
 * Intel Ethernet Fabric Suite 12.1.0.1.6
 * NVIDIA DOCA 3.2.3
