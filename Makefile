@@ -128,26 +128,26 @@ clean: clean-hpc clean-atm-sci
 
 .PHONY: clean-hpc
 clean-hpc:
-	@for IMAGE in $$($(DOCKER) image ls -q "$$(basename "$(HPC_IMAGE_NAME)")"); do \
-		$(DOCKER) image rm -f -i "$${IMAGE}"; \
+	@for IMAGE in $$($(DOCKER) image ls --quiet "$$(basename "$(HPC_IMAGE_NAME)")"); do \
+		$(DOCKER) image rm --force --ignore "$${IMAGE}"; \
 	done
-	@for IMAGE in $$($(DOCKER) image ls -q --filter "dangling=true"); do \
-		$(DOCKER) image rm -f -i "$${IMAGE}"; \
+	@for IMAGE in $$($(DOCKER) image ls --quiet --filter "dangling=true"); do \
+		$(DOCKER) image rm --force --ignore "$${IMAGE}"; \
 	done
 
 .PHONY: clean-atm-sci
 clean-atm-sci:
-	@for IMAGE in $$($(DOCKER) image ls -q "$$(basename "$(ATM_SCI_IMAGE_NAME)")"); do \
-		$(DOCKER) image rm -f -i "$${IMAGE}"; \
+	@for IMAGE in $$($(DOCKER) image ls --quiet "$$(basename "$(ATM_SCI_IMAGE_NAME)")"); do \
+		$(DOCKER) image rm --force --ignore "$${IMAGE}"; \
 	done
-	@for IMAGE in $$($(DOCKER) image ls -q --filter "dangling=true"); do \
-		$(DOCKER) image rm -f -i "$${IMAGE}"; \
+	@for IMAGE in $$($(DOCKER) image ls --quiet --filter "dangling=true"); do \
+		$(DOCKER) image rm --force --ignore "$${IMAGE}"; \
 	done
 
 .PHONY: deep-clean
 deep-clean: clean
-	@$(DOCKER) image prune --all --build-cache --external -f
+	@$(DOCKER) image prune --all --build-cache --external --force
 
 .PHONY: reset
 reset:
-	@$(DOCKER) system reset -f
+	@$(DOCKER) system reset --force
