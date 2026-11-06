@@ -1,0 +1,52 @@
+From a251fe0bf426bf4c8872d6df1f4ba04ff14e7726 Mon Sep 17 00:00:00 2001
+From: Ralph Castain <rhc@pmix.org>
+Date: Thu, 16 Jul 2026 14:30:47 -0600
+Subject: [PATCH] Fix cpuset (de)serialization to read
+ hwloc_bitmap_list_asprintf correctly
+
+hwloc_bitmap_list_asprintf returns the number of characters written and
+-1 only on error - it does NOT return 0 on success, despite the hwloc
+header comment saying so (its body returns hwloc_bitmap_list_snprintf,
+the byte count). pmix_hwloc_pack_cpuset and pmix_hwloc_print_cpuset tested
+the result with "0 != rc" and so treated every non-empty bitmap - i.e.
+any bound process's cpuset - as an error, failing the pack with
+PMIX_ERROR and the print with NULL.
+
+Test for a negative return instead, which is the actual error signal.
+
+Signed-off-by: Ralph Castain <rhc@pmix.org>
+---
+ src/hwloc/pmix_hwloc_datatype.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/src/hwloc/pmix_hwloc_datatype.c b/src/hwloc/pmix_hwloc_datatype.c
+index 3b9c223fc5..8179bcf985 100644
+--- a/src/hwloc/pmix_hwloc_datatype.c
++++ b/src/hwloc/pmix_hwloc_datatype.c
+@@ -44,8 +44,12 @@ pmix_status_t pmix_hwloc_pack_cpuset(pmix_buffer_t *buf, pmix_cpuset_t *src,
+         /* the process isn't bound */
+         tmp = NULL;
+     } else {
+-        /* express the cpuset as a string */
+-        if (0 != hwloc_bitmap_list_asprintf(&tmp, src->bitmap)) {
++        /* express the cpuset as a string. hwloc_bitmap_list_asprintf
++         * returns the number of characters written (>= 0), and -1 only on
++         * error - despite the header comment claiming "0 on success". Test
++         * for the negative error value, not non-zero, or every bound cpuset
++         * (any non-empty bitmap) is mistaken for a failure. */
++        if (0 > hwloc_bitmap_list_asprintf(&tmp, src->bitmap)) {
+             return PMIX_ERROR;
+         }
+     }
+@@ -111,8 +115,9 @@ char *pmix_hwloc_print_cpuset(pmix_cpuset_t *src)
+         return NULL;
+     }
+ 
+-    /* express the cpuset as a string */
+-    if (0 != hwloc_bitmap_list_asprintf(&tmp, src->bitmap)) {
++    /* express the cpuset as a string. As above, the return is the character
++     * count (>= 0), with -1 signalling error - not "0 on success". */
++    if (0 > hwloc_bitmap_list_asprintf(&tmp, src->bitmap)) {
+         return NULL;
+     }
+ 
