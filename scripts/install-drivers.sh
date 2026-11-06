@@ -1,6 +1,55 @@
 #!/bin/sh
 set -euo pipefail
 
+if [ -z "${1:-}" ]; then
+    exit 1
+fi
+
+GPU="${1}"
+
+case "${GPU}" in
+    cuda-12)
+        dnf -y config-manager --add-repo "https://developer.download.nvidia.com/compute/cuda/repos/rhel9/x86_64/cuda-rhel9.repo"
+        dnf makecache
+        # Only allow DNF to pick packages from the `cuda-*` repository.
+        dnf -y --disablerepo="*" --enablerepo="cuda-rhel9-x86_64" install \
+            cuda-command-line-tools-12-9 cuda-minimal-build-12-9 \
+            cuda-cudart-devel-12-9 cuda-driver-devel-12-9 cuda-nvml-devel-12-9 libcublas-devel-12-9
+        dnf -y config-manager --set-disabled cuda-rhel9-x86_64
+        rm -fr /etc/ld.so.conf.d/*cuda*.conf
+        while IFS="" read -r f; do
+            if [ -f "${f%_static.a}.so" ]; then
+                du -h "${f}"
+                rm -f "${f}"
+            fi
+        done <<< "$(find /usr/local/cuda-12.9 -iname "lib*_static.a" -print)"
+        unset f
+        ;;
+    cuda-13)
+        dnf -y config-manager --add-repo "https://developer.download.nvidia.com/compute/cuda/repos/rhel9/x86_64/cuda-rhel9.repo"
+        dnf makecache
+        # Only allow DNF to pick packages from the `cuda-*` repository.
+        dnf -y --disablerepo="*" --enablerepo="cuda-rhel9-x86_64" install \
+            cuda-command-line-tools-13-0 cuda-minimal-build-13-0 \
+            cuda-cudart-devel-13-0 cuda-driver-devel-13-0 cuda-nvml-devel-13-0 libcublas-devel-13-0
+        dnf -y config-manager --set-disabled cuda-rhel9-x86_64
+        rm -fr /etc/ld.so.conf.d/*cuda*.conf
+        while IFS="" read -r f; do
+            if [ -f "${f%_static.a}.so" ]; then
+                du -h "${f}"
+                rm -f "${f}"
+            fi
+        done <<< "$(find /usr/local/cuda-13.0 -iname "lib*_static.a" -print)"
+        unset f
+        ;;
+    none)
+        :
+        ;;
+    *)
+        exit 1
+        ;;
+esac
+
 dnf makecache
 # Only allow DNF to pick packages from the `doca` repository.
 dnf -y --disablerepo="*" --enablerepo="doca" install \

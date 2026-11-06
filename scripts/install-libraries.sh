@@ -114,6 +114,10 @@ compile_and_install_zlib() {
             SELECTED_ZLIB_CFLAGS="${SELECTED_CFLAGS} -no-intel-lib"
             SELECTED_ZLIB_CXXFLAGS="${SELECTED_CXXFLAGS} -no-intel-lib"
             ;;
+        nvidia-*)
+            SELECTED_ZLIB_CFLAGS="${SELECTED_CFLAGS}"
+            SELECTED_ZLIB_CXXFLAGS="${SELECTED_CXXFLAGS}"
+            ;;
         *)
             return 1
             ;;
@@ -121,6 +125,7 @@ compile_and_install_zlib() {
     # There is no way to prevent zlib from building static libraries.
     CC="${SELECTED_CC}" CFLAGS="${SELECTED_ZLIB_CFLAGS}" \
     CXX="${SELECTED_CXX}" CXXFLAGS="${SELECTED_ZLIB_CXXFLAGS}" \
+    LDSHARED="${SELECTED_CC} -shared -Wl,-soname,libz.so.1,--version-script,$(realpath ../source)/zlib.map" \
     ../source/configure --shared --prefix="${ZLIB_PREFIX}"
 
     echo ">>>>> Compiling zlib"
@@ -176,6 +181,10 @@ compile_and_install_zstd() {
         intel-*)
             SELECTED_ZSTD_CFLAGS="${SELECTED_CFLAGS} -no-intel-lib"
             SELECTED_ZSTD_CXXFLAGS="${SELECTED_CXXFLAGS} -no-intel-lib"
+            ;;
+        nvidia-*)
+            SELECTED_ZSTD_CFLAGS="${SELECTED_CFLAGS}"
+            SELECTED_ZSTD_CXXFLAGS="${SELECTED_CXXFLAGS}"
             ;;
         *)
             return 1
@@ -244,14 +253,33 @@ compile_and_install_jasper() {
     fi
 
     echo ">>>>> Preparing JasPer"
+    # JasPer is used by WPS. Cannot update to version 3.0.0 and beyond due to breaking API changes.
     if [ ! -d jasper-2.0.33 ]; then
         extract_archive "${LIBRARIES_PATH}/jasper-2.0.33.tar.gz"
     fi
     stage_build_directory jasper-2.0.33
 
     echo ">>>>> Configuring JasPer"
-    CC="${SELECTED_CC}" CFLAGS="${SELECTED_CFLAGS}" \
-    CXX="${SELECTED_CXX}" CXXFLAGS="${SELECTED_CXXFLAGS}" \
+    # Massage input for JasPer.
+    case "${COMPILER}" in
+        gnu-*)
+            SELECTED_JASPER_CFLAGS="${SELECTED_CFLAGS}"
+            SELECTED_JASPER_CXXFLAGS="${SELECTED_CXXFLAGS}"
+            ;;
+        intel-*)
+            SELECTED_JASPER_CFLAGS="${SELECTED_CFLAGS}"
+            SELECTED_JASPER_CXXFLAGS="${SELECTED_CXXFLAGS}"
+            ;;
+        nvidia-*)
+            SELECTED_JASPER_CFLAGS="${SELECTED_CFLAGS} -noswitcherror"
+            SELECTED_JASPER_CXXFLAGS="${SELECTED_CXXFLAGS} -noswitcherror"
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+    CC="${SELECTED_CC}" CFLAGS="${SELECTED_JASPER_CFLAGS}" \
+    CXX="${SELECTED_CXX}" CXXFLAGS="${SELECTED_JASPER_CXXFLAGS}" \
     cmake \
         -D CMAKE_BUILD_TYPE="Release" \
         -D CMAKE_INSTALL_LIBDIR="lib" \
@@ -272,6 +300,9 @@ compile_and_install_jasper() {
 
     echo ">>>>> Installing JasPer"
     make_install
+
+    unset SELECTED_JASPER_CFLAGS
+    unset SELECTED_JASPER_CXXFLAGS
 
     echo ">>>>> JasPer - OK"
     popd
@@ -818,6 +849,9 @@ compile_and_install_esmf() {
             ;;
         intel-*)
             SELECTED_ESMF_COMPILER="intel"
+            ;;
+        nvidia-*)
+            SELECTED_ESMF_COMPILER="nvhpc"
             ;;
         *)
             return 1

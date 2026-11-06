@@ -38,6 +38,14 @@ set_selected_compiler() {
             SELECTED_FC="${SELECTED_FC:-ifx}"
             SELECTED_FCFLAGS="${SELECTED_FCFLAGS:--fpic -march=core-avx2 -mtune=core-avx2 -O3}"
             ;;
+        nvidia-2026)
+            SELECTED_CC="${SELECTED_CC:-nvc}"
+            SELECTED_CFLAGS="${SELECTED_CFLAGS:--fast -fpic -tp=x86-64-v3}"
+            SELECTED_CXX="${SELECTED_CXX:-nvc++}"
+            SELECTED_CXXFLAGS="${SELECTED_CXXFLAGS:--fast -fpic -tp=x86-64-v3}"
+            SELECTED_FC="${SELECTED_FC:-nvfortran}"
+            SELECTED_FCFLAGS="${SELECTED_FCFLAGS:--fast -fpic -tp=x86-64-v3}"
+            ;;
         *)
             return 1
             ;;

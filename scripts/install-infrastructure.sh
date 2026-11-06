@@ -15,7 +15,7 @@ if [ -z "${1:-}" ]; then
     exit 1
 fi
 
-COMPILER="${1}"
+GPU="${1}"
 
 INFRASTRUCTURE_PREFIX="${INFRASTRUCTURE_PREFIX:-/opt/hpc/infrastructure}"
 
@@ -193,6 +193,18 @@ compile_and_install_hwloc() {
 
     HWLOC_PREFIX="${INFRASTRUCTURE_PREFIX}/base"
 
+    case "${GPU}" in
+        cuda-*)
+            set -- "--with-cuda=${GPU_PREFIX}"
+            ;;
+        none)
+            set --
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+
     echo ">>>>> Preparing hwloc"
     extract_archive "${INFRASTRUCTURE_PATH}/hwloc-2.12.2.tar.gz"
     stage_build_directory hwloc-2.12.2
@@ -214,7 +226,8 @@ compile_and_install_hwloc() {
         --enable-libxml2 \
         --enable-pci \
         --enable-plugins \
-        --without-x
+        --without-x \
+        "${@}"
     patch_libtool_to_disable_rpath
 
     echo ">>>>> Compiling hwloc"
@@ -425,6 +438,18 @@ compile_and_install_prrte() {
 }
 
 compile_and_install_ucx() {
+    case "${GPU}" in
+        cuda-*)
+            set -- "--with-cuda=${GPU_PREFIX}"
+            ;;
+        none)
+            set --
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+
     echo ">>>>> Preparing UCX"
     extract_archive "${INFRASTRUCTURE_PATH}/ucx-1.22.0.tar.gz"
     stage_build_directory ucx-1.22.0
@@ -457,7 +482,8 @@ compile_and_install_ucx() {
         --with-verbs="/usr" \
         --with-xpmem="/usr" \
         --without-go \
-        --without-java
+        --without-java \
+        "${@}"
     patch_libtool_to_disable_rpath
 
     echo ">>>>> Compiling UCX"
@@ -471,6 +497,18 @@ compile_and_install_ucx() {
 }
 
 compile_and_install_ucc() {
+    case "${GPU}" in
+        cuda-*)
+            set -- "--with-cuda=${GPU_PREFIX}"
+            ;;
+        none)
+            set --
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+
     echo ">>>>> Preparing UCC"
     extract_archive "${INFRASTRUCTURE_PATH}/ucc-1.9.0.tar.gz"
     pushd ucc-1.9.0
@@ -494,7 +532,8 @@ compile_and_install_ucc() {
         --with-ibverbs \
         --with-rdmacm \
         --with-tls="all" \
-        --with-ucx="${INFRASTRUCTURE_PREFIX}/ucx"
+        --with-ucx="${INFRASTRUCTURE_PREFIX}/ucx" \
+        "${@}"
     patch_libtool_to_disable_rpath
 
     echo ">>>>> Compiling UCC"
@@ -508,6 +547,18 @@ compile_and_install_ucc() {
 }
 
 compile_and_install_libfabric() {
+    case "${GPU}" in
+        cuda-*)
+            set -- "--enable-cuda-dlopen" "--with-cuda=${GPU_PREFIX}"
+            ;;
+        none)
+            set --
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+
     echo ">>>>> Preparing libfabric"
     extract_archive "${INFRASTRUCTURE_PATH}/libfabric-2.7.0.tar.bz2"
     stage_build_directory libfabric-2.7.0
@@ -531,7 +582,8 @@ compile_and_install_libfabric() {
         --enable-psm3="/usr" \
         --enable-verbs="/usr" \
         --enable-xpmem="/usr" \
-        --with-numa="${NUMACTL_PREFIX}"
+        --with-numa="${NUMACTL_PREFIX}" \
+        "${@}"
     patch_libtool_to_disable_rpath
 
     echo ">>>>> Compiling libfabric"
@@ -550,7 +602,7 @@ compile_and_install_libfabric() {
 ### Main
 ###
 
-set_selected_compiler "${COMPILER}"
+set_selected_compiler "gnu-11"
 
 echo "This script builds and installs the infrastructure for optimized MPICH / Open MPI."
 echo "It is assumed that all relevant transport drivers have already been installed."
@@ -570,13 +622,24 @@ echo ""
 confirm_to_continue || exit 0
 echo ""
 
+mkdir -p "${INFRASTRUCTURE_PREFIX}"
+echo "INFRASTRUCTURE_PREFIX=${INFRASTRUCTURE_PREFIX}" > "${INFRASTRUCTURE_PREFIX}/.env"
+
 compile_and_install_patchelf
+
 compile_and_install_zlib
+echo "ZLIB_PREFIX=${ZLIB_PREFIX}" >> "${INFRASTRUCTURE_PREFIX}/.env"
 compile_and_install_numactl
+echo "NUMACTL_PREFIX=${NUMACTL_PREFIX}" >> "${INFRASTRUCTURE_PREFIX}/.env"
 compile_and_install_libxml2
+echo "LIBXML2_PREFIX=${LIBXML2_PREFIX}" >> "${INFRASTRUCTURE_PREFIX}/.env"
 compile_and_install_hwloc
+echo "HWLOC_PREFIX=${HWLOC_PREFIX}" >> "${INFRASTRUCTURE_PREFIX}/.env"
 compile_and_install_libcxi
+echo "LIBCXI_PREFIX=${LIBCXI_PREFIX}" >> "${INFRASTRUCTURE_PREFIX}/.env"
 compile_and_install_libevent
+echo "LIBEVENT_PREFIX=${LIBEVENT_PREFIX}" >> "${INFRASTRUCTURE_PREFIX}/.env"
+
 compile_and_install_pmi2
 compile_and_install_pmix
 compile_and_install_prrte

@@ -67,6 +67,23 @@ case "${COMPILER}" in
             "!" -path "/var/intel/installercache/packagemanager.db" \
             -delete
         ;;
+    nvidia-2026)
+        NVHPC_INSTALL_DIR="/opt/nvidia/hpc-sdk" \
+        NVHPC_INSTALL_TYPE="single" \
+        NVHPC_SILENT="true" \
+        "${COMPILERS_PATH}/nvidia-hpc-sdk/x86_64/install"
+        rm -fr /opt/nvidia/hpc-sdk/modulefiles
+        for d in REDIST cmake comm_libs examples math_libs profilers; do
+            rm -fr "/opt/nvidia/hpc-sdk/$(uname -s)_$(uname -m)/2026/${d}"
+        done
+        unset d
+        # Use custom CUDA instead of the bundled one.
+        rm -fr "/opt/nvidia/hpc-sdk/$(uname -s)_$(uname -m)/2026/cuda/"*
+        for d in bin include lib64 nvvm; do
+            ln -s "${GPU_PREFIX}/${d}" "/opt/nvidia/hpc-sdk/$(uname -s)_$(uname -m)/2026/cuda/${d}"
+        done
+        unset d
+        ;;
     *)
         exit 1
         ;;

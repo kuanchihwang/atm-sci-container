@@ -5,6 +5,7 @@ ARG BINARY_DATA_TAG
 ARG SOURCE_DATA_TAG
 ARG COMPILER
 ARG MPI
+ARG GPU
 
 FROM ${DATA_IMAGE_NAME}:${BINARY_DATA_TAG} AS binary-data
 FROM ${DATA_IMAGE_NAME}:${SOURCE_DATA_TAG} AS source-data
@@ -29,6 +30,7 @@ RUN --mount=type=tmpfs,target=/tmp \
 ENV PATH="/opt/hpc/core/cmake/bin${PATH:+:${PATH}}"
 
 FROM install-base AS install-drivers
+ARG GPU
 RUN --mount=type=tmpfs,target=/tmp \
     --mount=type=tmpfs,target=/var/log \
     --mount=type=cache,target=/var/cache/dnf,sharing=locked \
@@ -42,11 +44,31 @@ RUN --mount=type=tmpfs,target=/tmp \
     --mount=type=bind,source=scripts,target=/mnt/scripts,ro \
     mkdir -p /tmp/working && \
     pushd /tmp/working && \
-    /mnt/scripts/install-drivers.sh && \
+    /mnt/scripts/install-drivers.sh "${GPU}" && \
     popd && \
     rm -fr /tmp/working
+ENV GPU="${GPU}"
 
-FROM install-drivers AS install-infrastructure
+FROM install-drivers AS set-default-cuda-12
+ENV GPU_PREFIX="/usr/local/cuda-12"
+RUN echo "# Included by /etc/ld.so.conf" >  /etc/ld.so.conf.d/hpc-drivers.conf && \
+    echo "${GPU_PREFIX}/lib64"           >> /etc/ld.so.conf.d/hpc-drivers.conf && \
+    ldconfig
+ENV PATH="${GPU_PREFIX}/bin${PATH:+:${PATH}}"
+
+FROM install-drivers AS set-default-cuda-13
+ENV GPU_PREFIX="/usr/local/cuda-13"
+RUN echo "# Included by /etc/ld.so.conf" >  /etc/ld.so.conf.d/hpc-drivers.conf && \
+    echo "${GPU_PREFIX}/lib64"           >> /etc/ld.so.conf.d/hpc-drivers.conf && \
+    ldconfig
+ENV PATH="${GPU_PREFIX}/bin${PATH:+:${PATH}}"
+
+FROM install-drivers AS set-default-none
+# No GPU. Nothing to do.
+ENV GPU_PREFIX="none"
+
+FROM set-default-${GPU} AS install-infrastructure
+ENV INFRASTRUCTURE_PREFIX="/opt/hpc/infrastructure"
 RUN --mount=type=tmpfs,target=/tmp \
     --mount=type=tmpfs,target=/var/log \
     --mount=type=bind,from=source-data,source=infrastructure,target=/mnt/src/infrastructure,ro \
@@ -57,21 +79,21 @@ RUN --mount=type=tmpfs,target=/tmp \
     printf "y\n" | \
         HAVE_EXTERNAL_LIBEVENT="true" \
         HAVE_EXTERNAL_NUMACTL="true" \
-        /mnt/scripts/install-infrastructure.sh "gnu-11" && \
+        /mnt/scripts/install-infrastructure.sh "${GPU}" && \
     popd && \
     rm -fr /tmp/working && \
-    echo "# Included by /etc/ld.so.conf"         >  /etc/ld.so.conf.d/hpc-infrastructure.conf && \
-    echo "/opt/hpc/infrastructure/base/lib"      >> /etc/ld.so.conf.d/hpc-infrastructure.conf && \
-    echo "/opt/hpc/infrastructure/libcxi/lib"    >> /etc/ld.so.conf.d/hpc-infrastructure.conf && \
-    echo "/opt/hpc/infrastructure/libfabric/lib" >> /etc/ld.so.conf.d/hpc-infrastructure.conf && \
-    echo "/opt/hpc/infrastructure/ucx/lib"       >> /etc/ld.so.conf.d/hpc-infrastructure.conf && \
-    echo "/opt/hpc/infrastructure/ucc/lib"       >> /etc/ld.so.conf.d/hpc-infrastructure.conf && \
+    echo "# Included by /etc/ld.so.conf"          >  /etc/ld.so.conf.d/hpc-infrastructure.conf && \
+    echo "${INFRASTRUCTURE_PREFIX}/base/lib"      >> /etc/ld.so.conf.d/hpc-infrastructure.conf && \
+    echo "${INFRASTRUCTURE_PREFIX}/libcxi/lib"    >> /etc/ld.so.conf.d/hpc-infrastructure.conf && \
+    echo "${INFRASTRUCTURE_PREFIX}/libfabric/lib" >> /etc/ld.so.conf.d/hpc-infrastructure.conf && \
+    echo "${INFRASTRUCTURE_PREFIX}/ucc/lib"       >> /etc/ld.so.conf.d/hpc-infrastructure.conf && \
+    echo "${INFRASTRUCTURE_PREFIX}/ucx/lib"       >> /etc/ld.so.conf.d/hpc-infrastructure.conf && \
     ldconfig
-ENV PATH="/opt/hpc/infrastructure/base/bin${PATH:+:${PATH}}"
-ENV PATH="/opt/hpc/infrastructure/libcxi/bin${PATH:+:${PATH}}"
-ENV PATH="/opt/hpc/infrastructure/libfabric/bin${PATH:+:${PATH}}"
-ENV PATH="/opt/hpc/infrastructure/ucx/bin${PATH:+:${PATH}}"
-ENV PATH="/opt/hpc/infrastructure/ucc/bin${PATH:+:${PATH}}"
+ENV PATH="${INFRASTRUCTURE_PREFIX}/base/bin${PATH:+:${PATH}}"
+ENV PATH="${INFRASTRUCTURE_PREFIX}/libcxi/bin${PATH:+:${PATH}}"
+ENV PATH="${INFRASTRUCTURE_PREFIX}/libfabric/bin${PATH:+:${PATH}}"
+ENV PATH="${INFRASTRUCTURE_PREFIX}/ucc/bin${PATH:+:${PATH}}"
+ENV PATH="${INFRASTRUCTURE_PREFIX}/ucx/bin${PATH:+:${PATH}}"
 
 FROM install-infrastructure AS install-compilers
 ARG COMPILER
@@ -90,32 +112,46 @@ ENV COMPILER="${COMPILER}"
 
 FROM install-compilers AS set-default-gnu-11
 # Default in RHEL 9. Nothing to do.
+ENV COMPILER_PREFIX="/usr"
 ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}"
 ENV PATH="${PATH:-}"
 
 FROM install-compilers AS set-default-gnu-12
-ENV LD_LIBRARY_PATH="/opt/rh/gcc-toolset-12/root/usr/lib64:/opt/rh/gcc-toolset-12/root/usr/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
-ENV PATH="/opt/rh/gcc-toolset-12/root/usr/bin${PATH:+:${PATH}}"
+ENV COMPILER_PREFIX="/opt/rh/gcc-toolset-12/root/usr"
+ENV LD_LIBRARY_PATH="${COMPILER_PREFIX}/lib64:${COMPILER_PREFIX}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+ENV PATH="${COMPILER_PREFIX}/bin${PATH:+:${PATH}}"
 
 FROM install-compilers AS set-default-gnu-13
-ENV LD_LIBRARY_PATH="/opt/rh/gcc-toolset-13/root/usr/lib64:/opt/rh/gcc-toolset-13/root/usr/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
-ENV PATH="/opt/rh/gcc-toolset-13/root/usr/bin${PATH:+:${PATH}}"
+ENV COMPILER_PREFIX="/opt/rh/gcc-toolset-13/root/usr"
+ENV LD_LIBRARY_PATH="${COMPILER_PREFIX}/lib64:${COMPILER_PREFIX}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+ENV PATH="${COMPILER_PREFIX}/bin${PATH:+:${PATH}}"
 
 FROM install-compilers AS set-default-gnu-14
-ENV LD_LIBRARY_PATH="/opt/rh/gcc-toolset-14/root/usr/lib64:/opt/rh/gcc-toolset-14/root/usr/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
-ENV PATH="/opt/rh/gcc-toolset-14/root/usr/bin${PATH:+:${PATH}}"
+ENV COMPILER_PREFIX="/opt/rh/gcc-toolset-14/root/usr"
+ENV LD_LIBRARY_PATH="${COMPILER_PREFIX}/lib64:${COMPILER_PREFIX}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+ENV PATH="${COMPILER_PREFIX}/bin${PATH:+:${PATH}}"
 
 FROM install-compilers AS set-default-gnu-15
-ENV LD_LIBRARY_PATH="/opt/rh/gcc-toolset-15/root/usr/lib64:/opt/rh/gcc-toolset-15/root/usr/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
-ENV PATH="/opt/rh/gcc-toolset-15/root/usr/bin${PATH:+:${PATH}}"
+ENV COMPILER_PREFIX="/opt/rh/gcc-toolset-15/root/usr"
+ENV LD_LIBRARY_PATH="${COMPILER_PREFIX}/lib64:${COMPILER_PREFIX}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+ENV PATH="${COMPILER_PREFIX}/bin${PATH:+:${PATH}}"
 
 FROM install-compilers AS set-default-intel-2024
-ENV LD_LIBRARY_PATH="/opt/intel/oneapi/compiler/latest/opt/compiler/lib:/opt/intel/oneapi/compiler/latest/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
-ENV PATH="/opt/intel/oneapi/compiler/latest/bin${PATH:+:${PATH}}"
+ENV COMPILER_PREFIX="/opt/intel/oneapi/compiler/latest"
+ENV LD_LIBRARY_PATH="${COMPILER_PREFIX}/opt/compiler/lib:${COMPILER_PREFIX}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+ENV PATH="${COMPILER_PREFIX}/bin${PATH:+:${PATH}}"
 
 FROM install-compilers AS set-default-intel-2025
-ENV LD_LIBRARY_PATH="/opt/intel/oneapi/compiler/latest/opt/compiler/lib:/opt/intel/oneapi/compiler/latest/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
-ENV PATH="/opt/intel/oneapi/compiler/latest/bin${PATH:+:${PATH}}"
+ENV COMPILER_PREFIX="/opt/intel/oneapi/compiler/latest"
+ENV LD_LIBRARY_PATH="${COMPILER_PREFIX}/opt/compiler/lib:${COMPILER_PREFIX}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+ENV PATH="${COMPILER_PREFIX}/bin${PATH:+:${PATH}}"
+
+FROM install-compilers AS set-default-nvidia-2026
+ENV CUDA_HOME="${GPU_PREFIX}"
+ENV NVHPC_CUDA_HOME="${GPU_PREFIX}"
+ENV COMPILER_PREFIX="/opt/nvidia/hpc-sdk/Linux_x86_64/2026/compilers"
+ENV LD_LIBRARY_PATH="${COMPILER_PREFIX}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+ENV PATH="${COMPILER_PREFIX}/bin${PATH:+:${PATH}}"
 
 FROM set-default-${COMPILER} AS install-mpi
 ARG MPI
@@ -137,24 +173,29 @@ ENV MPI="${MPI}"
 
 FROM install-mpi AS set-default-intel-mpi
 ENV I_MPI_ROOT="/opt/intel/oneapi/mpi/latest"
-ENV LD_LIBRARY_PATH="/opt/intel/oneapi/mpi/latest/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
-ENV PATH="/opt/intel/oneapi/mpi/latest/bin${PATH:+:${PATH}}"
+ENV MPI_PREFIX="/opt/intel/oneapi/mpi/latest"
+ENV LD_LIBRARY_PATH="${MPI_PREFIX}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+ENV PATH="${MPI_PREFIX}/bin${PATH:+:${PATH}}"
 
 FROM install-mpi AS set-default-mpich-4
-ENV LD_LIBRARY_PATH="/opt/hpc/compiler/${COMPILER}/${MPI}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
-ENV PATH="/opt/hpc/compiler/${COMPILER}/${MPI}/bin${PATH:+:${PATH}}"
+ENV MPI_PREFIX="/opt/hpc/compiler/${COMPILER}/${MPI}"
+ENV LD_LIBRARY_PATH="${MPI_PREFIX}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+ENV PATH="${MPI_PREFIX}/bin${PATH:+:${PATH}}"
 
 FROM install-mpi AS set-default-mpich-5
-ENV LD_LIBRARY_PATH="/opt/hpc/compiler/${COMPILER}/${MPI}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
-ENV PATH="/opt/hpc/compiler/${COMPILER}/${MPI}/bin${PATH:+:${PATH}}"
+ENV MPI_PREFIX="/opt/hpc/compiler/${COMPILER}/${MPI}"
+ENV LD_LIBRARY_PATH="${MPI_PREFIX}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+ENV PATH="${MPI_PREFIX}/bin${PATH:+:${PATH}}"
 
 FROM install-mpi AS set-default-open-mpi-4
-ENV LD_LIBRARY_PATH="/opt/hpc/compiler/${COMPILER}/${MPI}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
-ENV PATH="/opt/hpc/compiler/${COMPILER}/${MPI}/bin${PATH:+:${PATH}}"
+ENV MPI_PREFIX="/opt/hpc/compiler/${COMPILER}/${MPI}"
+ENV LD_LIBRARY_PATH="${MPI_PREFIX}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+ENV PATH="${MPI_PREFIX}/bin${PATH:+:${PATH}}"
 
 FROM install-mpi AS set-default-open-mpi-5
-ENV LD_LIBRARY_PATH="/opt/hpc/compiler/${COMPILER}/${MPI}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
-ENV PATH="/opt/hpc/compiler/${COMPILER}/${MPI}/bin${PATH:+:${PATH}}"
+ENV MPI_PREFIX="/opt/hpc/compiler/${COMPILER}/${MPI}"
+ENV LD_LIBRARY_PATH="${MPI_PREFIX}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+ENV PATH="${MPI_PREFIX}/bin${PATH:+:${PATH}}"
 
 FROM set-default-${MPI} AS hpc-container
 COPY scripts/container-entrypoint.sh /usr/local/bin/

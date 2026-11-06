@@ -7,6 +7,8 @@ ifeq ($(findstring gnu,$(COMPILER)),gnu)
     ADDITIONAL_FCFLAGS = -fno-unsafe-math-optimizations -frounding-math -fsignaling-nans -frecursive
 else ifeq ($(findstring intel,$(COMPILER)),intel)
     ADDITIONAL_FCFLAGS = -fp-model=precise -assume recursion
+else ifeq ($(findstring nvidia,$(COMPILER)),nvidia)
+    ADDITIONAL_FCFLAGS = -Kieee -Mrecursive
 else
     ADDITIONAL_FCFLAGS =
 endif

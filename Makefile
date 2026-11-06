@@ -1,5 +1,7 @@
+DOCKER = $(shell command -v docker 1>/dev/null 2>&1 && echo docker || echo podman)
 REGISTRY ?= docker.io
 NAMESPACE ?= kuanchihwang
+
 VERSION ?= testing
 
 # Compiler choices are:
@@ -10,15 +12,22 @@ VERSION ?= testing
 # * gnu-15
 # * intel-2024
 # * intel-2025
+# * nvidia-2026
 COMPILER ?= gnu-11
 
 # MPI choices are:
-# * intel-mpi
 # * mpich-4
 # * mpich-5
 # * open-mpi-4
 # * open-mpi-5
+# * intel-mpi
 MPI ?= open-mpi-5
+
+# GPU choices are:
+# * cuda-12
+# * cuda-13
+# * none
+GPU ?= none
 
 BASE_IMAGE_NAME ?= docker.io/almalinux/9-base
 BASE_IMAGE_TAG ?= 9.8
@@ -26,11 +35,10 @@ DATA_IMAGE_NAME ?= docker.io/kuanchihwang/atm-sci-container-data
 BINARY_DATA_TAG ?= testing_binary
 SOURCE_DATA_TAG ?= testing_source
 
-DOCKER = $(shell command -v docker 1>/dev/null 2>&1 && echo docker || echo podman)
 HPC_IMAGE_NAME ?= localhost/build-artifact/hpc-container
-HPC_IMAGE_TAG ?= $(VERSION)_$(COMPILER)_$(MPI)
+HPC_IMAGE_TAG ?= $(VERSION)_$(COMPILER)_$(MPI)_$(GPU)
 ATM_SCI_IMAGE_NAME ?= localhost/build-artifact/atm-sci-container
-ATM_SCI_IMAGE_TAG ?= $(VERSION)_$(COMPILER)_$(MPI)
+ATM_SCI_IMAGE_TAG ?= $(VERSION)_$(COMPILER)_$(MPI)_$(GPU)
 
 .NOTPARALLEL:
 
@@ -38,11 +46,11 @@ ATM_SCI_IMAGE_TAG ?= $(VERSION)_$(COMPILER)_$(MPI)
 all:
 	@echo "Usage:"
 	@echo "    make stage"
-	@echo "    make build [VERSION=...] [COMPILER=...] [MPI=...]"
+	@echo "    make build [VERSION=...] [COMPILER=...] [MPI=...] [GPU=...]"
 	@echo "    make clean"
 	@echo ""
 	@echo "    make login [REGISTRY=...] [NAMESPACE=...]"
-	@echo "    make push [REGISTRY=...] [NAMESPACE=...] [VERSION=...] [COMPILER=...] [MPI=...]"
+	@echo "    make push [REGISTRY=...] [NAMESPACE=...] [VERSION=...] [COMPILER=...] [MPI=...] [GPU=...]"
 	@echo "    make logout [REGISTRY=...]"
 	@echo ""
 	@echo "    make reset (Warning: Mass destruction!)"
@@ -67,6 +75,7 @@ build-hpc:
 		--build-arg SOURCE_DATA_TAG="$(SOURCE_DATA_TAG)" \
 		--build-arg COMPILER="$(COMPILER)" \
 		--build-arg MPI="$(MPI)" \
+		--build-arg GPU="$(GPU)" \
 		--file Containerfile.hpc \
 		--label "org.opencontainers.image.revision=$$(git rev-parse --verify HEAD)" \
 		--label "org.opencontainers.image.version=$(VERSION)" \

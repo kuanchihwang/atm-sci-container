@@ -18,31 +18,13 @@ fi
 COMPILER="${1}"
 MPI="${2}"
 
-INFRASTRUCTURE_PREFIX="${INFRASTRUCTURE_PREFIX:-/opt/hpc/infrastructure}"
 MPI_PREFIX="${MPI_PREFIX:-/opt/hpc/compiler/${COMPILER}/${MPI}}"
-
-HAVE_EXTERNAL_HWLOC="${HAVE_EXTERNAL_HWLOC:-false}"
-HAVE_EXTERNAL_LIBEVENT="${HAVE_EXTERNAL_LIBEVENT:-false}"
-HAVE_EXTERNAL_NUMACTL="${HAVE_EXTERNAL_NUMACTL:-false}"
-HAVE_EXTERNAL_ZLIB="${HAVE_EXTERNAL_ZLIB:-false}"
 
 ###
 ### Individual library compilation and installation functions
 ###
 
 compile_and_install_mpich_4() {
-    case "${HAVE_EXTERNAL_HWLOC}" in
-        true)
-            HWLOC_PREFIX="${HWLOC_PREFIX:-/usr}"
-            ;;
-        false)
-            HWLOC_PREFIX="${INFRASTRUCTURE_PREFIX}/base"
-            ;;
-        *)
-            return 1
-            ;;
-    esac
-
     echo ">>>>> Preparing MPICH"
     extract_archive "${MPI_PATH}/mpich-4.3.2.tar.gz"
     stage_build_directory mpich-4.3.2
@@ -88,12 +70,12 @@ compile_and_install_mpich_4() {
 }
 
 compile_and_install_mpich_5() {
-    case "${HAVE_EXTERNAL_HWLOC}" in
-        true)
-            HWLOC_PREFIX="${HWLOC_PREFIX:-/usr}"
+    case "${GPU}" in
+        cuda-*)
+            set -- "--with-cuda=${GPU_PREFIX}"
             ;;
-        false)
-            HWLOC_PREFIX="${INFRASTRUCTURE_PREFIX}/base"
+        none)
+            set --
             ;;
         *)
             return 1
@@ -131,7 +113,8 @@ compile_and_install_mpich_5() {
         --with-hwloc="${HWLOC_PREFIX}" \
         --with-pm="hydra" \
         --with-wrapper-dl-type="none" \
-        --with-xpmem="/usr"
+        --with-xpmem="/usr" \
+        "$@"
     patch_libtool_to_disable_rpath
 
     echo ">>>>> Compiling MPICH"
@@ -145,54 +128,6 @@ compile_and_install_mpich_5() {
 }
 
 compile_and_install_open_mpi_4() {
-    case "${HAVE_EXTERNAL_HWLOC}" in
-        true)
-            HWLOC_PREFIX="${HWLOC_PREFIX:-/usr}"
-            ;;
-        false)
-            HWLOC_PREFIX="${INFRASTRUCTURE_PREFIX}/base"
-            ;;
-        *)
-            return 1
-            ;;
-    esac
-
-    case "${HAVE_EXTERNAL_LIBEVENT}" in
-        true)
-            LIBEVENT_PREFIX="${LIBEVENT_PREFIX:-/usr}"
-            ;;
-        false)
-            LIBEVENT_PREFIX="${INFRASTRUCTURE_PREFIX}/base"
-            ;;
-        *)
-            return 1
-            ;;
-    esac
-
-    case "${HAVE_EXTERNAL_NUMACTL}" in
-        true)
-            NUMACTL_PREFIX="${NUMACTL_PREFIX:-/usr}"
-            ;;
-        false)
-            NUMACTL_PREFIX="${INFRASTRUCTURE_PREFIX}/base"
-            ;;
-        *)
-            return 1
-            ;;
-    esac
-
-    case "${HAVE_EXTERNAL_ZLIB}" in
-        true)
-            ZLIB_PREFIX="${ZLIB_PREFIX:-/usr}"
-            ;;
-        false)
-            ZLIB_PREFIX="${INFRASTRUCTURE_PREFIX}/base"
-            ;;
-        *)
-            return 1
-            ;;
-    esac
-
     echo ">>>>> Preparing Open MPI"
     extract_archive "${MPI_PATH}/openmpi-4.1.9a1.tar.gz"
     stage_build_directory openmpi-4.1.9a1
@@ -240,48 +175,12 @@ compile_and_install_open_mpi_4() {
 }
 
 compile_and_install_open_mpi_5() {
-    case "${HAVE_EXTERNAL_HWLOC}" in
-        true)
-            HWLOC_PREFIX="${HWLOC_PREFIX:-/usr}"
+    case "${GPU}" in
+        cuda-*)
+            set -- "--with-cuda=${GPU_PREFIX}"
             ;;
-        false)
-            HWLOC_PREFIX="${INFRASTRUCTURE_PREFIX}/base"
-            ;;
-        *)
-            return 1
-            ;;
-    esac
-
-    case "${HAVE_EXTERNAL_LIBEVENT}" in
-        true)
-            LIBEVENT_PREFIX="${LIBEVENT_PREFIX:-/usr}"
-            ;;
-        false)
-            LIBEVENT_PREFIX="${INFRASTRUCTURE_PREFIX}/base"
-            ;;
-        *)
-            return 1
-            ;;
-    esac
-
-    case "${HAVE_EXTERNAL_NUMACTL}" in
-        true)
-            NUMACTL_PREFIX="${NUMACTL_PREFIX:-/usr}"
-            ;;
-        false)
-            NUMACTL_PREFIX="${INFRASTRUCTURE_PREFIX}/base"
-            ;;
-        *)
-            return 1
-            ;;
-    esac
-
-    case "${HAVE_EXTERNAL_ZLIB}" in
-        true)
-            ZLIB_PREFIX="${ZLIB_PREFIX:-/usr}"
-            ;;
-        false)
-            ZLIB_PREFIX="${INFRASTRUCTURE_PREFIX}/base"
+        none)
+            set --
             ;;
         *)
             return 1
@@ -326,7 +225,8 @@ compile_and_install_open_mpi_5() {
         --with-ucc="${INFRASTRUCTURE_PREFIX}/ucc" \
         --with-ucx="${INFRASTRUCTURE_PREFIX}/ucx" \
         --with-xpmem="/usr" \
-        --with-zlib="${ZLIB_PREFIX}"
+        --with-zlib="${ZLIB_PREFIX}" \
+        "$@"
     patch_libtool_to_disable_rpath
 
     echo ">>>>> Compiling Open MPI"
@@ -362,6 +262,8 @@ echo ""
 
 confirm_to_continue || exit 0
 echo ""
+
+. "${INFRASTRUCTURE_PREFIX}/.env"
 
 case "${MPI}" in
     intel-mpi)
