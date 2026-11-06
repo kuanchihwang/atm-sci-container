@@ -569,6 +569,7 @@ compile_and_install_netcdf_fortran() {
     echo ">>>>> Preparing NetCDF (Fortran, 3, Serial)"
     if [ ! -d netcdf-fortran-4.6.4 ]; then
         extract_archive "${LIBRARIES_PATH}/netcdf-fortran-4.6.4.tar.gz"
+        apply_patch_to_directory "${PATCHES_PATH}/netcdf-fortran-"*".patch" netcdf-fortran-4.6.4
     fi
     stage_build_directory netcdf-fortran-4.6.4 netcdf-fortran-4.6.4-3-serial
 

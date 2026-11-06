@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Kuan-Chih Wang <kuanchihwang@outlook.com>
+Date: Wed, 4 Nov 2026 08:17:35 +0000
+Subject: [PATCH] Fix typo in code generation script
+
+---
+ fortran/expand-interfaces.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fortran/expand-interfaces.py b/fortran/expand-interfaces.py
+index 5320426..f8d6cda 100755
+--- a/fortran/expand-interfaces.py
++++ b/fortran/expand-interfaces.py
+@@ -112,7 +112,7 @@ function {{ replace_by.function_name }}(ncid, varid, values, start, count, strid
+ 
+     function my_get_varm_{{ replace_by.c_type }}(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_{{ replace_by.c_type }}')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_{{ replace_by.c_type }}
++      integer(c_int)        :: my_get_varm_{{ replace_by.c_type }}
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+-- 
+2.52.0
+

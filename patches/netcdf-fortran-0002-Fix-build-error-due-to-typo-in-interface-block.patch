@@ -1,0 +1,396 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Kuan-Chih Wang <kuanchihwang@outlook.com>
+Date: Wed, 4 Nov 2026 08:18:30 +0000
+Subject: [PATCH] Fix build error due to typo in interface block
+
+This is not an issue most of the time, but there are certain compilers
+(e.g., NVIDIA HPC SDK) that complain about it.
+---
+ fortran/netcdf_get_nd_expanded.F90 | 84 +++++++++++++++---------------
+ 1 file changed, 42 insertions(+), 42 deletions(-)
+
+diff --git a/fortran/netcdf_get_nd_expanded.F90 b/fortran/netcdf_get_nd_expanded.F90
+index 5b3bd46..b914ef6 100644
+--- a/fortran/netcdf_get_nd_expanded.F90
++++ b/fortran/netcdf_get_nd_expanded.F90
+@@ -25,7 +25,7 @@ function nf90_get_var_1D_OneByteInt(ncid, varid, values, start, count, stride, m
+ 
+     function my_get_varm_schar(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_schar')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_schar
++      integer(c_int)        :: my_get_varm_schar
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -165,7 +165,7 @@ function nf90_get_var_2D_OneByteInt(ncid, varid, values, start, count, stride, m
+ 
+     function my_get_varm_schar(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_schar')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_schar
++      integer(c_int)        :: my_get_varm_schar
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -305,7 +305,7 @@ function nf90_get_var_3D_OneByteInt(ncid, varid, values, start, count, stride, m
+ 
+     function my_get_varm_schar(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_schar')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_schar
++      integer(c_int)        :: my_get_varm_schar
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -445,7 +445,7 @@ function nf90_get_var_4D_OneByteInt(ncid, varid, values, start, count, stride, m
+ 
+     function my_get_varm_schar(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_schar')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_schar
++      integer(c_int)        :: my_get_varm_schar
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -585,7 +585,7 @@ function nf90_get_var_5D_OneByteInt(ncid, varid, values, start, count, stride, m
+ 
+     function my_get_varm_schar(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_schar')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_schar
++      integer(c_int)        :: my_get_varm_schar
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -725,7 +725,7 @@ function nf90_get_var_6D_OneByteInt(ncid, varid, values, start, count, stride, m
+ 
+     function my_get_varm_schar(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_schar')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_schar
++      integer(c_int)        :: my_get_varm_schar
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -865,7 +865,7 @@ function nf90_get_var_7D_OneByteInt(ncid, varid, values, start, count, stride, m
+ 
+     function my_get_varm_schar(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_schar')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_schar
++      integer(c_int)        :: my_get_varm_schar
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -1005,7 +1005,7 @@ function nf90_get_var_1D_TwoByteInt(ncid, varid, values, start, count, stride, m
+ 
+     function my_get_varm_short(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_short')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_short
++      integer(c_int)        :: my_get_varm_short
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -1145,7 +1145,7 @@ function nf90_get_var_2D_TwoByteInt(ncid, varid, values, start, count, stride, m
+ 
+     function my_get_varm_short(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_short')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_short
++      integer(c_int)        :: my_get_varm_short
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -1285,7 +1285,7 @@ function nf90_get_var_3D_TwoByteInt(ncid, varid, values, start, count, stride, m
+ 
+     function my_get_varm_short(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_short')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_short
++      integer(c_int)        :: my_get_varm_short
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -1425,7 +1425,7 @@ function nf90_get_var_4D_TwoByteInt(ncid, varid, values, start, count, stride, m
+ 
+     function my_get_varm_short(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_short')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_short
++      integer(c_int)        :: my_get_varm_short
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -1565,7 +1565,7 @@ function nf90_get_var_5D_TwoByteInt(ncid, varid, values, start, count, stride, m
+ 
+     function my_get_varm_short(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_short')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_short
++      integer(c_int)        :: my_get_varm_short
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -1705,7 +1705,7 @@ function nf90_get_var_6D_TwoByteInt(ncid, varid, values, start, count, stride, m
+ 
+     function my_get_varm_short(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_short')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_short
++      integer(c_int)        :: my_get_varm_short
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -1845,7 +1845,7 @@ function nf90_get_var_7D_TwoByteInt(ncid, varid, values, start, count, stride, m
+ 
+     function my_get_varm_short(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_short')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_short
++      integer(c_int)        :: my_get_varm_short
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -1985,7 +1985,7 @@ function nf90_get_var_1D_FourByteInt(ncid, varid, values, start, count, stride,
+ 
+     function my_get_varm_int(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_int')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_int
++      integer(c_int)        :: my_get_varm_int
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -2125,7 +2125,7 @@ function nf90_get_var_2D_FourByteInt(ncid, varid, values, start, count, stride,
+ 
+     function my_get_varm_int(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_int')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_int
++      integer(c_int)        :: my_get_varm_int
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -2265,7 +2265,7 @@ function nf90_get_var_3D_FourByteInt(ncid, varid, values, start, count, stride,
+ 
+     function my_get_varm_int(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_int')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_int
++      integer(c_int)        :: my_get_varm_int
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -2405,7 +2405,7 @@ function nf90_get_var_4D_FourByteInt(ncid, varid, values, start, count, stride,
+ 
+     function my_get_varm_int(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_int')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_int
++      integer(c_int)        :: my_get_varm_int
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -2545,7 +2545,7 @@ function nf90_get_var_5D_FourByteInt(ncid, varid, values, start, count, stride,
+ 
+     function my_get_varm_int(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_int')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_int
++      integer(c_int)        :: my_get_varm_int
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -2685,7 +2685,7 @@ function nf90_get_var_6D_FourByteInt(ncid, varid, values, start, count, stride,
+ 
+     function my_get_varm_int(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_int')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_int
++      integer(c_int)        :: my_get_varm_int
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -2825,7 +2825,7 @@ function nf90_get_var_7D_FourByteInt(ncid, varid, values, start, count, stride,
+ 
+     function my_get_varm_int(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_int')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_int
++      integer(c_int)        :: my_get_varm_int
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -2965,7 +2965,7 @@ function nf90_get_var_1D_EightByteInt(ncid, varid, values, start, count, stride,
+ 
+     function my_get_varm_long(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_long')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_long
++      integer(c_int)        :: my_get_varm_long
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -3105,7 +3105,7 @@ function nf90_get_var_2D_EightByteInt(ncid, varid, values, start, count, stride,
+ 
+     function my_get_varm_long(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_long')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_long
++      integer(c_int)        :: my_get_varm_long
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -3245,7 +3245,7 @@ function nf90_get_var_3D_EightByteInt(ncid, varid, values, start, count, stride,
+ 
+     function my_get_varm_long(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_long')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_long
++      integer(c_int)        :: my_get_varm_long
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -3385,7 +3385,7 @@ function nf90_get_var_4D_EightByteInt(ncid, varid, values, start, count, stride,
+ 
+     function my_get_varm_long(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_long')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_long
++      integer(c_int)        :: my_get_varm_long
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -3525,7 +3525,7 @@ function nf90_get_var_5D_EightByteInt(ncid, varid, values, start, count, stride,
+ 
+     function my_get_varm_long(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_long')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_long
++      integer(c_int)        :: my_get_varm_long
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -3665,7 +3665,7 @@ function nf90_get_var_6D_EightByteInt(ncid, varid, values, start, count, stride,
+ 
+     function my_get_varm_long(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_long')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_long
++      integer(c_int)        :: my_get_varm_long
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -3805,7 +3805,7 @@ function nf90_get_var_7D_EightByteInt(ncid, varid, values, start, count, stride,
+ 
+     function my_get_varm_long(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_long')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_long
++      integer(c_int)        :: my_get_varm_long
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -3945,7 +3945,7 @@ function nf90_get_var_1D_FourByteReal(ncid, varid, values, start, count, stride,
+ 
+     function my_get_varm_float(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_float')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_float
++      integer(c_int)        :: my_get_varm_float
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -4085,7 +4085,7 @@ function nf90_get_var_2D_FourByteReal(ncid, varid, values, start, count, stride,
+ 
+     function my_get_varm_float(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_float')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_float
++      integer(c_int)        :: my_get_varm_float
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -4225,7 +4225,7 @@ function nf90_get_var_3D_FourByteReal(ncid, varid, values, start, count, stride,
+ 
+     function my_get_varm_float(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_float')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_float
++      integer(c_int)        :: my_get_varm_float
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -4365,7 +4365,7 @@ function nf90_get_var_4D_FourByteReal(ncid, varid, values, start, count, stride,
+ 
+     function my_get_varm_float(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_float')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_float
++      integer(c_int)        :: my_get_varm_float
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -4505,7 +4505,7 @@ function nf90_get_var_5D_FourByteReal(ncid, varid, values, start, count, stride,
+ 
+     function my_get_varm_float(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_float')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_float
++      integer(c_int)        :: my_get_varm_float
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -4645,7 +4645,7 @@ function nf90_get_var_6D_FourByteReal(ncid, varid, values, start, count, stride,
+ 
+     function my_get_varm_float(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_float')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_float
++      integer(c_int)        :: my_get_varm_float
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -4785,7 +4785,7 @@ function nf90_get_var_7D_FourByteReal(ncid, varid, values, start, count, stride,
+ 
+     function my_get_varm_float(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_float')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_float
++      integer(c_int)        :: my_get_varm_float
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -4925,7 +4925,7 @@ function nf90_get_var_1D_EightByteReal(ncid, varid, values, start, count, stride
+ 
+     function my_get_varm_double(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_double')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_double
++      integer(c_int)        :: my_get_varm_double
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -5065,7 +5065,7 @@ function nf90_get_var_2D_EightByteReal(ncid, varid, values, start, count, stride
+ 
+     function my_get_varm_double(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_double')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_double
++      integer(c_int)        :: my_get_varm_double
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -5205,7 +5205,7 @@ function nf90_get_var_3D_EightByteReal(ncid, varid, values, start, count, stride
+ 
+     function my_get_varm_double(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_double')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_double
++      integer(c_int)        :: my_get_varm_double
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -5345,7 +5345,7 @@ function nf90_get_var_4D_EightByteReal(ncid, varid, values, start, count, stride
+ 
+     function my_get_varm_double(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_double')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_double
++      integer(c_int)        :: my_get_varm_double
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -5485,7 +5485,7 @@ function nf90_get_var_5D_EightByteReal(ncid, varid, values, start, count, stride
+ 
+     function my_get_varm_double(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_double')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_double
++      integer(c_int)        :: my_get_varm_double
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -5625,7 +5625,7 @@ function nf90_get_var_6D_EightByteReal(ncid, varid, values, start, count, stride
+ 
+     function my_get_varm_double(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_double')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_double
++      integer(c_int)        :: my_get_varm_double
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+@@ -5765,7 +5765,7 @@ function nf90_get_var_7D_EightByteReal(ncid, varid, values, start, count, stride
+ 
+     function my_get_varm_double(ncid, varid, startp, countp, stridep, mapp, ip) bind(c, name='nc_get_varm_double')
+       use, intrinsic :: iso_c_binding, only: c_int, c_ptr
+-      integer(c_int)        :: my_get_vara_double
++      integer(c_int)        :: my_get_varm_double
+       integer(c_int), value :: ncid
+       integer(c_int), value :: varid
+       type(c_ptr), value    :: startp
+-- 
+2.52.0
+
