@@ -386,9 +386,7 @@ patch_binary_to_set_rpath() {
                     fi
                     ;;
             esac
-        done << EOF
-$(printf "%s\n" "${r}" | tr ":" "\n")
-EOF
+        done <<< "$(printf "%s\n" "${r}" | tr ":" "\n")"
 
         unset d
     fi
@@ -461,9 +459,7 @@ prepend_ld_library_path() {
 
             return 1
         fi
-    done << EOF
-$(printf "%s\n" "${1}" | tr ":" "\n")
-EOF
+    done <<< "$(printf "%s\n" "${1}" | tr ":" "\n")"
 
     unset d
 

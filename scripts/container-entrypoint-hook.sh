@@ -144,9 +144,7 @@ while IFS="" read -r x; do
             :
             ;;
     esac
-done << EOF
-$(printf "%s\n" "${CONTAINER_ENVIRONMENT}" | tr "+" "\n")
-EOF
+done <<< "$(printf "%s\n" "${CONTAINER_ENVIRONMENT}" | tr "+" "\n")"
 
 unset x
 
