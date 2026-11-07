@@ -10,18 +10,11 @@ REGISTRY="${2:-"docker.io"}"
 NAMESPACE="${3:-"kuanchihwang"}"
 VERSION="${4:-"testing"}"
 
-for MPI in "mpich-4" "open-mpi-4" "open-mpi-5" "intel-mpi"; do
-    for COMPILER in "gnu-11" "gnu-12" "gnu-13" "gnu-14" "gnu-15" "intel-2024" "intel-2025"; do
-        # Filter out invalid combinations.
-        case "${MPI}" in
-            intel-mpi)
-                case "${COMPILER}" in
-                    gnu-*)
-                        continue
-                        ;;
-                esac
-                ;;
-        esac
+while IFS="" read -r line; do
+    if [ -n "${line}" ]; then
+        COMPILER="$(echo "${line}" | cut -d _ -f 1)"
+        MPI="$(echo "${line}" | cut -d _ -f 2)"
+        GPU="$(echo "${line}" | cut -d _ -f 3)"
 
         make "${TARGET}" \
             REGISTRY="${REGISTRY}" \
@@ -29,9 +22,10 @@ for MPI in "mpich-4" "open-mpi-4" "open-mpi-5" "intel-mpi"; do
             VERSION="${VERSION}" \
             COMPILER="${COMPILER}" \
             MPI="${MPI}" \
-            2>&1 | tee "logs/${TARGET}_${REGISTRY}_${NAMESPACE}_${VERSION}_${COMPILER}_${MPI}.log" | \
+            GPU="${GPU}" \
+            2>&1 | tee "logs/${TARGET}_${REGISTRY}_${NAMESPACE}_${VERSION}_${COMPILER}_${MPI}_${GPU}.log" | \
             { grep -E --line-buffered '^\[[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z\] ' || true; }
-    done
-done
+    fi
+done < "$(dirname "$(realpath "${0}")")/config"
 
 echo "[$(date -u "+%FT%TZ")] End container push"
