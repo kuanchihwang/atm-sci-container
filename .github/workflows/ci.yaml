@@ -16,6 +16,27 @@ on:
     tags:
       - '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]'
   workflow_dispatch:
+    inputs:
+      build:
+        description: 'Build string'
+        required: true
+        type: string
+        default: ''
+      version:
+        description: 'Version string'
+        required: true
+        type: string
+        default: ''
+      push:
+        description: 'Push container images'
+        required: false
+        type: boolean
+        default: false
+      push-latest:
+        description: 'Push latest container images'
+        required: false
+        type: boolean
+        default: false
 
 concurrency:
   cancel-in-progress: true
@@ -30,6 +51,9 @@ jobs:
       version: ${{ steps.configurator.outputs.version }}
       push: ${{ steps.configurator.outputs.push }}
       push-latest: ${{ steps.configurator.outputs.push-latest }}
+      compiler: ${{ steps.configurator.outputs.compiler }}
+      mpi: ${{ steps.configurator.outputs.mpi }}
+      gpu: ${{ steps.configurator.outputs.gpu }}
     timeout-minutes: 1
     steps:
       - name: Configure pipeline
@@ -43,26 +67,72 @@ jobs:
             echo "version=" >> "${GITHUB_OUTPUT}"
             echo "push=false" >> "${GITHUB_OUTPUT}"
             echo "push-latest=false" >> "${GITHUB_OUTPUT}"
+            echo "compiler=" >> "${GITHUB_OUTPUT}"
+            echo "mpi=" >> "${GITHUB_OUTPUT}"
+            echo "gpu=" >> "${GITHUB_OUTPUT}"
 
-            # Overwrite values with provided arguments.
+            # Overwrite values according to the provided arguments.
             while [ "${#}" -gt 0 ]; do
               case "${1}" in
                 --build)
-                  echo "build=${2}" >> "${GITHUB_OUTPUT}"
+                  # Sanitize input.
+                  BUILD="$(echo "${2}" | \
+                    sed -E -e "s|[^A-Za-z0-9_-]||g")"
+
+                  case "${BUILD}" in
+                    all)
+                      echo "build=all" | tee -a "${GITHUB_OUTPUT}"
+                      ;;
+                    *)
+                      # Sanitize input.
+                      COMPILER="$(echo "${BUILD}" | \
+                        cut -d _ -f 1 | \
+                        sed -E -e "s|^ *-*||g")"
+                      MPI="$(echo "${BUILD}" | \
+                        cut -d _ -f 2 | \
+                        sed -E -e "s|^ *-*||g")"
+                      GPU="$(echo "${BUILD}" | \
+                        cut -d _ -f 3 | \
+                        sed -E -e "s|^ *-*||g")"
+
+                      if [ -z "${COMPILER}" ] || [ -z "${MPI}" ] || [ -z "${GPU}" ]; then
+                        echo "Build string is invalid."
+
+                        exit 1
+                      fi
+
+                      echo "build=custom" | tee -a "${GITHUB_OUTPUT}"
+                      echo "compiler=${COMPILER}" | tee -a "${GITHUB_OUTPUT}"
+                      echo "mpi=${MPI}" | tee -a "${GITHUB_OUTPUT}"
+                      echo "gpu=${GPU}" | tee -a "${GITHUB_OUTPUT}"
+
+                      unset COMPILER
+                      unset MPI
+                      unset GPU
+                      ;;
+                  esac
+
+                  unset BUILD
                   shift
                   shift
                   ;;
                 --version)
-                  echo "version=${2}" >> "${GITHUB_OUTPUT}"
+                  # Sanitize input.
+                  VERSION="$(echo "${2}" | \
+                    sed -E -e "s|[^A-Za-z0-9_-]||g" -e "s|^ *-*||g")"
+
+                  echo "version=${VERSION}" | tee -a "${GITHUB_OUTPUT}"
+
+                  unset VERSION
                   shift
                   shift
                   ;;
                 --push)
-                  echo "push=true" >> "${GITHUB_OUTPUT}"
+                  echo "push=true" | tee -a "${GITHUB_OUTPUT}"
                   shift
                   ;;
                 --push-latest)
-                  echo "push-latest=true" >> "${GITHUB_OUTPUT}"
+                  echo "push-latest=true" | tee -a "${GITHUB_OUTPUT}"
                   shift
                   ;;
                 error|*)
@@ -85,7 +155,7 @@ jobs:
                   echo "Target branch is develop."
 
                   write_output_and_exit \
-                    --build single \
+                    --build gnu-11_open-mpi-5_none \
                     --version testing
                   ;;
                 master)
@@ -110,7 +180,7 @@ jobs:
                   echo "Pushed ref is develop branch."
 
                   write_output_and_exit \
-                    --build single \
+                    --build gnu-11_open-mpi-5_none \
                     --version testing
                   ;;
                 refs/heads/master)
@@ -118,8 +188,7 @@ jobs:
 
                   write_output_and_exit \
                     --build all \
-                    --version testing \
-                    --push
+                    --version testing
                   ;;
                 *)
                   if echo "${{ github.ref }}" | grep -E -q '^refs/tags/[0-9]{4}-[0-9]{2}-[0-9]{2}$'; then
@@ -141,8 +210,20 @@ jobs:
             workflow_dispatch)
               echo "Event is workflow dispatch."
 
-              # WIP... Skip for now.
-              write_output_and_exit
+              set --
+
+              if [ "${{ inputs.push }}" = "true" ]; then
+                set -- "${@}" "--push"
+
+                if [ "${{ inputs.push-latest }}" = "true" ]; then
+                  set -- "${@}" "--push-latest"
+                fi
+              fi
+
+              write_output_and_exit \
+                --build "${{ inputs.build }}" \
+                --version "${{ inputs.version }}" \
+                "${@}"
               ;;
             *)
               echo "Event is invalid."
@@ -160,11 +241,16 @@ jobs:
     runs-on: self-hosted
     env:
       BUILDX_NO_DEFAULT_ATTESTATIONS: 1
+      # ----------
       DOCKER_HUB_REGISTRY: docker.io
       GITHUB_PACKAGE_REGISTRY: ghcr.io
       NAMESPACE: kuanchihwang
+      # ----------
       BUILD: ${{ needs.configure-pipeline.outputs.build }}
       VERSION: ${{ needs.configure-pipeline.outputs.version }}
+      COMPILER: ${{ needs.configure-pipeline.outputs.compiler }}
+      MPI: ${{ needs.configure-pipeline.outputs.mpi }}
+      GPU: ${{ needs.configure-pipeline.outputs.gpu }}
     timeout-minutes: 1440
     steps:
       - name: Checkout atm-sci-container
@@ -184,22 +270,29 @@ jobs:
           username: ${{ env.NAMESPACE }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build container images
+      - name: Pull data container images
         run: |
           set -euo pipefail
 
           make stage
 
+      - name: Build container images
+        run: |
+          set -euo pipefail
+
           case "${BUILD}" in
-            single)
+            all)
+              ./.github/scripts/build-all.sh build "${VERSION}"
+              ;;
+            custom)
               mkdir -p logs
               make build \
                 VERSION="${VERSION}" \
-                2>&1 | tee "logs/build_default.log" | \
+                COMPILER="${COMPILER}" \
+                MPI="${MPI}" \
+                GPU="${GPU}" \
+                2>&1 | tee "logs/build_custom.log" | \
                 { grep -E --line-buffered '^\[[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z\] ' || true; }
-              ;;
-            all)
-              ./.github/scripts/build-all.sh build "${VERSION}"
               ;;
             *)
               exit 1
@@ -225,14 +318,54 @@ jobs:
       - name: Push container images
         if: ${{ needs.configure-pipeline.outputs.push == 'true' }}
         run: |
-          ./.github/scripts/push-all.sh push "${DOCKER_HUB_REGISTRY}" "${NAMESPACE}" "${VERSION}"
-          ./.github/scripts/push-all.sh push "${GITHUB_PACKAGE_REGISTRY}" "${NAMESPACE}" "${VERSION}"
+          set -euo pipefail
+
+          case "${BUILD}" in
+            all)
+              ./.github/scripts/push-all.sh push "${DOCKER_HUB_REGISTRY}" "${NAMESPACE}" "${VERSION}"
+              ./.github/scripts/push-all.sh push "${GITHUB_PACKAGE_REGISTRY}" "${NAMESPACE}" "${VERSION}"
+              ;;
+            custom)
+              make push \
+                REGISTRY="${DOCKER_HUB_REGISTRY}" \
+                NAMESPACE="${NAMESPACE}" \
+                VERSION="${VERSION}" \
+                COMPILER="${COMPILER}" \
+                MPI="${MPI}" \
+                GPU="${GPU}" \
+                2>&1 | tee "logs/push_custom.log" | \
+                { grep -E --line-buffered '^\[[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z\] ' || true; }
+              ;;
+            *)
+              exit 1
+              ;;
+          esac
 
       - name: Push latest container images
         if: ${{ needs.configure-pipeline.outputs.push-latest == 'true' }}
         run: |
-          ./.github/scripts/push-all.sh push-latest "${DOCKER_HUB_REGISTRY}" "${NAMESPACE}" "${VERSION}"
-          ./.github/scripts/push-all.sh push-latest "${GITHUB_PACKAGE_REGISTRY}" "${NAMESPACE}" "${VERSION}"
+          set -euo pipefail
+
+          case "${BUILD}" in
+            all)
+              ./.github/scripts/push-all.sh push-latest "${DOCKER_HUB_REGISTRY}" "${NAMESPACE}" "${VERSION}"
+              ./.github/scripts/push-all.sh push-latest "${GITHUB_PACKAGE_REGISTRY}" "${NAMESPACE}" "${VERSION}"
+              ;;
+            custom)
+              make push-latest \
+                REGISTRY="${DOCKER_HUB_REGISTRY}" \
+                NAMESPACE="${NAMESPACE}" \
+                VERSION="${VERSION}" \
+                COMPILER="${COMPILER}" \
+                MPI="${MPI}" \
+                GPU="${GPU}" \
+                2>&1 | tee "logs/push-latest_custom.log" | \
+                { grep -E --line-buffered '^\[[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z\] ' || true; }
+              ;;
+            *)
+              exit 1
+              ;;
+          esac
 
       - name: Upload build logs
         if: ${{ always() }}
