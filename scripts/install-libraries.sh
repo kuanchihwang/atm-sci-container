@@ -1059,6 +1059,9 @@ echo ""
 confirm_to_continue || exit 0
 echo ""
 
+mkdir -p "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}"
+mkdir -p "${LIBRARIES_PREFIX_MPI_SPECIFIC}"
+
 compile_and_install_libaec
 compile_and_install_zlib
 compile_and_install_zstd
