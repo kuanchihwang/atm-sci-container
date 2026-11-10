@@ -18,7 +18,8 @@ case "${GPU}" in
         dnf -y config-manager --set-disabled cuda-rhel9-x86_64
         rm -fr /etc/ld.so.conf.d/*cuda*.conf
         while IFS="" read -r f; do
-            if [ -f "${f%_static.a}.so" ]; then
+            # Remove the static library if the shared one also exists, but spare the CUDA runtime library.
+            if [ -f "${f%_static.a}.so" ] && [ "$(basename "${f}")" != "libcudart_static.a" ]; then
                 du -h "${f}"
                 rm -f "${f}"
             fi
@@ -35,7 +36,8 @@ case "${GPU}" in
         dnf -y config-manager --set-disabled cuda-rhel9-x86_64
         rm -fr /etc/ld.so.conf.d/*cuda*.conf
         while IFS="" read -r f; do
-            if [ -f "${f%_static.a}.so" ]; then
+            # Remove the static library if the shared one also exists, but spare the CUDA runtime library.
+            if [ -f "${f%_static.a}.so" ] && [ "$(basename "${f}")" != "libcudart_static.a" ]; then
                 du -h "${f}"
                 rm -f "${f}"
             fi
