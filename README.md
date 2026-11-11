@@ -20,7 +20,7 @@
   * [Supported Transports](#supported-transports)
   * [Building from Source](#building-from-source)
 
-**High-performance computing (HPC) containers** for parallel workloads (e.g., MPI, OpenMP), delivering portability, reproducibility, and optimal single-/multi-node performance out of the box.
+**High-performance computing (HPC) containers** for parallel workloads (e.g., MPI, OpenMP, OpenACC), delivering portability, reproducibility, and optimal single-/multi-node performance out of the box. Now with GPU support.
 
 For an overview of why containers remain valuable even for HPC scenarios, see the [Apptainer introduction](https://apptainer.org/docs/user/latest/introduction.html).
 
@@ -224,13 +224,14 @@ The container images are available in **2** variants:
 1. `hpc-container`: A **general-purpose** HPC container image suitable for parallel workloads (e.g., MPI, OpenMP). It includes everything listed in the "[Included Software Stack](#included-software-stack)" section, except for libraries that are commonly used by atmospheric models.
 2. `atm-sci-container`: A **specialized** HPC container image tailored for **atmospheric science applications**. Built upon `hpc-container`, it includes additional libraries that are commonly used by atmospheric models such as CESM, MPAS, and WRF.
 
-Both variants are tagged in the `${VERSION}_${COMPILER}_${MPI}` format, where:
+Both variants are tagged in the `${VERSION}_${COMPILER}_${MPI}_${GPU}` format, where:
 
 * `${VERSION}` indicates the **version** of the container image. It should correspond to a Git tag in this project, or `latest`.
-* `${COMPILER}` indicates the **compiler toolchain** available in the container image. It should be one of `gnu-11`, `gnu-12`, `gnu-13`, `gnu-14`, `gnu-15`, `intel-2024`, or `intel-2025`.
+* `${COMPILER}` indicates the **compiler toolchain** available in the container image. It should be one of `gnu-11`, `gnu-12`, `gnu-13`, `gnu-14`, `gnu-15`, `intel-2024`, `intel-2025`, or `nvidia-2026`.
 * `${MPI}` indicates the **MPI library** available in the container image. It should be one of `mpich-4`, `mpich-5`, `open-mpi-4`, `open-mpi-5`, or `intel-mpi`.
+* `${GPU}` indicates the **GPU runtime** available in the container image. It should be one of `cuda-12`, `cuda-13`, or `none`.
 
-For each variant and `${VERSION}`, there are currently **23** combinations of compiler toolchains and MPI libraries available.
+For each variant and `${VERSION}`, there are currently [**30**](./.github/scripts/config) combinations of compiler toolchains, MPI libraries, and GPU runtime available.
 
 ## Usage
 
@@ -442,6 +443,9 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
   * GNU Compiler Collection 15 (C, C++, Fortran)
   * Intel oneAPI Compiler 2024.2.1 (C, C++, Fortran)
   * Intel oneAPI Compiler 2025.3.3 (C, C++, Fortran)
+  * NVIDIA HPC SDK 26.9 (C, C++, Fortran)
+    * CUDA 12.9
+    * CUDA 13.0
 * MPI Libraries
   * MPICH 4.3.2
   * MPICH 5.0.2
