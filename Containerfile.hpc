@@ -164,8 +164,6 @@ RUN --mount=type=tmpfs,target=/tmp \
     mkdir -p /tmp/working && \
     pushd /tmp/working && \
     printf "y\n" | \
-        HAVE_EXTERNAL_LIBEVENT="true" \
-        HAVE_EXTERNAL_NUMACTL="true" \
         /mnt/scripts/install-mpi.sh "${COMPILER}" "${MPI}" && \
     popd && \
     rm -fr /tmp/working
