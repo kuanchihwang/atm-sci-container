@@ -114,7 +114,7 @@ compile_and_install_mpich_5() {
         --with-pm="hydra" \
         --with-wrapper-dl-type="none" \
         --with-xpmem="/usr" \
-        "$@"
+        "${@}"
     patch_libtool_to_disable_rpath
 
     echo ">>>>> Compiling MPICH"
@@ -226,7 +226,7 @@ compile_and_install_open_mpi_5() {
         --with-ucx="${INFRASTRUCTURE_PREFIX}/ucx" \
         --with-xpmem="/usr" \
         --with-zlib="${ZLIB_PREFIX}" \
-        "$@"
+        "${@}"
     patch_libtool_to_disable_rpath
 
     echo ">>>>> Compiling Open MPI"
