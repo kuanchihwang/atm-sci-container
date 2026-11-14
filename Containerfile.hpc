@@ -77,8 +77,8 @@ RUN --mount=type=tmpfs,target=/tmp \
     mkdir -p /tmp/working && \
     pushd /tmp/working && \
     printf "y\n" | \
-        HAVE_EXTERNAL_LIBEVENT="true" \
-        HAVE_EXTERNAL_NUMACTL="true" \
+        HAVE_EXTERNAL_LIBEVENT="true" LIBEVENT_PREFIX="/usr" \
+        HAVE_EXTERNAL_NUMACTL="true" NUMACTL_PREFIX="/usr" \
         /mnt/scripts/install-infrastructure.sh "${GPU}" && \
     popd && \
     rm -fr /tmp/working && \

@@ -481,3 +481,9 @@ restore_ld_library_path() {
 
     return 0
 }
+
+escape_unique() {
+    for x in "${@}"; do
+        printf '%q\n' "${x}"
+    done | awk '!seen[$0]++' | xargs -d '\n'
+}

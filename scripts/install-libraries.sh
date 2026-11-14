@@ -482,8 +482,8 @@ compile_and_install_netcdf_c() {
     prepend_ld_library_path "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/lib"
     CC="${SELECTED_CC}" CFLAGS="${SELECTED_CFLAGS}" \
     CXX="${SELECTED_CXX}" CXXFLAGS="${SELECTED_CXXFLAGS}" \
-    CPPFLAGS="-I${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/include" \
-    LDFLAGS="-L${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/lib" \
+    CPPFLAGS="${EXTERNAL_CPPFLAGS}" \
+    LDFLAGS="${EXTERNAL_LDFLAGS}" \
     ../source/configure --disable-static --enable-shared --prefix="${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/netcdf3" \
         --disable-benchmarks \
         --disable-curl \
@@ -520,8 +520,8 @@ compile_and_install_netcdf_c() {
     prepend_ld_library_path "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/hdf5/lib:${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/lib"
     CC="${SELECTED_CC}" CFLAGS="${SELECTED_CFLAGS}" \
     CXX="${SELECTED_CXX}" CXXFLAGS="${SELECTED_CXXFLAGS}" \
-    CPPFLAGS="-I${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/hdf5/include -I${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/include" \
-    LDFLAGS="-L${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/hdf5/lib -L${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/lib" \
+    CPPFLAGS="-I${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/hdf5/include ${EXTERNAL_CPPFLAGS}" \
+    LDFLAGS="-L${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/hdf5/lib ${EXTERNAL_LDFLAGS}" \
     ../source/configure --disable-static --enable-shared --prefix="${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/netcdf4" \
         --disable-benchmarks \
         --disable-curl \
@@ -558,8 +558,8 @@ compile_and_install_netcdf_c() {
     prepend_ld_library_path "${LIBRARIES_PREFIX_MPI_SPECIFIC}/phdf5/lib:${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3/lib:${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/lib"
     CC="${SELECTED_MPICC}" CFLAGS="${SELECTED_CFLAGS}" \
     CXX="${SELECTED_MPICXX}" CXXFLAGS="${SELECTED_CXXFLAGS}" \
-    CPPFLAGS="-I${LIBRARIES_PREFIX_MPI_SPECIFIC}/phdf5/include -I${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3/include -I${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/include" \
-    LDFLAGS="-L${LIBRARIES_PREFIX_MPI_SPECIFIC}/phdf5/lib -L${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3/lib -L${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/lib" \
+    CPPFLAGS="-I${LIBRARIES_PREFIX_MPI_SPECIFIC}/phdf5/include -I${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3/include ${EXTERNAL_CPPFLAGS}" \
+    LDFLAGS="-L${LIBRARIES_PREFIX_MPI_SPECIFIC}/phdf5/lib -L${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3/lib ${EXTERNAL_LDFLAGS}" \
     ../source/configure --disable-static --enable-shared --prefix="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4" \
         --disable-benchmarks \
         --disable-curl \
@@ -611,8 +611,8 @@ compile_and_install_netcdf_fortran() {
     CXX="${SELECTED_CXX}" CXXFLAGS="${SELECTED_CXXFLAGS}" \
     F77="${SELECTED_FC}" FFLAGS="${SELECTED_FCFLAGS}" \
     FC="${SELECTED_FC}" FCFLAGS="${SELECTED_FCFLAGS}" \
-    CPPFLAGS="-I${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/netcdf3/include -I${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/include" \
-    LDFLAGS="-L${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/netcdf3/lib -L${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/lib" \
+    CPPFLAGS="-I${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/netcdf3/include ${EXTERNAL_CPPFLAGS}" \
+    LDFLAGS="-L${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/netcdf3/lib ${EXTERNAL_LDFLAGS}" \
     HDF5_PLUGIN_PATH="${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/netcdf3/lib/plugin" \
     ../source/configure --disable-static --enable-shared --prefix="${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/netcdf3" \
         --disable-benchmarks \
@@ -639,8 +639,8 @@ compile_and_install_netcdf_fortran() {
     CXX="${SELECTED_CXX}" CXXFLAGS="${SELECTED_CXXFLAGS}" \
     F77="${SELECTED_FC}" FFLAGS="${SELECTED_FCFLAGS}" \
     FC="${SELECTED_FC}" FCFLAGS="${SELECTED_FCFLAGS}" \
-    CPPFLAGS="-I${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/netcdf4/include -I${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/hdf5/include -I${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/include" \
-    LDFLAGS="-L${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/netcdf4/lib -L${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/hdf5/lib -L${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/lib" \
+    CPPFLAGS="-I${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/netcdf4/include -I${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/hdf5/include ${EXTERNAL_CPPFLAGS}" \
+    LDFLAGS="-L${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/netcdf4/lib -L${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/hdf5/lib ${EXTERNAL_LDFLAGS}" \
     HDF5_PLUGIN_PATH="${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/netcdf4/lib/plugin" \
     ../source/configure --disable-static --enable-shared --prefix="${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/netcdf4" \
         --disable-benchmarks \
@@ -667,8 +667,8 @@ compile_and_install_netcdf_fortran() {
     CXX="${SELECTED_MPICXX}" CXXFLAGS="${SELECTED_CXXFLAGS}" \
     F77="${SELECTED_MPIFC}" FFLAGS="${SELECTED_FCFLAGS}" \
     FC="${SELECTED_MPIFC}" FCFLAGS="${SELECTED_FCFLAGS}" \
-    CPPFLAGS="-I${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/include -I${LIBRARIES_PREFIX_MPI_SPECIFIC}/phdf5/include -I${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3/include -I${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/include" \
-    LDFLAGS="-L${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/lib -L${LIBRARIES_PREFIX_MPI_SPECIFIC}/phdf5/lib -L${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3/lib -L${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/lib" \
+    CPPFLAGS="-I${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/include -I${LIBRARIES_PREFIX_MPI_SPECIFIC}/phdf5/include -I${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3/include ${EXTERNAL_CPPFLAGS}" \
+    LDFLAGS="-L${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/lib -L${LIBRARIES_PREFIX_MPI_SPECIFIC}/phdf5/lib -L${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3/lib ${EXTERNAL_LDFLAGS}" \
     HDF5_PLUGIN_PATH="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/lib/plugin" \
     ../source/configure --disable-static --enable-shared --prefix="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4" \
         --disable-benchmarks \
@@ -874,6 +874,7 @@ compile_and_install_esmf() {
     SELECTED_CFLAGS_NO_PIC="$(echo "${SELECTED_CFLAGS}" | sed 's/[a-z-]*pic[a-z-]*//gi' | awk '{ $1 = $1; print }')"
     SELECTED_CXXFLAGS_NO_PIC="$(echo "${SELECTED_CXXFLAGS}" | sed 's/[a-z-]*pic[a-z-]*//gi' | awk '{ $1 = $1; print }')"
     SELECTED_FCFLAGS_NO_PIC="$(echo "${SELECTED_FCFLAGS}" | sed 's/[a-z-]*pic[a-z-]*//gi' | awk '{ $1 = $1; print }')"
+    EXTERNAL_LIBPATH="$(escape_unique "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/lib" "${LIBAEC_PREFIX}/lib" "${ZLIB_PREFIX}/lib" "${ZSTD_PREFIX}/lib")"
 
     echo ">>>>> Compiling ESMF"
     ESMF_COMPILER="${SELECTED_ESMF_COMPILER}" \
@@ -889,7 +890,7 @@ compile_and_install_esmf() {
     ESMF_INSTALL_MODDIR="include" \
     ESMF_ABI="64" \
     ESMF_LAPACK="netlib" ESMF_LAPACK_LIBPATH="${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/lib" \
-    ESMF_NETCDF="split" ESMF_NETCDF_INCLUDE="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/include" ESMF_NETCDF_LIBPATH="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/lib ${LIBRARIES_PREFIX_MPI_SPECIFIC}/phdf5/lib ${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3/lib ${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/lib" \
+    ESMF_NETCDF="split" ESMF_NETCDF_INCLUDE="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/include" ESMF_NETCDF_LIBPATH="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/lib ${LIBRARIES_PREFIX_MPI_SPECIFIC}/phdf5/lib ${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3/lib ${EXTERNAL_LIBPATH}" \
     ESMF_PNETCDF="standard" ESMF_PNETCDF_INCLUDE="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3/include" ESMF_PNETCDF_LIBPATH="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3/lib" \
     ESMF_PIO="standard" ESMF_PIO_INCLUDE="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pio/include" ESMF_PIO_LIBPATH="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pio/lib" \
     make info
@@ -907,7 +908,7 @@ compile_and_install_esmf() {
     ESMF_INSTALL_MODDIR="include" \
     ESMF_ABI="64" \
     ESMF_LAPACK="netlib" ESMF_LAPACK_LIBPATH="${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/lib" \
-    ESMF_NETCDF="split" ESMF_NETCDF_INCLUDE="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/include" ESMF_NETCDF_LIBPATH="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/lib ${LIBRARIES_PREFIX_MPI_SPECIFIC}/phdf5/lib ${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3/lib ${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/lib" \
+    ESMF_NETCDF="split" ESMF_NETCDF_INCLUDE="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/include" ESMF_NETCDF_LIBPATH="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/lib ${LIBRARIES_PREFIX_MPI_SPECIFIC}/phdf5/lib ${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3/lib ${EXTERNAL_LIBPATH}" \
     ESMF_PNETCDF="standard" ESMF_PNETCDF_INCLUDE="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3/include" ESMF_PNETCDF_LIBPATH="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3/lib" \
     ESMF_PIO="standard" ESMF_PIO_INCLUDE="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pio/include" ESMF_PIO_LIBPATH="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pio/lib" \
     make_compile
@@ -926,7 +927,7 @@ compile_and_install_esmf() {
     ESMF_INSTALL_MODDIR="include" \
     ESMF_ABI="64" \
     ESMF_LAPACK="netlib" ESMF_LAPACK_LIBPATH="${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/lib" \
-    ESMF_NETCDF="split" ESMF_NETCDF_INCLUDE="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/include" ESMF_NETCDF_LIBPATH="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/lib ${LIBRARIES_PREFIX_MPI_SPECIFIC}/phdf5/lib ${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3/lib ${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/lib" \
+    ESMF_NETCDF="split" ESMF_NETCDF_INCLUDE="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/include" ESMF_NETCDF_LIBPATH="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/lib ${LIBRARIES_PREFIX_MPI_SPECIFIC}/phdf5/lib ${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3/lib ${EXTERNAL_LIBPATH}" \
     ESMF_PNETCDF="standard" ESMF_PNETCDF_INCLUDE="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3/include" ESMF_PNETCDF_LIBPATH="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf3/lib" \
     ESMF_PIO="standard" ESMF_PIO_INCLUDE="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pio/include" ESMF_PIO_LIBPATH="${LIBRARIES_PREFIX_MPI_SPECIFIC}/pio/lib" \
     make_install
@@ -938,6 +939,7 @@ compile_and_install_esmf() {
     unset SELECTED_CFLAGS_NO_PIC
     unset SELECTED_CXXFLAGS_NO_PIC
     unset SELECTED_FCFLAGS_NO_PIC
+    unset EXTERNAL_LIBPATH
 
     echo ">>>>> ESMF - OK"
     popd
@@ -1010,7 +1012,7 @@ compile_and_install_scotch() {
         -D CMAKE_BUILD_TYPE="Release" \
         -D CMAKE_INSTALL_LIBDIR="lib" \
         -D CMAKE_INSTALL_PREFIX="${LIBRARIES_PREFIX_MPI_SPECIFIC}/scotch" \
-        -D CMAKE_PREFIX_PATH="${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base" \
+        -D CMAKE_PREFIX_PATH="${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base:${ZLIB_PREFIX}" \
         -D CMAKE_SKIP_RPATH=TRUE \
         -D BUILD_SHARED_LIBS=TRUE \
         -D ENABLE_TESTS=FALSE \
@@ -1065,6 +1067,8 @@ mkdir -p "${LIBRARIES_PREFIX_MPI_SPECIFIC}"
 compile_and_install_libaec
 compile_and_install_zlib
 compile_and_install_zstd
+EXTERNAL_CPPFLAGS="$(escape_unique "-I${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/include" "-I${LIBAEC_PREFIX}/include" "-I${ZLIB_PREFIX}/include" "-I${ZSTD_PREFIX}/include")"
+EXTERNAL_LDFLAGS="$(escape_unique "-L${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/lib" "-L${LIBAEC_PREFIX}/lib" "-L${ZLIB_PREFIX}/lib" "-L${ZSTD_PREFIX}/lib")"
 compile_and_install_libjpeg
 compile_and_install_jasper
 compile_and_install_libpng
