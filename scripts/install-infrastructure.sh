@@ -439,8 +439,13 @@ compile_and_install_prrte() {
 
 compile_and_install_ucx() {
     case "${GPU}" in
-        cuda-*)
-            set -- "--with-cuda=${GPU_PREFIX}"
+        cuda-12)
+            set -- "--with-cuda=${GPU_PREFIX}" \
+                   "--with-nvcc-gencode=-gencode=arch=compute_70,code=sm_70 -gencode=arch=compute_75,code=sm_75 -gencode=arch=compute_80,code=sm_80 -gencode=arch=compute_89,code=sm_89 -gencode=arch=compute_89,code=compute_89"
+            ;;
+        cuda-13)
+            set -- "--with-cuda=${GPU_PREFIX}" \
+                   "--with-nvcc-gencode=-gencode=arch=compute_75,code=sm_75 -gencode=arch=compute_80,code=sm_80 -gencode=arch=compute_89,code=sm_89 -gencode=arch=compute_90,code=sm_90 -gencode=arch=compute_90,code=compute_90"
             ;;
         none)
             set --
@@ -498,8 +503,13 @@ compile_and_install_ucx() {
 
 compile_and_install_ucc() {
     case "${GPU}" in
-        cuda-*)
-            set -- "--with-cuda=${GPU_PREFIX}"
+        cuda-12)
+            set -- "--with-cuda=${GPU_PREFIX}" \
+                   "--with-nvcc-gencode=-gencode=arch=compute_70,code=sm_70 -gencode=arch=compute_75,code=sm_75 -gencode=arch=compute_80,code=sm_80 -gencode=arch=compute_89,code=sm_89 -gencode=arch=compute_89,code=compute_89"
+            ;;
+        cuda-13)
+            set -- "--with-cuda=${GPU_PREFIX}" \
+                   "--with-nvcc-gencode=-gencode=arch=compute_75,code=sm_75 -gencode=arch=compute_80,code=sm_80 -gencode=arch=compute_89,code=sm_89 -gencode=arch=compute_90,code=sm_90 -gencode=arch=compute_90,code=compute_90"
             ;;
         none)
             set --
