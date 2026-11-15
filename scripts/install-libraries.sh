@@ -953,10 +953,10 @@ compile_and_install_pfunit() {
     fi
 
     echo ">>>>> Preparing pFUnit"
-    if [ ! -d pFUnit-v4.20.1 ]; then
-        extract_archive "${LIBRARIES_PATH}/pFUnit-v4.20.1.tar"
+    if [ ! -d pFUnit-v4.20.2 ]; then
+        extract_archive "${LIBRARIES_PATH}/pFUnit-v4.20.2.tar"
     fi
-    stage_build_directory pFUnit-v4.20.1
+    stage_build_directory pFUnit-v4.20.2
 
     echo ">>>>> Configuring pFUnit"
     CC="${SELECTED_MPICC}" CFLAGS="${SELECTED_CFLAGS}" \
