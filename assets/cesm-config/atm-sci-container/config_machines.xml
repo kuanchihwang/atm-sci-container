@@ -5,9 +5,10 @@
       High-performance computing (HPC) containers for performance-portable and reproducible atmospheric modeling.
     </DESC>
     <OS>LINUX</OS>
-    <COMPILERS>gnu,intel</COMPILERS>
+    <COMPILERS>gnu,intel,nvhpc</COMPILERS>
     <MPILIBS compiler="gnu">open-mpi,mpich</MPILIBS>
     <MPILIBS compiler="intel">open-mpi,mpich,intel-mpi</MPILIBS>
+    <MPILIBS compiler="nvhpc">open-mpi,mpich</MPILIBS>
     <CIME_OUTPUT_ROOT>/working/cesm-output-root</CIME_OUTPUT_ROOT>
     <DIN_LOC_ROOT>/working/cesm-data-root/inputdata</DIN_LOC_ROOT>
     <DIN_LOC_ROOT_CLMFORC>/working/cesm-data-root/inputdata/atm/datm7</DIN_LOC_ROOT_CLMFORC>
