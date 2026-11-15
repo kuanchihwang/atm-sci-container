@@ -51,10 +51,10 @@ compile_and_install_libaec() {
     fi
 
     echo ">>>>> Preparing libaec"
-    if [ ! -d libaec-1.1.7 ]; then
-        extract_archive "${LIBRARIES_PATH}/libaec-1.1.7.tar.gz"
+    if [ ! -d libaec-1.1.8 ]; then
+        extract_archive "${LIBRARIES_PATH}/libaec-1.1.8.tar.gz"
     fi
-    stage_build_directory libaec-1.1.7
+    stage_build_directory libaec-1.1.8
 
     echo ">>>>> Configuring libaec"
     ../source/configure --help
