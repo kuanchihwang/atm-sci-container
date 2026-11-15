@@ -231,7 +231,7 @@ Both variants are tagged in the `${VERSION}_${COMPILER}_${MPI}_${GPU}` format, w
 * `${MPI}` indicates the **MPI library** available in the container image. It should be one of `mpich-4`, `mpich-5`, `open-mpi-4`, `open-mpi-5`, or `intel-mpi`.
 * `${GPU}` indicates the **GPU runtime** available in the container image. It should be one of `cuda-12`, `cuda-13`, or `none`.
 
-For each variant and `${VERSION}`, there are currently [**30**](./.github/scripts/config) combinations of compiler toolchains, MPI libraries, and GPU runtime available.
+For each variant and `${VERSION}`, there are currently [**30 combinations**](./.github/scripts/config) of compiler toolchains, MPI libraries, and GPU runtime available.
 
 ## Usage
 
