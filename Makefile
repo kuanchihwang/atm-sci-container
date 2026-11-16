@@ -114,15 +114,15 @@ push-latest: push-hpc-latest push-atm-sci-latest
 
 .PHONY: push-hpc-latest
 push-hpc-latest:
-	@echo "[$$(date -u "+%FT%TZ")] Pushing $(REGISTRY)/$(NAMESPACE)/$$(basename "$(HPC_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)"
-	@$(DOCKER) image tag "$(HPC_IMAGE_NAME):$(HPC_IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(HPC_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)"
-	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(HPC_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)"
+	@echo "[$$(date -u "+%FT%TZ")] Pushing $(REGISTRY)/$(NAMESPACE)/$$(basename "$(HPC_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)_$(GPU)"
+	@$(DOCKER) image tag "$(HPC_IMAGE_NAME):$(HPC_IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(HPC_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)_$(GPU)"
+	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(HPC_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)_$(GPU)"
 
 .PHONY: push-atm-sci-latest
 push-atm-sci-latest:
-	@echo "[$$(date -u "+%FT%TZ")] Pushing $(REGISTRY)/$(NAMESPACE)/$$(basename "$(ATM_SCI_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)"
-	@$(DOCKER) image tag "$(ATM_SCI_IMAGE_NAME):$(ATM_SCI_IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(ATM_SCI_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)"
-	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(ATM_SCI_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)"
+	@echo "[$$(date -u "+%FT%TZ")] Pushing $(REGISTRY)/$(NAMESPACE)/$$(basename "$(ATM_SCI_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)_$(GPU)"
+	@$(DOCKER) image tag "$(ATM_SCI_IMAGE_NAME):$(ATM_SCI_IMAGE_TAG)" "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(ATM_SCI_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)_$(GPU)"
+	@$(DOCKER) image push "$(REGISTRY)/$(NAMESPACE)/$$(basename "$(ATM_SCI_IMAGE_NAME)"):latest_$(COMPILER)_$(MPI)_$(GPU)"
 
 .PHONY: login
 login:
