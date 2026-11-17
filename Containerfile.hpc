@@ -164,7 +164,7 @@ RUN --mount=type=tmpfs,target=/tmp \
     mkdir -p /tmp/working && \
     pushd /tmp/working && \
     printf "y\n" | \
-        /mnt/scripts/install-mpi.sh "${COMPILER}" "${MPI}" && \
+        /mnt/scripts/install-mpi.sh "${COMPILER}" "${MPI}" "${GPU}" && \
     popd && \
     rm -fr /tmp/working
 ENV MPI="${MPI}"

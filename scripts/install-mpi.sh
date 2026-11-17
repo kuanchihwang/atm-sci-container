@@ -11,12 +11,13 @@ MPI_PATH="$(dirname "${SCRIPTS_PATH}")/src/mpi"
 ### User options
 ###
 
-if [ -z "${1:-}" ] || [ -z "${2:-}" ]; then
+if [ -z "${1:-}" ] || [ -z "${2:-}" ] || [ -z "${3:-}" ]; then
     exit 1
 fi
 
 COMPILER="${1}"
 MPI="${2}"
+GPU="${3}"
 
 MPI_PREFIX="${MPI_PREFIX:-/opt/hpc/compiler/${COMPILER}/${MPI}}"
 
@@ -71,8 +72,13 @@ compile_and_install_mpich_4() {
 
 compile_and_install_mpich_5() {
     case "${GPU}" in
-        cuda-*)
-            set -- "--with-cuda=${GPU_PREFIX}"
+        cuda-12)
+            set -- "--with-cuda=${GPU_PREFIX}" \
+                   "--with-cuda-sm=70,75,80,89"
+            ;;
+        cuda-13)
+            set -- "--with-cuda=${GPU_PREFIX}" \
+                   "--with-cuda-sm=75,80,89,90"
             ;;
         none)
             set --
