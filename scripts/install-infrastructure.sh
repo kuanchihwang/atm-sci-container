@@ -46,7 +46,7 @@ compile_and_install_patchelf() {
 
     echo ">>>>> Installing patchelf"
     make_install
-    cp -av patchelf-install/bin/patchelf /usr/local/bin
+    cp -af patchelf-install/bin/patchelf /usr/local/bin
 
     echo ">>>>> patchelf - OK"
     popd
@@ -60,7 +60,6 @@ compile_and_install_zlib() {
             return 0
             ;;
         false)
-            :
             ;;
         *)
             return 1
@@ -100,7 +99,6 @@ compile_and_install_numactl() {
             return 0
             ;;
         false)
-            :
             ;;
         *)
             return 1
@@ -138,7 +136,6 @@ compile_and_install_libxml2() {
             return 0
             ;;
         false)
-            :
             ;;
         *)
             return 1
@@ -184,7 +181,6 @@ compile_and_install_hwloc() {
             return 0
             ;;
         false)
-            :
             ;;
         *)
             return 1
@@ -251,7 +247,6 @@ compile_and_install_libcxi() {
             return 0
             ;;
         false)
-            :
             ;;
         *)
             return 1
@@ -265,11 +260,11 @@ compile_and_install_libcxi() {
     mkdir -p "${LIBCXI_PREFIX}/share"
 
     extract_archive "${INFRASTRUCTURE_PATH}/shs-cassini-headers-12.0.2.tar.gz"
-    cp -av shs-cassini-headers-release-shs-12.0.2/include/* "${LIBCXI_PREFIX}/include"
-    cp -av shs-cassini-headers-release-shs-12.0.2/share/*   "${LIBCXI_PREFIX}/share"
+    cp -af shs-cassini-headers-release-shs-12.0.2/include/* "${LIBCXI_PREFIX}/include"
+    cp -af shs-cassini-headers-release-shs-12.0.2/share/*   "${LIBCXI_PREFIX}/share"
 
     extract_archive "${INFRASTRUCTURE_PATH}/shs-cxi-driver-12.0.2.tar.gz"
-    cp -av shs-cxi-driver-release-shs-12.0.2/include/*      "${LIBCXI_PREFIX}/include"
+    cp -af shs-cxi-driver-release-shs-12.0.2/include/*      "${LIBCXI_PREFIX}/include"
 
     echo ">>>>> Preparing libcxi"
     extract_archive "${INFRASTRUCTURE_PATH}/shs-libcxi-12.0.2.tar.gz"
@@ -307,7 +302,6 @@ compile_and_install_libevent() {
             return 0
             ;;
         false)
-            :
             ;;
         *)
             return 1

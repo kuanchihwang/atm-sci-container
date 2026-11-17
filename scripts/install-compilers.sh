@@ -21,7 +21,6 @@ COMPILER="${1}"
 case "${COMPILER}" in
     gnu-11)
         # Default in RHEL 9. Nothing to do.
-        :
         ;;
     gnu-12)
         dnf -y install gcc-toolset-12

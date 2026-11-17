@@ -45,7 +45,6 @@ case "${GPU}" in
         unset f
         ;;
     none)
-        :
         ;;
     *)
         exit 1
@@ -80,6 +79,6 @@ mkdir -p opxs-kernel-updates
 rpm2archive -n < "${OPXS_KERNEL_UPDATES}" | \
     tar -xf - -C opxs-kernel-updates --no-same-owner
 tar -xf opxs-kernel-updates/opxs-kernel-updates-*.tgz -C opxs-kernel-updates --no-same-owner --strip-components=1
-cp -av opxs-kernel-updates/include/uapi /usr/include
+cp -af opxs-kernel-updates/include/uapi /usr/include
 rm -fr opxs-kernel-updates
 unset OPXS_KERNEL_UPDATES

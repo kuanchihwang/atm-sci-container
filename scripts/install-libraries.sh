@@ -37,7 +37,6 @@ compile_and_install_libaec() {
             return 0
             ;;
         false)
-            :
             ;;
         *)
             return 1
@@ -83,7 +82,6 @@ compile_and_install_zlib() {
             return 0
             ;;
         false)
-            :
             ;;
         *)
             return 1
@@ -153,7 +151,6 @@ compile_and_install_zstd() {
             return 0
             ;;
         false)
-            :
             ;;
         *)
             return 1
@@ -784,7 +781,7 @@ compile_and_install_cprnc() {
 
     echo ">>>>> Installing cprnc"
     make_install
-    cp -av cprnc-install/bin/cprnc /usr/local/bin
+    cp -af cprnc-install/bin/cprnc /usr/local/bin
 
     restore_ld_library_path
 
@@ -806,7 +803,7 @@ compile_and_install_lapack() {
     pushd lapack-3.12.1
 
     echo ">>>>> Configuring LAPACK"
-    cp -av "${PATCHES_PATH}/lapack-make.inc" make.inc
+    cp -af "${PATCHES_PATH}/lapack-make.inc" make.inc
 
     echo ">>>>> Compiling LAPACK"
     COMPILER="${COMPILER}" \
@@ -817,9 +814,9 @@ compile_and_install_lapack() {
     echo ">>>>> Installing LAPACK"
     mkdir -p "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/include"
     mkdir -p "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/lib"
-    cp -av ./CBLAS/include/*.h "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/include"
-    cp -av ./LAPACKE/include/*.h "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/include"
-    cp -av ./*.so "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/lib"
+    cp -af ./CBLAS/include/*.h "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/include"
+    cp -af ./LAPACKE/include/*.h "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/include"
+    cp -af ./*.so "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/lib"
     echo ">>>>> LAPACK - OK"
     popd
 
@@ -840,8 +837,8 @@ compile_and_install_esmf() {
     echo ">>>>> Configuring ESMF"
     # The included yaml-cpp in ESMF is at version 0.7.0, which is ancient.
     # Update it to the latest upstream version.
-    cp -av ../yaml-cpp-0.8.0-merge-key-support.3/include/* src/prologue/yaml-cpp/include
-    cp -av ../yaml-cpp-0.8.0-merge-key-support.3/src/* src/prologue/yaml-cpp/src
+    cp -af ../yaml-cpp-0.8.0-merge-key-support.3/include/* src/prologue/yaml-cpp/include
+    cp -af ../yaml-cpp-0.8.0-merge-key-support.3/src/* src/prologue/yaml-cpp/src
     # Massage input for ESMF.
     case "${COMPILER}" in
         gnu-*)
@@ -1069,6 +1066,7 @@ compile_and_install_zlib
 compile_and_install_zstd
 EXTERNAL_CPPFLAGS="$(escape_unique "-I${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/include" "-I${LIBAEC_PREFIX}/include" "-I${ZLIB_PREFIX}/include" "-I${ZSTD_PREFIX}/include")"
 EXTERNAL_LDFLAGS="$(escape_unique "-L${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/base/lib" "-L${LIBAEC_PREFIX}/lib" "-L${ZLIB_PREFIX}/lib" "-L${ZSTD_PREFIX}/lib")"
+
 compile_and_install_libjpeg
 compile_and_install_jasper
 compile_and_install_libpng

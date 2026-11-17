@@ -35,7 +35,6 @@ case "${CONTAINER_PRESET}" in
         ;;
     *)
         # No or unsupported preset is specified. Nothing to do.
-        :
         ;;
 esac
 
@@ -141,7 +140,6 @@ while IFS="" read -r x; do
             ;;
         *)
             # No or unsupported environment is specified. Nothing to do.
-            :
             ;;
     esac
 done <<< "$(echo "${CONTAINER_ENVIRONMENT}" | tr "+" "\n")"
