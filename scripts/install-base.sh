@@ -1,5 +1,6 @@
 #!/bin/sh
-set -euo pipefail
+set -eu
+[ -n "${BASH_VERSION}" ] && set -o pipefail
 
 # Cache packages locally to speed up subsequent container builds.
 # This must be coupled with `RUN --mount=type=cache ...` to work.

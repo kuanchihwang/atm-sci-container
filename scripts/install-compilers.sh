@@ -1,5 +1,6 @@
 #!/bin/sh
-set -euo pipefail
+set -eu
+[ -n "${BASH_VERSION}" ] && set -o pipefail
 
 SCRIPTS_PATH="$(dirname "$(realpath "${0}")")"
 COMPILERS_PATH="$(dirname "${SCRIPTS_PATH}")/bin/compilers"

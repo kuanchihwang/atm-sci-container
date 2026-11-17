@@ -1,5 +1,6 @@
 #!/bin/sh
-set -euo pipefail
+set -eu
+[ -n "${BASH_VERSION}" ] && set -o pipefail
 
 # If the container is running as root, create a new or reuse an existing non-root user.
 # Use the `CONTAINER_USER`, `CONTAINER_UID`, and `CONTAINER_GID` environment variables to control how a new user is created.

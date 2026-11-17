@@ -1,5 +1,6 @@
 #!/bin/sh
-set -euo pipefail
+set -eu
+[ -n "${BASH_VERSION}" ] && set -o pipefail
 
 if [ -z "${1:-}" ]; then
     exit 1
