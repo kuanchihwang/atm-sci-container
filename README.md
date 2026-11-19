@@ -20,7 +20,7 @@
   * [Supported Transports](#supported-transports)
   * [Building from Source](#building-from-source)
 
-**High-performance computing (HPC) containers** for parallel workloads (e.g., MPI, OpenMP, OpenACC), delivering portability, reproducibility, and optimal single-/multi-node performance out of the box. Now with GPU support.
+**High-performance computing (HPC) containers** for parallel workloads (e.g., MPI, OpenMP, OpenACC), delivering portability, reproducibility, and optimal single-/multi-node performance out of the box. Now with support for GPUs!
 
 For an overview of why containers remain valuable even for HPC scenarios, see the [Apptainer introduction](https://apptainer.org/docs/user/latest/introduction.html).
 
@@ -231,7 +231,7 @@ Both variants are tagged in the `${VERSION}_${COMPILER}_${MPI}_${GPU}` format, w
 * `${MPI}` indicates the **MPI library** available in the container image. It should be one of `mpich-4`, `mpich-5`, `open-mpi-4`, `open-mpi-5`, or `intel-mpi`.
 * `${GPU}` indicates the **GPU runtime** available in the container image. It should be one of `cuda-12`, `cuda-13`, or `none`.
 
-For each variant and `${VERSION}`, there are currently [**30 combinations**](./.github/scripts/config) of compiler toolchains, MPI libraries, and GPU runtime available.
+For each variant and `${VERSION}`, there are currently [**30 combinations**](./.github/scripts/config) of compiler toolchains, MPI libraries, and GPU runtimes available.
 
 ## Usage
 
