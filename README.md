@@ -443,7 +443,7 @@ Refer to the "Hybrid model" section of the [Apptainer documentation](https://app
   * GNU Compiler Collection 15 (C, C++, Fortran)
   * Intel oneAPI Compiler 2024.2.1 (C, C++, Fortran)
   * Intel oneAPI Compiler 2025.3.3 (C, C++, Fortran)
-  * NVIDIA HPC SDK 26.9 (C, C++, Fortran)
+  * NVIDIA HPC SDK 26.11 (C, C++, Fortran)
     * CUDA 12.9
     * CUDA 13.0
 * MPI Libraries

@@ -32,8 +32,8 @@ GPU ?= none
 BASE_IMAGE_NAME ?= docker.io/almalinux/9-base
 BASE_IMAGE_TAG ?= 9.8
 DATA_IMAGE_NAME ?= docker.io/kuanchihwang/atm-sci-container-data
-BINARY_DATA_TAG ?= testing_binary
-SOURCE_DATA_TAG ?= testing_source
+BINARY_DATA_TAG ?= 2026-11-19_binary
+SOURCE_DATA_TAG ?= 2026-11-19_source
 
 HPC_IMAGE_NAME ?= localhost/build-artifact/hpc-container
 HPC_IMAGE_TAG ?= $(VERSION)_$(COMPILER)_$(MPI)_$(GPU)
