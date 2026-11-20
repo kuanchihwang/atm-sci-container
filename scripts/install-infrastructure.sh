@@ -161,6 +161,7 @@ compile_and_install_libxml2() {
         --without-modules \
         --without-python \
         --without-schematron \
+        --without-xptr-locs \
         --without-zlib
     patch_libtool_to_disable_rpath
 
@@ -222,6 +223,7 @@ compile_and_install_hwloc() {
         --enable-libudev \
         --enable-libxml2 \
         --enable-pci \
+        --enable-plugin-dlopen \
         --enable-plugins \
         --without-x \
         "${@}"
@@ -325,7 +327,10 @@ compile_and_install_libevent() {
         --disable-libevent-regress \
         --disable-openssl \
         --disable-samples \
-        --disable-verbose-debug
+        --disable-verbose-debug \
+        --enable-clock-gettime \
+        --enable-malloc-replacement \
+        --enable-thread-support
     patch_libtool_to_disable_rpath
 
     echo ">>>>> Compiling libevent"
@@ -380,11 +385,18 @@ compile_and_install_pmix() {
         --disable-debug \
         --disable-devel-check \
         --disable-memory-sanitizers \
+        --disable-pmix-timing \
+        --disable-python-bindings \
         --disable-sphinx \
         --disable-wrapper-rpath \
         --disable-wrapper-runpath \
+        --enable-dlopen \
+        --enable-pmix-binaries \
+        --enable-pmix-dlopen \
+        --enable-pty-support \
         --with-hwloc="${HWLOC_PREFIX}" \
         --with-libevent="${LIBEVENT_PREFIX}" \
+        --with-pmix-headers \
         --with-zlib="${ZLIB_PREFIX}" \
         --without-munge \
         --without-tests-examples
@@ -415,9 +427,17 @@ compile_and_install_prrte() {
         --disable-devel-check \
         --disable-memory-sanitizers \
         --disable-sphinx \
+        --enable-dlopen \
+        --enable-getpwuid \
+        --enable-ompi-support \
+        --enable-prte-dlopen \
+        --enable-pty-support \
         --with-hwloc="${HWLOC_PREFIX}" \
         --with-libevent="${LIBEVENT_PREFIX}" \
-        --with-pmix="${INFRASTRUCTURE_PREFIX}/base"
+        --with-pbs \
+        --with-pmix="${INFRASTRUCTURE_PREFIX}/base" \
+        --with-slurm \
+        --without-devel-headers
     patch_libtool_to_disable_rpath
 
     echo ">>>>> Compiling PRRTE"
@@ -466,23 +486,33 @@ compile_and_install_ucx() {
     CXX="${SELECTED_CXX}" CXXFLAGS="${SELECTED_CXXFLAGS}" \
     ../source/contrib/configure-release-mt --disable-static --enable-shared --prefix="${INFRASTRUCTURE_PREFIX}/ucx" \
         --disable-debug-data \
+        --disable-devel-headers \
         --disable-doxygen-doc \
         --disable-examples \
+        --disable-experimental-api \
         --disable-frame-pointer \
+        --disable-gcov \
+        --disable-gtest \
+        --disable-lcov \
         --disable-profiling \
         --disable-stats \
+        --disable-test-apps \
+        --disable-tuning \
         --enable-cma \
         --enable-compiler-opt \
         --enable-optimizations \
         --with-avx \
-        --with-fuse3="/usr" \
+        --with-efa \
+        --with-fuse3 \
         --with-knem="$(find /opt -maxdepth 1 -iname "knem-*" -print | LC_ALL=C sort | tail -n 1)" \
-        --with-mad="/usr" \
-        --with-rdmacm="/usr" \
-        --with-verbs="/usr" \
-        --with-xpmem="/usr" \
+        --with-mad \
+        --with-mlx5 \
+        --with-rdmacm \
+        --with-verbs \
+        --with-xpmem \
         --without-go \
         --without-java \
+        --without-valgrind \
         "${@}"
     patch_libtool_to_disable_rpath
 
@@ -538,6 +568,8 @@ compile_and_install_ucc() {
         --with-rdmacm \
         --with-tls="all" \
         --with-ucx="${INFRASTRUCTURE_PREFIX}/ucx" \
+        --without-profiling \
+        --without-valgrind \
         "${@}"
     patch_libtool_to_disable_rpath
 
@@ -576,18 +608,45 @@ compile_and_install_libfabric() {
     CPPFLAGS="-I${LIBCXI_PREFIX}/include -I${HWLOC_PREFIX}/include -I${NUMACTL_PREFIX}/include" \
     LDFLAGS="-L${LIBCXI_PREFIX}/lib -L${HWLOC_PREFIX}/lib -L${NUMACTL_PREFIX}/lib" \
     ../source/configure --enable-static --enable-shared --prefix="${INFRASTRUCTURE_PREFIX}/libfabric" \
+        --disable-coverage \
         --disable-debug \
+        --disable-direct \
         --disable-monitor \
+        --disable-only \
         --disable-perf \
         --disable-profile \
         --disable-trace \
-        --enable-cxi="${LIBCXI_PREFIX}" \
-        --enable-opx="/usr" \
-        --enable-psm2="/usr" \
-        --enable-psm3="/usr" \
-        --enable-verbs="/usr" \
-        --enable-xpmem="/usr" \
+        --disable-ucx \
+        --enable-atomics \
+        --enable-memhooks-monitor \
+        --enable-restricted-dl \
+        --enable-uffd-monitor \
+        --enable-xpmem \
+        --with-default-monitor="uffd" \
+        --with-dlopen \
         --with-numa="${NUMACTL_PREFIX}" \
+        --with-uring \
+        --without-valgrind \
+        --enable-cxi="${LIBCXI_PREFIX}" \
+        --enable-dmabuf_peer_mem \
+        --enable-efa \
+        --enable-hook_debug \
+        --enable-hook_hmem \
+        --enable-lnx \
+        --enable-lpp \
+        --enable-mrail \
+        --enable-opx \
+        --enable-psm2 \
+        --enable-psm3 \
+        --enable-rxd \
+        --enable-rxm \
+        --enable-shm \
+        --enable-sm2 \
+        --enable-sockets \
+        --enable-tcp \
+        --enable-udp \
+        --enable-usnic \
+        --enable-verbs \
         "${@}"
     patch_libtool_to_disable_rpath
 
