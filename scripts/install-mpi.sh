@@ -20,7 +20,14 @@ COMPILER="${1}"
 MPI="${2}"
 GPU="${3}"
 
+INFRASTRUCTURE_PREFIX="${INFRASTRUCTURE_PREFIX:-/opt/hpc/infrastructure}"
 MPI_PREFIX="${MPI_PREFIX:-/opt/hpc/compiler/${COMPILER}/${MPI}}"
+
+if [ ! -f "${INFRASTRUCTURE_PREFIX}/.env" ]; then
+    exit 1
+fi
+
+. "${INFRASTRUCTURE_PREFIX}/.env"
 
 ###
 ### Individual library compilation and installation functions
@@ -253,7 +260,7 @@ compile_and_install_open_mpi_5() {
 set_selected_compiler "${COMPILER}"
 
 echo "This script builds and installs optimized MPICH / Open MPI."
-echo "It is assumed that all relevant transport drivers have already been installed."
+echo "It is assumed that all prerequisites have already been installed."
 echo ""
 echo "    C Compiler: ${SELECTED_CC} ($(command -v "${SELECTED_CC}"))"
 echo "    C Compiler Flags: ${SELECTED_CFLAGS}"
@@ -269,8 +276,6 @@ echo ""
 
 confirm_to_continue || exit 0
 echo ""
-
-. "${INFRASTRUCTURE_PREFIX}/.env"
 
 case "${MPI}" in
     intel-mpi)
@@ -305,6 +310,7 @@ case "${MPI}" in
         esac
         ;;
     mpich-4)
+        mkdir -p "$(dirname "${MPI_PREFIX}")"
         compile_and_install_mpich_4
 
         patch_binary_to_set_rpath "${MPI_PREFIX}/bin/"* ''
@@ -314,6 +320,7 @@ case "${MPI}" in
         remove_libtool_archive_from_directory "${MPI_PREFIX}"
         ;;
     mpich-5)
+        mkdir -p "$(dirname "${MPI_PREFIX}")"
         compile_and_install_mpich_5
 
         patch_binary_to_set_rpath "${MPI_PREFIX}/bin/"* ''
@@ -323,6 +330,7 @@ case "${MPI}" in
         remove_libtool_archive_from_directory "${MPI_PREFIX}"
         ;;
     open-mpi-4)
+        mkdir -p "$(dirname "${MPI_PREFIX}")"
         compile_and_install_open_mpi_4
 
         patch_binary_to_set_rpath "${MPI_PREFIX}/bin/"* ''
@@ -332,6 +340,7 @@ case "${MPI}" in
         remove_libtool_archive_from_directory "${MPI_PREFIX}"
         ;;
     open-mpi-5)
+        mkdir -p "$(dirname "${MPI_PREFIX}")"
         compile_and_install_open_mpi_5
 
         patch_binary_to_set_rpath "${MPI_PREFIX}/bin/"* ''

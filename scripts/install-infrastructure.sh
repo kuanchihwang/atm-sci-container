@@ -610,7 +610,7 @@ compile_and_install_libfabric() {
 set_selected_compiler "gnu-11"
 
 echo "This script builds and installs the infrastructure for optimized MPICH / Open MPI."
-echo "It is assumed that all relevant transport drivers have already been installed."
+echo "It is assumed that all prerequisites have already been installed."
 echo ""
 echo "    C Compiler: ${SELECTED_CC} ($(command -v "${SELECTED_CC}"))"
 echo "    C Compiler Flags: ${SELECTED_CFLAGS}"
@@ -628,7 +628,6 @@ confirm_to_continue || exit 0
 echo ""
 
 mkdir -p "${INFRASTRUCTURE_PREFIX}"
-echo "INFRASTRUCTURE_PREFIX=${INFRASTRUCTURE_PREFIX}" > "${INFRASTRUCTURE_PREFIX}/.env"
 
 compile_and_install_patchelf
 
