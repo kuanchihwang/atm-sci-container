@@ -520,15 +520,15 @@ To build the container images from source, use the `Containerfile` directly or t
     make stage
     ```
 
-2. Build container images by specifying the desired combination of `VERSION`, `COMPILER`, and `MPI`, one at a time. Refer to the "[Container Image Variants and Tags](#container-image-variants-and-tags)" section for details. The `build-hpc` target builds the `hpc-container` variant, the `build-atm-sci` target builds the `atm-sci-container` variant, and the `build` target builds both.
+2. Build container images by specifying the desired combination of `VERSION`, `COMPILER`, `MPI`, and `GPU`, one at a time. Refer to the "[Container Image Variants and Tags](#container-image-variants-and-tags)" section for details. The `build-hpc` target builds the `hpc-container` variant, the `build-atm-sci` target builds the `atm-sci-container` variant, and the `build` target builds both.
 
     ```shell
-    make build [VERSION=...] [COMPILER=...] [MPI=...]
-    make build-hpc [VERSION=...] [COMPILER=...] [MPI=...]
-    make build-atm-sci [VERSION=...] [COMPILER=...] [MPI=...]
+    make build [VERSION=...] [COMPILER=...] [MPI=...] [GPU=...]
+    make build-hpc [VERSION=...] [COMPILER=...] [MPI=...] [GPU=...]
+    make build-atm-sci [VERSION=...] [COMPILER=...] [MPI=...] [GPU=...]
     ```
 
-3. Alternatively, simply run the `.github/scripts/build-all.sh` shell script to build all possible combinations and variants in one pass. This can take several hours to complete.
+3. Alternatively, simply run the `.github/scripts/build-all.sh` script to build all [predefined combinations](./.github/scripts/config) and variants in one pass. This can take several hours to complete.
 
 4. Clean up built and dangling container images. The `clean-hpc` target cleans the `hpc-container` variant, the `clean-atm-sci` target cleans the `atm-sci-container` variant, and the `clean` target cleans both.
 
