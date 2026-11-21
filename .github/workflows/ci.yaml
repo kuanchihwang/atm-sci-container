@@ -367,6 +367,14 @@ jobs:
               ;;
           esac
 
+      - name: Clean up
+        run: |
+          set -euo pipefail
+
+          docker container ls --all --quiet | xargs -r docker container stop
+          docker system prune --force --volumes
+          docker system df --verbose
+
       - name: Upload build logs
         if: ${{ always() }}
         uses: actions/upload-artifact@v7
