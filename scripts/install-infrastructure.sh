@@ -50,7 +50,7 @@ compile_and_install_patchelf() {
     cp -af patchelf-install/bin/patchelf /usr/local/bin
 
     echo ">>>>> patchelf - OK"
-    popd
+    cd -
 }
 
 compile_and_install_zlib() {
@@ -89,7 +89,7 @@ compile_and_install_zlib() {
     remove_static_library_from_directory "${ZLIB_PREFIX}"
 
     echo ">>>>> zlib - OK"
-    popd
+    cd -
 }
 
 compile_and_install_numactl() {
@@ -126,7 +126,7 @@ compile_and_install_numactl() {
     make_install
 
     echo ">>>>> numactl - OK"
-    popd
+    cd -
 }
 
 compile_and_install_libxml2() {
@@ -172,7 +172,7 @@ compile_and_install_libxml2() {
     make_install
 
     echo ">>>>> libxml2 - OK"
-    popd
+    cd -
 }
 
 compile_and_install_hwloc() {
@@ -236,7 +236,7 @@ compile_and_install_hwloc() {
     make_install
 
     echo ">>>>> hwloc - OK"
-    popd
+    cd -
 }
 
 # The driver binaries of HPE Slingshot 11 NIC are not publicly available.
@@ -272,7 +272,7 @@ compile_and_install_libcxi() {
     echo ">>>>> Preparing libcxi"
     extract_archive "${INFRASTRUCTURE_PATH}/shs-libcxi-12.0.2.tar.gz"
     apply_patch_to_directory "${PATCHES_PATH}/shs-libcxi-"*".patch" shs-libcxi-release-shs-12.0.2
-    pushd shs-libcxi-release-shs-12.0.2
+    cd shs-libcxi-release-shs-12.0.2
     autoreconf -fi
 
     echo ">>>>> Configuring libcxi"
@@ -294,7 +294,7 @@ compile_and_install_libcxi() {
     make_install
 
     echo ">>>>> libcxi - OK"
-    popd
+    cd -
 }
 
 compile_and_install_libevent() {
@@ -340,7 +340,7 @@ compile_and_install_libevent() {
     make_install
 
     echo ">>>>> libevent - OK"
-    popd
+    cd -
 }
 
 compile_and_install_pmi2() {
@@ -361,14 +361,13 @@ compile_and_install_pmi2() {
     patch_libtool_to_disable_rpath
 
     echo ">>>>> Compiling PMI2"
-    cd contribs/pmi2
-    make_compile
+    make_compile -C contribs/pmi2
 
     echo ">>>>> Installing PMI2"
-    make_install
+    make_install -C contribs/pmi2
 
     echo ">>>>> PMI2 - OK"
-    popd
+    cd -
 }
 
 compile_and_install_pmix() {
@@ -409,7 +408,7 @@ compile_and_install_pmix() {
     make_install
 
     echo ">>>>> PMIx - OK"
-    popd
+    cd -
 }
 
 compile_and_install_prrte() {
@@ -449,7 +448,7 @@ compile_and_install_prrte() {
     restore_ld_library_path
 
     echo ">>>>> PRRTE - OK"
-    popd
+    cd -
 }
 
 compile_and_install_ucx() {
@@ -523,7 +522,7 @@ compile_and_install_ucx() {
     make_install
 
     echo ">>>>> UCX - OK"
-    popd
+    cd -
 }
 
 compile_and_install_ucc() {
@@ -546,9 +545,9 @@ compile_and_install_ucc() {
 
     echo ">>>>> Preparing UCC"
     extract_archive "${INFRASTRUCTURE_PATH}/ucc-1.9.0.tar.gz"
-    pushd ucc-1.9.0
+    cd ucc-1.9.0
     ./autogen.sh
-    popd
+    cd -
     stage_build_directory ucc-1.9.0
 
     echo ">>>>> Configuring UCC"
@@ -580,7 +579,7 @@ compile_and_install_ucc() {
     make_install
 
     echo ">>>>> UCC - OK"
-    popd
+    cd -
 }
 
 compile_and_install_libfabric() {
@@ -659,7 +658,7 @@ compile_and_install_libfabric() {
     remove_static_library_from_directory "${INFRASTRUCTURE_PREFIX}/libfabric"
 
     echo ">>>>> libfabric - OK"
-    popd
+    cd -
 }
 
 ###

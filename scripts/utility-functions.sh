@@ -237,7 +237,7 @@ stage_build_directory() {
     rm -f -r "${bd}"
     mkdir -p "${bd}"
 
-    pushd "${bd}" || return 1
+    cd "${bd}" || return 1
 
     unset bd sd
 
@@ -372,7 +372,7 @@ patch_binary_to_set_rpath() {
         :
     done
 
-    if [ ! -z "${r}" ]; then
+    if [ -n "${r}" ]; then
         while IFS="" read -r d; do
             case "${d}" in
                 '$LIB'*|'$ORIGIN'*)

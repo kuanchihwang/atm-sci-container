@@ -70,7 +70,7 @@ compile_and_install_libaec() {
     make_install
 
     echo ">>>>> libaec - OK"
-    popd
+    cd -
 
     set_milestone libaec
 }
@@ -139,7 +139,7 @@ compile_and_install_zlib() {
     unset SELECTED_ZLIB_CXXFLAGS
 
     echo ">>>>> zlib - OK"
-    popd
+    cd -
 
     set_milestone zlib
 }
@@ -167,7 +167,7 @@ compile_and_install_zstd() {
     echo ">>>>> Preparing zstd"
     rm -fr zstd-1.5.7
     extract_archive "${LIBRARIES_PATH}/zstd-1.5.7.tar.gz"
-    pushd zstd-1.5.7
+    cd zstd-1.5.7
 
     echo ">>>>> Configuring zstd"
     # Massage input for zstd.
@@ -210,7 +210,7 @@ compile_and_install_zstd() {
     unset SELECTED_ZSTD_CXXFLAGS
 
     echo ">>>>> zstd - OK"
-    popd
+    cd -
 
     set_milestone zstd
 }
@@ -240,7 +240,7 @@ compile_and_install_libjpeg() {
     make_install
 
     echo ">>>>> libjpeg - OK"
-    popd
+    cd -
 
     set_milestone libjpeg
 }
@@ -303,7 +303,7 @@ compile_and_install_jasper() {
     unset SELECTED_JASPER_CXXFLAGS
 
     echo ">>>>> JasPer - OK"
-    popd
+    cd -
 
     set_milestone jasper
 }
@@ -338,7 +338,7 @@ compile_and_install_libpng() {
     make_install
 
     echo ">>>>> libpng - OK"
-    popd
+    cd -
 
     set_milestone libpng
 }
@@ -388,7 +388,7 @@ compile_and_install_hdf5() {
     restore_ld_library_path
 
     echo ">>>>> HDF5 (Serial) - OK"
-    popd
+    cd -
 
     echo ">>>>> Preparing HDF5 (Parallel)"
     stage_build_directory hdf5-1.14.6 hdf5-1.14.6-parallel
@@ -423,7 +423,7 @@ compile_and_install_hdf5() {
     restore_ld_library_path
 
     echo ">>>>> HDF5 (Parallel) - OK"
-    popd
+    cd -
 
     set_milestone hdf5
 }
@@ -459,7 +459,7 @@ compile_and_install_pnetcdf() {
     make_install
 
     echo ">>>>> NetCDF (C, Fortran, 3, Parallel) - OK"
-    popd
+    cd -
 
     set_milestone pnetcdf
 }
@@ -509,7 +509,7 @@ compile_and_install_netcdf_c() {
     restore_ld_library_path
 
     echo ">>>>> NetCDF (C, 3, Serial) - OK"
-    popd
+    cd -
 
     echo ">>>>> Preparing NetCDF (C, 4, Serial)"
     stage_build_directory netcdf-c-4.9.3 netcdf-c-4.9.3-4-serial
@@ -547,7 +547,7 @@ compile_and_install_netcdf_c() {
     restore_ld_library_path
 
     echo ">>>>> NetCDF (C, 4, Serial) - OK"
-    popd
+    cd -
 
     echo ">>>>> Preparing NetCDF (C, 4, Parallel)"
     stage_build_directory netcdf-c-4.9.3 netcdf-c-4.9.3-4-parallel
@@ -585,7 +585,7 @@ compile_and_install_netcdf_c() {
     restore_ld_library_path
 
     echo ">>>>> NetCDF (C, 4, Parallel) - OK"
-    popd
+    cd -
 
     set_milestone netcdf-c
 }
@@ -626,7 +626,7 @@ compile_and_install_netcdf_fortran() {
     restore_ld_library_path
 
     echo ">>>>> NetCDF (Fortran, 3, Serial) - OK"
-    popd
+    cd -
 
     echo ">>>>> Preparing NetCDF (Fortran, 4, Serial)"
     stage_build_directory netcdf-fortran-4.6.4 netcdf-fortran-4.6.4-4-serial
@@ -654,7 +654,7 @@ compile_and_install_netcdf_fortran() {
     restore_ld_library_path
 
     echo ">>>>> NetCDF (Fortran, 4, Serial) - OK"
-    popd
+    cd -
 
     echo ">>>>> Preparing NetCDF (Fortran, 4, Parallel)"
     stage_build_directory netcdf-fortran-4.6.4 netcdf-fortran-4.6.4-4-parallel
@@ -682,7 +682,7 @@ compile_and_install_netcdf_fortran() {
     restore_ld_library_path
 
     echo ">>>>> NetCDF (Fortran, 4, Parallel) - OK"
-    popd
+    cd -
 
     set_milestone netcdf-fortran
 }
@@ -741,7 +741,7 @@ compile_and_install_pio() {
     restore_ld_library_path
 
     echo ">>>>> PIO - OK"
-    popd
+    cd -
 
     set_milestone pio
 }
@@ -786,7 +786,7 @@ compile_and_install_cprnc() {
     restore_ld_library_path
 
     echo ">>>>> cprnc - OK"
-    popd
+    cd -
 
     set_milestone cprnc
 }
@@ -800,7 +800,7 @@ compile_and_install_lapack() {
     rm -fr lapack-3.12.1
     extract_archive "${LIBRARIES_PATH}/lapack-3.12.1.tar.gz"
     apply_patch_to_directory "${PATCHES_PATH}/lapack-"*".patch" lapack-3.12.1
-    pushd lapack-3.12.1
+    cd lapack-3.12.1
 
     echo ">>>>> Configuring LAPACK"
     cp -af "${PATCHES_PATH}/lapack-make.inc" make.inc
@@ -818,7 +818,7 @@ compile_and_install_lapack() {
     cp -af ./LAPACKE/include/*.h "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/include"
     cp -af ./*.so "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/lib"
     echo ">>>>> LAPACK - OK"
-    popd
+    cd -
 
     set_milestone lapack
 }
@@ -832,7 +832,7 @@ compile_and_install_esmf() {
     rm -fr esmf-8.9.1
     extract_archive "${LIBRARIES_PATH}/esmf-8.9.1.tar.gz"
     extract_archive "${LIBRARIES_PATH}/yaml-cpp-0.8.0-merge-key-support.3.tar.gz"
-    pushd esmf-8.9.1
+    cd esmf-8.9.1
 
     echo ">>>>> Configuring ESMF"
     # The included yaml-cpp in ESMF is at version 0.7.0, which is ancient.
@@ -939,7 +939,7 @@ compile_and_install_esmf() {
     unset EXTERNAL_LIBPATH
 
     echo ">>>>> ESMF - OK"
-    popd
+    cd -
 
     set_milestone esmf
 }
@@ -984,7 +984,7 @@ compile_and_install_pfunit() {
     make_install
 
     echo ">>>>> pFUnit - OK"
-    popd
+    cd -
 
     set_milestone pfunit
 }
@@ -1024,7 +1024,7 @@ compile_and_install_scotch() {
     make_install
 
     echo ">>>>> Scotch - OK"
-    popd
+    cd -
 
     set_milestone scotch
 }

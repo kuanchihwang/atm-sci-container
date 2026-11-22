@@ -75,7 +75,7 @@ compile_and_install_mpich_4() {
     make_install
 
     echo ">>>>> MPICH - OK"
-    popd
+    cd -
 }
 
 compile_and_install_mpich_5() {
@@ -138,7 +138,7 @@ compile_and_install_mpich_5() {
     make_install
 
     echo ">>>>> MPICH - OK"
-    popd
+    cd -
 }
 
 compile_and_install_open_mpi_4() {
@@ -185,7 +185,7 @@ compile_and_install_open_mpi_4() {
     make_install
 
     echo ">>>>> Open MPI - OK"
-    popd
+    cd -
 }
 
 compile_and_install_open_mpi_5() {
@@ -250,7 +250,7 @@ compile_and_install_open_mpi_5() {
     make_install
 
     echo ">>>>> Open MPI - OK"
-    popd
+    cd -
 }
 
 ###
