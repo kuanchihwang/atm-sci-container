@@ -137,25 +137,18 @@ clean: clean-hpc clean-atm-sci
 
 .PHONY: clean-hpc
 clean-hpc:
-	@for IMAGE in $$($(DOCKER) image ls --quiet "$$(basename "$(HPC_IMAGE_NAME)")"); do \
-		$(DOCKER) image rm --force --ignore "$${IMAGE}"; \
-	done
-	@for IMAGE in $$($(DOCKER) image ls --quiet --filter "dangling=true"); do \
-		$(DOCKER) image rm --force --ignore "$${IMAGE}"; \
-	done
+	@$(DOCKER) image ls --quiet "$$(basename "$(HPC_IMAGE_NAME)")" | xargs -r $(DOCKER) image rm --force
+	@$(DOCKER) image prune --force
 
 .PHONY: clean-atm-sci
 clean-atm-sci:
-	@for IMAGE in $$($(DOCKER) image ls --quiet "$$(basename "$(ATM_SCI_IMAGE_NAME)")"); do \
-		$(DOCKER) image rm --force --ignore "$${IMAGE}"; \
-	done
-	@for IMAGE in $$($(DOCKER) image ls --quiet --filter "dangling=true"); do \
-		$(DOCKER) image rm --force --ignore "$${IMAGE}"; \
-	done
+	@$(DOCKER) image ls --quiet "$$(basename "$(ATM_SCI_IMAGE_NAME)")" | xargs -r $(DOCKER) image rm --force
+	@$(DOCKER) image prune --force
 
 .PHONY: deep-clean
 deep-clean: clean
-	@$(DOCKER) image prune --all --build-cache --external --force
+	@$(DOCKER) container ls --all --quiet | xargs -r $(DOCKER) container stop
+	@$(DOCKER) system prune --force --volumes
 
 .PHONY: reset
 reset:
