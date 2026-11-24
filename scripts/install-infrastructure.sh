@@ -552,8 +552,11 @@ compile_and_install_ucc() {
 
     echo ">>>>> Configuring UCC"
     ../source/configure --help
+    prepend_ld_library_path "${INFRASTRUCTURE_PREFIX}/ucx/lib"
     CC="${SELECTED_CC}" CFLAGS="${SELECTED_CFLAGS}" \
     CXX="${SELECTED_CXX}" CXXFLAGS="${SELECTED_CXXFLAGS}" \
+    CPPFLAGS="-I${ZLIB_PREFIX}/include" \
+    LDFLAGS="-L${ZLIB_PREFIX}/lib" \
     ../source/configure --disable-static --enable-shared --prefix="${INFRASTRUCTURE_PREFIX}/ucc" \
         --disable-assert \
         --disable-debug \
@@ -565,6 +568,7 @@ compile_and_install_ucc() {
         --with-avx \
         --with-ibverbs \
         --with-rdmacm \
+        --with-sharp="/opt/mellanox/sharp" \
         --with-tls="all" \
         --with-ucx="${INFRASTRUCTURE_PREFIX}/ucx" \
         --without-profiling \
@@ -577,6 +581,8 @@ compile_and_install_ucc() {
 
     echo ">>>>> Installing UCC"
     make_install
+
+    restore_ld_library_path
 
     echo ">>>>> UCC - OK"
     cd -

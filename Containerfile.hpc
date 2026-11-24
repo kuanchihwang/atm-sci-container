@@ -46,20 +46,21 @@ RUN --mount=type=tmpfs,target=/tmp \
     pushd /tmp/working && \
     /mnt/scripts/install-drivers.sh "${GPU}" && \
     popd && \
-    rm -fr /tmp/working
+    rm -fr /tmp/working && \
+    echo "# Included by /etc/ld.so.conf" >  /etc/ld.so.conf.d/hpc-drivers.conf && \
+    echo "/opt/mellanox/sharp/lib"       >> /etc/ld.so.conf.d/hpc-drivers.conf && \
+    ldconfig
 ENV GPU="${GPU}"
 
 FROM install-drivers AS set-default-cuda-12
 ENV GPU_PREFIX="/usr/local/cuda-12"
-RUN echo "# Included by /etc/ld.so.conf" >  /etc/ld.so.conf.d/hpc-drivers.conf && \
-    echo "${GPU_PREFIX}/lib64"           >> /etc/ld.so.conf.d/hpc-drivers.conf && \
+RUN echo "${GPU_PREFIX}/lib64"           >> /etc/ld.so.conf.d/hpc-drivers.conf && \
     ldconfig
 ENV PATH="${GPU_PREFIX}/bin${PATH:+:${PATH}}"
 
 FROM install-drivers AS set-default-cuda-13
 ENV GPU_PREFIX="/usr/local/cuda-13"
-RUN echo "# Included by /etc/ld.so.conf" >  /etc/ld.so.conf.d/hpc-drivers.conf && \
-    echo "${GPU_PREFIX}/lib64"           >> /etc/ld.so.conf.d/hpc-drivers.conf && \
+RUN echo "${GPU_PREFIX}/lib64"           >> /etc/ld.so.conf.d/hpc-drivers.conf && \
     ldconfig
 ENV PATH="${GPU_PREFIX}/bin${PATH:+:${PATH}}"
 

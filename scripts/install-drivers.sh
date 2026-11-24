@@ -57,6 +57,18 @@ dnf makecache
 dnf -y --disablerepo="*" --enablerepo="doca" install \
     knem libxpmem libxpmem-devel rdma-core rdma-core-devel \
     infiniband-diags libibverbs-utils librdmacm-utils
+# SHARP brings its own UCX as a dependency, but that is problematic because we build UCX ourselves from source.
+# Resort to magic file surgery here.
+SHARP="$(find /usr/share/doca-host-* -maxdepth 3 \
+    -name "sharp-*.rpm" -print | \
+    head -n 1)"
+mkdir -p sharp
+rpm2archive -n < "${SHARP}" | \
+    tar -xf - -C sharp --no-same-owner
+cp -af sharp/opt/mellanox /opt
+cp -af sharp/usr/lib64/pkgconfig/sharp.pc /usr/lib64/pkgconfig
+rm -fr sharp
+unset SHARP
 # Only allow DNF to pick packages from the `cornelis-opxs` repository.
 LIBPSM2_DEVEL="$(dnf -q --disablerepo="*" --enablerepo="cornelis-opxs" repoquery \
     libpsm2-devel | \
