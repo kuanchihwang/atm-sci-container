@@ -781,7 +781,8 @@ compile_and_install_cprnc() {
 
     echo ">>>>> Installing cprnc"
     make_install
-    cp -af cprnc-install/bin/cprnc /usr/local/bin
+    mkdir -p /opt/hpc/core/cprnc
+    cp -af cprnc-install/bin /opt/hpc/core/cprnc
 
     restore_ld_library_path
 
@@ -1097,6 +1098,7 @@ patch_binary_to_set_rpath "${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/bin/"* ''
 patch_binary_to_set_rpath "${LIBRARIES_PREFIX_MPI_SPECIFIC}/pnetcdf4/lib/"* ''
 patch_binary_to_set_rpath "${LIBRARIES_PREFIX_MPI_SPECIFIC}/pio/bin/"* ''
 patch_binary_to_set_rpath "${LIBRARIES_PREFIX_MPI_SPECIFIC}/pio/lib/"* ''
+patch_binary_to_set_rpath "/opt/hpc/core/cprnc/bin/"* ''
 patch_binary_to_set_rpath "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/bin/"* ''
 patch_binary_to_set_rpath "${LIBRARIES_PREFIX_COMPILER_SPECIFIC}/lapack/lib/"* ''
 patch_binary_to_set_rpath "${LIBRARIES_PREFIX_MPI_SPECIFIC}/esmf/bin/"*/*/* ''
