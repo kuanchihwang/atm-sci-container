@@ -372,6 +372,10 @@ jobs:
           set -euo pipefail
 
           docker container ls --all --quiet | xargs -r docker container stop
+          docker image ls --all --filter "reference=${DOCKER_HUB_REGISTRY}/${NAMESPACE}/hpc-container:*" --filter "until=24h" --format "{{.Repository}}:{{.Tag}}" | xargs -r docker image rm --force --no-prune
+          docker image ls --all --filter "reference=${DOCKER_HUB_REGISTRY}/${NAMESPACE}/atm-sci-container:*" --filter "until=24h" --format "{{.Repository}}:{{.Tag}}" | xargs -r docker image rm --force --no-prune
+          docker image ls --all --filter "reference=${GITHUB_PACKAGE_REGISTRY}/${NAMESPACE}/hpc-container:*" --filter "until=24h" --format "{{.Repository}}:{{.Tag}}" | xargs -r docker image rm --force --no-prune
+          docker image ls --all --filter "reference=${GITHUB_PACKAGE_REGISTRY}/${NAMESPACE}/atm-sci-container:*" --filter "until=24h" --format "{{.Repository}}:{{.Tag}}" | xargs -r docker image rm --force --no-prune
           docker system prune --force --volumes
           docker system df --verbose
 
