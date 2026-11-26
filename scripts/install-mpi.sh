@@ -50,10 +50,10 @@ compile_and_install_mpich_4() {
         --disable-cxx \
         --disable-debuginfo \
         --disable-doc \
-        --disable-echo \
         --disable-g \
         --disable-mpi-abi \
         --disable-mutex-timing \
+        --disable-nolocal \
         --disable-qmpi \
         --disable-timing \
         --enable-error-checking="runtime" \
@@ -65,7 +65,7 @@ compile_and_install_mpich_4() {
         --with-hwloc="${HWLOC_PREFIX}" \
         --with-pm="hydra" \
         --with-wrapper-dl-type="none" \
-        --with-xpmem="/usr"
+        --with-xpmem
     patch_libtool_to_disable_rpath
 
     echo ">>>>> Compiling MPICH"
@@ -112,10 +112,10 @@ compile_and_install_mpich_5() {
         --disable-cxx \
         --disable-debuginfo \
         --disable-doc \
-        --disable-echo \
         --disable-g \
         --disable-mpi-abi \
         --disable-mutex-timing \
+        --disable-nolocal \
         --disable-qmpi \
         --disable-timing \
         --enable-error-checking="runtime" \
@@ -127,7 +127,7 @@ compile_and_install_mpich_5() {
         --with-hwloc="${HWLOC_PREFIX}" \
         --with-pm="hydra" \
         --with-wrapper-dl-type="none" \
-        --with-xpmem="/usr" \
+        --with-xpmem \
         "${@}"
     patch_libtool_to_disable_rpath
 
@@ -154,17 +154,33 @@ compile_and_install_open_mpi_4() {
     CPPFLAGS="-I${NUMACTL_PREFIX}/include" \
     LDFLAGS="-L${NUMACTL_PREFIX}/lib" \
     ../source/configure --disable-static --enable-shared --prefix="${MPI_PREFIX}" \
+        --disable-coverage \
         --disable-debug \
+        --disable-heterogeneous \
         --disable-io-romio \
         --disable-mem-debug \
         --disable-mem-profile \
+        --disable-memchecker \
         --disable-mpi-java \
         --disable-picky \
+        --disable-script-wrapper-compilers \
+        --disable-spc \
         --disable-timing \
         --disable-wrapper-rpath \
         --disable-wrapper-runpath \
+        --enable-binaries \
+        --enable-dlopen \
+        --enable-getpwuid \
+        --enable-io-ompio \
+        --enable-mpi \
         --enable-mpi-fortran="usempif08" \
+        --enable-oshmem \
+        --enable-oshmem-fortran \
+        --enable-pty-support \
         --with-mpi-param-check="runtime" \
+        --with-oshmem-param-check \
+        --without-devel-headers \
+        --without-valgrind \
         --with-cma \
         --with-hwloc="${HWLOC_PREFIX}" \
         --with-libevent="${LIBEVENT_PREFIX}" \
@@ -173,8 +189,8 @@ compile_and_install_open_mpi_4() {
         --with-pmix="${INFRASTRUCTURE_PREFIX}/base" \
         --with-ucc="${INFRASTRUCTURE_PREFIX}/ucc" \
         --with-ucx="${INFRASTRUCTURE_PREFIX}/ucx" \
-        --with-verbs="/usr" \
-        --with-xpmem="/usr" \
+        --with-verbs \
+        --with-xpmem \
         --with-zlib="${ZLIB_PREFIX}"
     patch_libtool_to_disable_rpath
 
@@ -213,23 +229,36 @@ compile_and_install_open_mpi_5() {
     CPPFLAGS="-I${NUMACTL_PREFIX}/include" \
     LDFLAGS="-L${NUMACTL_PREFIX}/lib" \
     ../source/configure --disable-static --enable-shared --prefix="${MPI_PREFIX}" \
+        --disable-coverage \
         --disable-debug \
-        --disable-devel-check \
+        --disable-heterogeneous \
         --disable-io-romio \
         --disable-mem-debug \
         --disable-mem-profile \
-        --disable-memory-sanitizers \
+        --disable-memchecker \
         --disable-mpi-java \
         --disable-picky \
         --disable-python-bindings \
+        --disable-script-wrapper-compilers \
+        --disable-spc \
         --disable-sphinx \
         --disable-timing \
         --disable-wrapper-rpath \
         --disable-wrapper-runpath \
+        --enable-binaries \
+        --enable-dlopen \
+        --enable-getpwuid \
+        --enable-io-ompio \
+        --enable-mpi \
         --enable-mpi-fortran="usempif08" \
+        --enable-oshmem \
+        --enable-oshmem-fortran \
+        --enable-pty-support \
         --with-mpi-param-check="runtime" \
-        --without-munge \
+        --with-oshmem-param-check \
+        --without-devel-headers \
         --without-tests-examples \
+        --without-valgrind \
         --with-cma \
         --with-hwloc="${HWLOC_PREFIX}" \
         --with-libevent="${LIBEVENT_PREFIX}" \
@@ -238,7 +267,7 @@ compile_and_install_open_mpi_5() {
         --with-prrte="${INFRASTRUCTURE_PREFIX}/base" \
         --with-ucc="${INFRASTRUCTURE_PREFIX}/ucc" \
         --with-ucx="${INFRASTRUCTURE_PREFIX}/ucx" \
-        --with-xpmem="/usr" \
+        --with-xpmem \
         --with-zlib="${ZLIB_PREFIX}" \
         "${@}"
     patch_libtool_to_disable_rpath
