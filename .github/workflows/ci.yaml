@@ -371,14 +371,22 @@ jobs:
         run: |
           set -euo pipefail
 
-          docker container ls --all --quiet | xargs -r docker container stop
-          docker image ls --all --filter "reference=localhost/build-artifact/hpc-container:*" --filter "until=168h" --format "{{.Repository}}:{{.Tag}}" | xargs -r docker image rm --force --no-prune
-          docker image ls --all --filter "reference=localhost/build-artifact/atm-sci-container:*" --filter "until=168h" --format "{{.Repository}}:{{.Tag}}" | xargs -r docker image rm --force --no-prune
-          docker image ls --all --filter "reference=${DOCKER_HUB_REGISTRY}/${NAMESPACE}/hpc-container:*" --filter "until=24h" --format "{{.Repository}}:{{.Tag}}" | xargs -r docker image rm --force --no-prune
-          docker image ls --all --filter "reference=${DOCKER_HUB_REGISTRY}/${NAMESPACE}/atm-sci-container:*" --filter "until=24h" --format "{{.Repository}}:{{.Tag}}" | xargs -r docker image rm --force --no-prune
-          docker image ls --all --filter "reference=${GITHUB_PACKAGE_REGISTRY}/${NAMESPACE}/hpc-container:*" --filter "until=24h" --format "{{.Repository}}:{{.Tag}}" | xargs -r docker image rm --force --no-prune
-          docker image ls --all --filter "reference=${GITHUB_PACKAGE_REGISTRY}/${NAMESPACE}/atm-sci-container:*" --filter "until=24h" --format "{{.Repository}}:{{.Tag}}" | xargs -r docker image rm --force --no-prune
-          docker system prune --force --volumes
+          # The following is roughly equivalent to `docker system prune --force --volumes`, but cache mounts are spared.
+          {
+          docker container ls --quiet | xargs -r docker container stop
+          docker container prune --force
+          docker network prune --force
+          docker volume prune --force
+          docker image ls --filter "reference=localhost/build-artifact/hpc-container:*" --filter "until=168h" --format "{{.Repository}}:{{.Tag}}" | xargs -r docker image rm --force --no-prune
+          docker image ls --filter "reference=localhost/build-artifact/atm-sci-container:*" --filter "until=168h" --format "{{.Repository}}:{{.Tag}}" | xargs -r docker image rm --force --no-prune
+          docker image ls --filter "reference=${DOCKER_HUB_REGISTRY}/${NAMESPACE}/hpc-container:*" --filter "until=24h" --format "{{.Repository}}:{{.Tag}}" | xargs -r docker image rm --force --no-prune
+          docker image ls --filter "reference=${DOCKER_HUB_REGISTRY}/${NAMESPACE}/atm-sci-container:*" --filter "until=24h" --format "{{.Repository}}:{{.Tag}}" | xargs -r docker image rm --force --no-prune
+          docker image ls --filter "reference=${GITHUB_PACKAGE_REGISTRY}/${NAMESPACE}/hpc-container:*" --filter "until=24h" --format "{{.Repository}}:{{.Tag}}" | xargs -r docker image rm --force --no-prune
+          docker image ls --filter "reference=${GITHUB_PACKAGE_REGISTRY}/${NAMESPACE}/atm-sci-container:*" --filter "until=24h" --format "{{.Repository}}:{{.Tag}}" | xargs -r docker image rm --force --no-prune
+          docker image prune --force
+          docker buildx prune --filter "type!=exec.cachemount" --force
+          } 1>/dev/null 2>&1
+
           docker system df --verbose
 
       - name: Upload build logs
