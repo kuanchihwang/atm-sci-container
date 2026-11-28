@@ -34,16 +34,16 @@ For an overview of why containers remain valuable even for HPC scenarios, see th
 ### CESM
 
 > [!NOTE]
-> In this walkthrough, we will configure [CAM-SIMA](https://github.com/ESCOMP/CAM-SIMA) with MPAS dynamical core, a global 480-km mesh, Kessler microphysics, and the moist baroclinic wave initial condition. CAM-SIMA is a component model of [CESM](https://github.com/ESCOMP/CESM). The model will be built and run with GNU compilers version 15 and MPICH version 4.
+> In this walkthrough, we will configure [CAM-SIMA](https://github.com/ESCOMP/CAM-SIMA) with MPAS dynamical core, a global 480-km mesh, Kessler microphysics, and the moist baroclinic wave initial condition. CAM-SIMA is a component model of [CESM](https://github.com/ESCOMP/CESM). The model will be built and run with GNU compilers version 15 and MPICH version 5.
 
 Pull the appropriate container image and create a container from it:
 
 ```shell
-docker image pull "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_mpich-4"
+docker image pull "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_mpich-5_none"
 docker container run -it --rm \
     --env "CONTAINER_PRESET=cesm" \
     --volume "working:/working" \
-    "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_mpich-4"
+    "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_mpich-5_none"
 ```
 
 You are now in an interactive shell session inside the created container. Continue with:
@@ -131,11 +131,11 @@ If multi-node execution and optimal performance are desired, it is recommended t
 Pull the appropriate container image and create a container from it:
 
 ```shell
-docker image pull "docker.io/kuanchihwang/atm-sci-container:latest_intel-2025_open-mpi-5"
+docker image pull "docker.io/kuanchihwang/atm-sci-container:latest_intel-2025_open-mpi-5_none"
 docker container run -it --rm \
     --env "CONTAINER_PRESET=mpas" \
     --volume "working:/working" \
-    "docker.io/kuanchihwang/atm-sci-container:latest_intel-2025_open-mpi-5"
+    "docker.io/kuanchihwang/atm-sci-container:latest_intel-2025_open-mpi-5_none"
 ```
 
 You are now in an interactive shell session inside the created container. Continue with:
@@ -164,11 +164,11 @@ If multi-node execution and optimal performance are desired, it is recommended t
 Pull the appropriate container image and create a container from it:
 
 ```shell
-docker image pull "docker.io/kuanchihwang/atm-sci-container:latest_intel-2024_open-mpi-4"
+docker image pull "docker.io/kuanchihwang/atm-sci-container:latest_intel-2024_open-mpi-4_none"
 docker container run -it --rm \
     --env "CONTAINER_PRESET=wrf" \
     --volume "working:/working" \
-    "docker.io/kuanchihwang/atm-sci-container:latest_intel-2024_open-mpi-4"
+    "docker.io/kuanchihwang/atm-sci-container:latest_intel-2024_open-mpi-4_none"
 ```
 
 You are now in an interactive shell session inside the created container. Continue with:
@@ -244,18 +244,18 @@ To start an interactive shell session:
 ```shell
 # Docker
 docker container run -it --rm \
-    "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_open-mpi-5"
+    "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_open-mpi-5_none"
 
 # Podman
 podman container run -it --rm \
-    "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_open-mpi-5"
+    "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_open-mpi-5_none"
 
 # Apptainer
 apptainer build \
-    "atm-sci-container@latest_gnu-15_open-mpi-5.sif" \
-    "docker://kuanchihwang/atm-sci-container:latest_gnu-15_open-mpi-5"
+    "atm-sci-container@latest_gnu-15_open-mpi-5_none.sif" \
+    "docker://kuanchihwang/atm-sci-container:latest_gnu-15_open-mpi-5_none"
 apptainer run \
-    "atm-sci-container@latest_gnu-15_open-mpi-5.sif"
+    "atm-sci-container@latest_gnu-15_open-mpi-5_none.sif"
 ```
 
 > [!IMPORTANT]
@@ -265,16 +265,16 @@ A custom command, along with any arguments, can be supplied for execution instea
 
 ```shell
 docker container run --rm \
-    "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_open-mpi-5" \
+    "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_open-mpi-5_none" \
     gcc --version
 docker container run --rm \
-    "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_open-mpi-5" \
+    "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_open-mpi-5_none" \
     g++ --version
 docker container run --rm \
-    "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_open-mpi-5" \
+    "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_open-mpi-5_none" \
     gfortran --version
 docker container run --rm \
-    "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_open-mpi-5" \
+    "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_open-mpi-5_none" \
     mpirun --version
 ```
 
@@ -316,7 +316,7 @@ docker container run -it --rm \
     --env "CONTAINER_USER=$(id -nu)" \
     --env "CONTAINER_UID=$(id -u)" \
     --env "CONTAINER_GID=$(id -g)" \
-    "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_open-mpi-5"
+    "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_open-mpi-5_none"
 ```
 
 If the container is already started as a non-root user (e.g., in most Apptainer environments), the user creation is skipped entirely.
@@ -348,7 +348,7 @@ For example, to load the `cesm` preset, pass its name via `CONTAINER_PRESET`:
 ```shell
 docker container run -it --rm \
     --env "CONTAINER_PRESET=cesm" \
-    "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_open-mpi-5"
+    "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_open-mpi-5_none"
 ```
 
 #### Environment Components
@@ -376,7 +376,7 @@ For example, to load only pFUnit, pass its name via `CONTAINER_ENVIRONMENT`:
 ```shell
 docker container run -it --rm \
     --env "CONTAINER_ENVIRONMENT=pfunit" \
-    "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_open-mpi-5"
+    "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_open-mpi-5_none"
 ```
 
 To load pFUnit on top of the `cesm` preset:
@@ -385,7 +385,7 @@ To load pFUnit on top of the `cesm` preset:
 docker container run -it --rm \
     --env "CONTAINER_PRESET=cesm" \
     --env "CONTAINER_ENVIRONMENT=pfunit" \
-    "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_open-mpi-5"
+    "docker.io/kuanchihwang/atm-sci-container:latest_gnu-15_open-mpi-5_none"
 ```
 
 ### Running a Container across Multiple Nodes
@@ -398,7 +398,7 @@ In general, the host MPI launcher (e.g., `mpiexec`, `mpirun`, `srun`) invokes th
 
 ```shell
 mpirun -n 4 apptainer exec \
-    "atm-sci-container@latest_gnu-15_open-mpi-5.sif" \
+    "atm-sci-container@latest_gnu-15_open-mpi-5_none.sif" \
     /working/mpi-application
 ```
 
@@ -407,7 +407,7 @@ Since `apptainer exec` bypasses the container entrypoint, `source` the container
 ```shell
 mpirun -n 4 apptainer exec \
     --env "CONTAINER_PRESET=cesm" \
-    "atm-sci-container@latest_gnu-15_open-mpi-5.sif" \
+    "atm-sci-container@latest_gnu-15_open-mpi-5_none.sif" \
     bash -c 'source /usr/local/bin/container-entrypoint-hook.sh && exec /working/mpi-application'
 ```
 
