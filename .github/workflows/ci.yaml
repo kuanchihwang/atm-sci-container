@@ -251,7 +251,7 @@ jobs:
       COMPILER: ${{ needs.configure-pipeline.outputs.compiler }}
       MPI: ${{ needs.configure-pipeline.outputs.mpi }}
       GPU: ${{ needs.configure-pipeline.outputs.gpu }}
-    timeout-minutes: 1440
+    timeout-minutes: 2880
     steps:
       - name: Checkout atm-sci-container
         uses: actions/checkout@v7
